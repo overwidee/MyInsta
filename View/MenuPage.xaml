@@ -1,0 +1,22 @@
+﻿<Page
+    x:Class="MyInsta.View.MenuPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MyInsta.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <NavigationView x:Name="NavigationViewControl" PaneDisplayMode="Top"
+                        IsBackButtonVisible="Collapsed" IsBackEnabled="True" Loaded="NavigationViewControl_Loaded" ItemInvoked="NavigationViewControl_ItemInvoked">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="My followers" x:Name="page_followers" Icon="List" Tag="Followers" FontFamily="Century Gothic"/>
+                <NavigationViewItem Content="My unfollowers" x:Name="page_unfollowers" Icon="Cancel" Tag="Unfollowers" FontFamily="Century Gothic"/>
+                <NavigationViewItem Content="My friends" x:Name="page_friends" Icon="Favorite" Tag="Friends" FontFamily="Century Gothic"/>
+            </NavigationView.MenuItems>
+            <Frame x:Name="contentFrame"></Frame>
+        </NavigationView>
+    </Grid>
+</Page>
