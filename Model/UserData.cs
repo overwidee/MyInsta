@@ -1,4 +1,5 @@
 ﻿using InstagramApiSharp.Classes.Models;
+using MyInsta.Logic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

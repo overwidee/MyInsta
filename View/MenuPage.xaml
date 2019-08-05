@@ -15,6 +15,7 @@
                 <NavigationViewItem Content="My followers" x:Name="page_followers" Icon="List" Tag="Followers" FontFamily="Century Gothic"/>
                 <NavigationViewItem Content="My unfollowers" x:Name="page_unfollowers" Icon="Cancel" Tag="Unfollowers" FontFamily="Century Gothic"/>
                 <NavigationViewItem Content="My friends" x:Name="page_friends" Icon="Favorite" Tag="Friends" FontFamily="Century Gothic"/>
+                <NavigationViewItem Content="Search profile" x:Name="page_search" Icon="Find" Tag="Search" FontFamily="Century Gothic"/>
             </NavigationView.MenuItems>
             <Frame x:Name="contentFrame"></Frame>
         </NavigationView>

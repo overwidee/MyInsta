@@ -18,6 +18,7 @@ using System.Diagnostics;
 using System.IO;
 using Windows.Web.Http;
 using Windows.Storage;
+using System.Text.RegularExpressions;
 
 namespace MyInsta.Logic
 {
@@ -62,21 +63,22 @@ namespace MyInsta.Logic
         public static async Task GetUserData(User userObject)
         {
             userObject.UserData.UserFollowers = new ObservableCollection<InstaUserShort>();
-            userObject.UserData.UserFriends = new ObservableCollection<InstaUserShort>();
-            userObject.UserData.UserUnfollowers = new ObservableCollection<InstaUserShort>();
+            //userObject.UserData.UserFriends = new ObservableCollection<InstaUserShort>();
+            //userObject.UserData.UserUnfollowers = new ObservableCollection<InstaUserShort>();
             var f = await userObject.API.UserProcessor.GetUserFollowersAsync(userObject.LoginUser, PaginationParameters.MaxPagesToLoad(5));
             foreach (var item in f.Value)
             {
-                userObject.UserData.UserFollowers.Add(item);
+                if (!userObject.UserData.UserFollowers.Contains(item))
+                    userObject.UserData.UserFollowers.Add(item);
             }
             var fling = await userObject.API.UserProcessor.GetUserFollowingAsync(userObject.LoginUser, PaginationParameters.MaxPagesToLoad(5));
             foreach (var item in fling.Value)
             {
                 var status = await userObject.API.UserProcessor.GetFriendshipStatusAsync(item.Pk);
-                if (status.Value.Following && status.Value.FollowedBy)
+                if (status.Value.Following && status.Value.FollowedBy && !userObject.UserData.UserFriends.Contains(item))
                     userObject.UserData.UserFriends.Add(item);
                 else
-                    if (status.Value.Following && !status.Value.FollowedBy)
+                if (status.Value.Following && !status.Value.FollowedBy && !userObject.UserData.UserUnfollowers.Contains(item))
                     userObject.UserData.UserUnfollowers.Add(item);
             }
         }
@@ -98,7 +100,11 @@ namespace MyInsta.Logic
                 var unF = await userObject.API.UserProcessor.UnFollowUserAsync(unfUser.Pk);
                 if (unF.Succeeded)
                 {
-                    await GetUserData(userObject);
+                    var person = await GetInstaUserShortById(userObject, unfUser.Pk);
+                    if (userObject.UserData.UserUnfollowers.Contains(person))
+                        userObject.UserData.UserUnfollowers.Remove(person);
+                    if (userObject.UserData.UserFriends.Contains(person))
+                        userObject.UserData.UserFriends.Remove(person);
                 }
             }
         }
@@ -110,7 +116,14 @@ namespace MyInsta.Logic
                 var unF = await userObject.API.UserProcessor.FollowUserAsync(unfUser.Pk);
                 if (unF.Succeeded)
                 {
-                    await GetUserData(userObject);
+                    var person = await GetInstaUserShortById(userObject, unfUser.Pk);
+                    if (unF.Value.Following && unF.Value.FollowedBy && !userObject.UserData.UserFriends
+                        .Contains(person))
+                        userObject.UserData.UserFriends.Add(person);
+                    else
+                        if (unF.Value.Following && !unF.Value.FollowedBy && !userObject.UserData.UserUnfollowers
+                        .Contains(person))
+                        userObject.UserData.UserUnfollowers.Add(person);
                 }
             }
         }
@@ -205,6 +218,20 @@ namespace MyInsta.Logic
             {
                 var items = collection.Where(x => x.UserName.Contains(srt));
                 return items;
+            }
+        }
+
+        public static async Task<InstaUserShort> SearchByUserName(User currentUser, string srt)
+        {
+            if (string.IsNullOrEmpty(srt))
+                return null;
+            else
+            {
+                var item = await currentUser.API.UserProcessor.GetUserInfoByUsernameAsync(srt);
+                if (item.Succeeded)
+                    return await GetInstaUserShortById(currentUser, item.Value.Pk);
+                else
+                    return null;
             }
         }
 

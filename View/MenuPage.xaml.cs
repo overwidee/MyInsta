@@ -52,6 +52,9 @@ namespace MyInsta.View
                     case "My friends":
                         contentFrame.Navigate(typeof(FriendsPage), InstaUser);
                         break;
+                    case "Search profile":
+                        contentFrame.Navigate(typeof(SearchPage), InstaUser);
+                        break;
                 }
             }
         }
