@@ -10,11 +10,11 @@
     xml:space="preserve"
     xmlns:model="using:MyInsta.Model"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <Page.Resources>
+    <!--<Page.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="FontFamily" Value="Century Gothic"/>
         </Style>
-    </Page.Resources>
+    </Page.Resources>-->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="64"/>
@@ -100,6 +100,7 @@
                                         <TextBlock Text="Comments count:" Margin="5, 5, 10, 5" FontSize="25"/>
                                         <TextBlock Text="{x:Bind CountComments}" Margin="5, 5, 10, 5" FontSize="25"/>
                                     </StackPanel>
+                                    <Button x:Name="buttonDownload" HorizontalAlignment="Center" Click="ButtonDownload_Click" Margin="10" Content="Download post" Tag="{x:Bind Name}"/>
                                 </StackPanel>
                             </DataTemplate>
                     </ListView.ItemTemplate>

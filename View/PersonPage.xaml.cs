@@ -85,6 +85,9 @@ namespace MyInsta.View
             await InstaServer.UnlikeProfile(CurrentUser, SelectUser);
         }
 
-
+        private async void ButtonDownload_Click(object sender, RoutedEventArgs e)
+        {
+            await InstaServer.DownloadPost(UrlMedias.Where(x => x.Name == ((Button)sender).Tag.ToString()).First());
+        }
     }
 }

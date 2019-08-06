@@ -8,6 +8,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Globalization;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -31,6 +32,7 @@ namespace MyInsta
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            ApplicationLanguages.PrimaryLanguageOverride = "ru-RU";
         }
 
         /// <summary>

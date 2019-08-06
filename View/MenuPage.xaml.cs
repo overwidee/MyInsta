@@ -38,21 +38,21 @@ namespace MyInsta.View
 
         private void NavigationViewControl_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
-            string ItemContent = args.InvokedItem as string;
+            var ItemContent = args.InvokedItemContainer.Tag;
             if (ItemContent != null)
             {
                 switch (ItemContent)
                 {
-                    case "My followers":
+                    case "Followers":
                         contentFrame.Navigate(typeof(FollowersPage), InstaUser);
                         break;
-                    case "My unfollowers":
+                    case "Unfollowers":
                         contentFrame.Navigate(typeof(UnfollowersPage), InstaUser);
                         break;
-                    case "My friends":
+                    case "Friends":
                         contentFrame.Navigate(typeof(FriendsPage), InstaUser);
                         break;
-                    case "Search profile":
+                    case "Search":
                         contentFrame.Navigate(typeof(SearchPage), InstaUser);
                         break;
                 }

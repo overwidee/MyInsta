@@ -19,6 +19,8 @@ using System.IO;
 using Windows.Web.Http;
 using Windows.Storage;
 using System.Text.RegularExpressions;
+using Windows.Storage.Pickers;
+using Windows.Storage.AccessCache;
 
 namespace MyInsta.Logic
 {
@@ -292,5 +294,35 @@ namespace MyInsta.Logic
                     $"Error - {e}", "All right");
             }
         }
+
+        public static async Task DownloadPost(CustomMedia media)
+        {
+            FileSavePicker savePicker = new FileSavePicker();
+            savePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            savePicker.FileTypeChoices.Add("jpeg image", new List<string>() { ".jpg" });
+            savePicker.SuggestedFileName = "EditedImage";
+            StorageFile file = await savePicker.PickSaveFileAsync();
+
+            if (file != null)
+            {
+                var httpWebRequest = HttpWebRequest.CreateHttp(media.UrlSmallImage);
+                HttpWebResponse response = (HttpWebResponse)await httpWebRequest.GetResponseAsync();
+                Stream resStream = response.GetResponseStream();
+                using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+                {
+                    await resStream.CopyToAsync(stream.AsStreamForWrite());
+                }
+                response.Dispose();
+
+                CustomDialog customDialog = new CustomDialog("Message", "Post downloaded\n" +
+                    $"{file.Path}", "All right");
+            }
+            else
+            {
+                CustomDialog customDialog = new CustomDialog("Warning", "Operation cancel."
+                    , "All right");
+            }
+        } 
     }
 }
