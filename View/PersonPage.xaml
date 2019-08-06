@@ -10,11 +10,11 @@
     xml:space="preserve"
     xmlns:model="using:MyInsta.Model"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <!--<Page.Resources>
+    <Page.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="FontFamily" Value="Century Gothic"/>
         </Style>
-    </Page.Resources>-->
+    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="64"/>
@@ -46,32 +46,32 @@
             <TextBlock Text="{x:Bind InstaUserInfo.FullName}"  
                         Grid.Column="1" FontSize="25" TextWrapping="Wrap" HorizontalAlignment="Center"/>
             <StackPanel Orientation="Horizontal" Margin="5, 30, 5, 5">
-                <TextBlock Text="Following: " FontSize="20" Margin="0, 0, 10, 0"/>
+                <TextBlock x:Uid="Following" FontSize="20" Margin="0, 0, 10, 0"/>
                 <TextBlock Text="{x:Bind InstaUserInfo.FollowingCount}"  
                         Grid.Column="1" FontSize="20" TextWrapping="Wrap"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5">
-                <TextBlock Text="Followers: " FontSize="20" Margin="0, 0, 10, 0"/>
+                <TextBlock x:Uid="Followers2" FontSize="20" Margin="0, 0, 10, 0"/>
                 <TextBlock Text="{x:Bind InstaUserInfo.FollowerCount}"  
                         Grid.Column="1" FontSize="20" TextWrapping="Wrap"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5">
-                <TextBlock Text="Media count: " FontSize="20" Margin="0, 0, 10, 0"/>
+                <TextBlock x:Uid="Media" FontSize="20" Margin="0, 0, 10, 0"/>
                 <TextBlock Text="{x:Bind InstaUserInfo.MediaCount}"  
                         Grid.Column="1" FontSize="20" TextWrapping="Wrap"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5">
-                <TextBlock Text="Is private: " FontSize="20" Margin="0, 0, 10, 0"/>
+                <TextBlock x:Uid="IsPrivate" FontSize="20" Margin="0, 0, 10, 0"/>
                 <TextBlock Text="{x:Bind InstaUserInfo.IsPrivate}"  
                         Grid.Column="1" FontSize="20" TextWrapping="Wrap"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5">
-                <TextBlock Text="Following: " FontSize="20" Margin="0, 0, 10, 0"/>
+                <TextBlock x:Uid="FollowingOn" FontSize="20" Margin="0, 0, 10, 0"/>
                 <TextBlock Text="{x:Bind InstaUserInfo.FriendshipStatus.Following}"  
                          FontSize="20"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5">
-                <TextBlock Text="FollowedBy: " FontSize="20" Margin="0, 0, 10, 0"/>
+                <TextBlock x:Uid="FollowedBy" FontSize="20" Margin="0, 0, 10, 0"/>
                 <TextBlock Text="{x:Bind InstaUserInfo.FriendshipStatus.FollowedBy}"  
                          FontSize="20" />
             </StackPanel>
@@ -93,14 +93,14 @@
                                 <StackPanel Orientation="Vertical" >
                                     <Image Source="{x:Bind UrlSmallImage}" Margin="10" Height="400" Width="500" HorizontalAlignment="Center"/>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <TextBlock Text="Likes count:" Margin="5, 5, 10, 5" FontSize="25"/>
-                                        <TextBlock Text="{x:Bind CountLikes}" Margin="5, 5, 10, 5" FontSize="25"/>
+                                        <TextBlock x:Uid="Likes" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
+                                        <TextBlock Text="{x:Bind CountLikes}" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <TextBlock Text="Comments count:" Margin="5, 5, 10, 5" FontSize="25"/>
-                                        <TextBlock Text="{x:Bind CountComments}" Margin="5, 5, 10, 5" FontSize="25"/>
+                                        <TextBlock x:Uid="Comments" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
+                                        <TextBlock Text="{x:Bind CountComments}" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
                                     </StackPanel>
-                                    <Button x:Name="buttonDownload" HorizontalAlignment="Center" Click="ButtonDownload_Click" Margin="10" Content="Download post" Tag="{x:Bind Name}"/>
+                                    <Button x:Name="buttonDownload" HorizontalAlignment="Center" Click="ButtonDownload_Click" Margin="10" x:Uid="DownloadPost" Tag="{x:Bind Name}"/>
                                 </StackPanel>
                             </DataTemplate>
                     </ListView.ItemTemplate>
@@ -109,16 +109,11 @@
         </Frame>
 
         
-        <Button x:Name="followButton" Content="Follow" IsEnabled="{x:Bind ButtonFollow, Mode=TwoWay}" Click="FollowButton_Click" HorizontalAlignment="Stretch" Margin="5" Grid.Column="1" Grid.Row="0"/>
-        <Button x:Name="unfollowButton" IsEnabled="{x:Bind ButtonUnFollow, Mode=TwoWay}" Content="Unfollow" Click="UnfollowButton_Click" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Stretch" Margin="5"/>
-        <Button x:Name="saveButton" Click="SaveButton_Click" Margin="5" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Stretch">
-            <Button.Content>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Download media"/>
-                </StackPanel>
-            </Button.Content>
-        </Button>
-        <Button x:Name="unlikeButton"  Content="Unlike profile" Click="UnlikeButton_Click"  HorizontalAlignment="Stretch" Margin="5" Grid.Column="4" Grid.Row="0"/>
+        <Button x:Name="followButton" x:Uid="Follow" IsEnabled="{x:Bind ButtonFollow, Mode=TwoWay}" Click="FollowButton_Click" HorizontalAlignment="Stretch" Margin="5" Grid.Column="1" Grid.Row="0"/>
+        <Button x:Name="unfollowButton" IsEnabled="{x:Bind ButtonUnFollow, Mode=TwoWay}" x:Uid="Unfollow" Click="UnfollowButton_Click" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Stretch" Margin="5"/>
+        <Button x:Name="saveButton" Click="SaveButton_Click" x:Uid="DownloadMedia" Margin="5" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Stretch"/>
+        
+        <Button x:Name="unlikeButton"  x:Uid="UnlikeProfile" Click="UnlikeButton_Click"  HorizontalAlignment="Stretch" Margin="5" Grid.Column="4" Grid.Row="0"/>
         
     </Grid>
 </Page>

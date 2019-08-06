@@ -117,11 +117,47 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Comments.Text" xml:space="preserve">
+    <value>Комменты:</value>
+  </data>
+  <data name="DownloadMedia.Content" xml:space="preserve">
+    <value>Скачать посты</value>
+  </data>
+  <data name="DownloadPost.Content" xml:space="preserve">
+    <value>Скачать пост</value>
+  </data>
+  <data name="Follow.Content" xml:space="preserve">
+    <value>Подписаться</value>
+  </data>
+  <data name="FollowedBy.Text" xml:space="preserve">
+    <value>Подписан на тебя:</value>
+  </data>
   <data name="Followers.Content" xml:space="preserve">
     <value>Подписчики</value>
   </data>
+  <data name="Followers2.Text" xml:space="preserve">
+    <value>Подписчики:</value>
+  </data>
+  <data name="Following.Text" xml:space="preserve">
+    <value>Подписки:</value>
+  </data>
+  <data name="FollowingOn.Text" xml:space="preserve">
+    <value>Подписан ты:</value>
+  </data>
   <data name="Friends.Content" xml:space="preserve">
     <value>Друзья</value>
+  </data>
+  <data name="IsPrivate.Text" xml:space="preserve">
+    <value>Приватный:</value>
+  </data>
+  <data name="Language.Header" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="Language.PlaceholderText" xml:space="preserve">
+    <value>Выберите язык</value>
+  </data>
+  <data name="Likes.Text" xml:space="preserve">
+    <value>Лайки:</value>
   </data>
   <data name="Login.PlaceholderText" xml:space="preserve">
     <value>Логин</value>
@@ -129,10 +165,25 @@
   <data name="LoginIns.Content" xml:space="preserve">
     <value>Войти</value>
   </data>
+  <data name="Media.Text" xml:space="preserve">
+    <value>Посты:</value>
+  </data>
   <data name="Password.PlaceholderText" xml:space="preserve">
     <value>Пароль</value>
   </data>
+  <data name="SearchBox.PlaceholderText" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
+  <data name="SearchProfile.Content" xml:space="preserve">
+    <value>Поиск профиля</value>
+  </data>
+  <data name="Unfollow.Content" xml:space="preserve">
+    <value>Отписаться</value>
+  </data>
   <data name="Unfollowers.Content" xml:space="preserve">
     <value>Отписки</value>
+  </data>
+  <data name="UnlikeProfile.Content" xml:space="preserve">
+    <value>Убрать лайки</value>
   </data>
 </root>

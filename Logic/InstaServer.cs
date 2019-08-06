@@ -42,22 +42,13 @@ namespace MyInsta.Logic
                     if (ok.Succeeded)
                     {
                         page.Frame.Navigate(typeof(MenuPage), userObject);
-                        //var f = await userObject.API.UserProcessor.GetUserFollowersAsync(userObject.LoginUser, PaginationParameters.MaxPagesToLoad(5));
-                        //foreach (var item in f.Value)
-                        //{
-                        //    userObject.UserData.UserFollowers.Add(item);
-                        //}
-                        //var fling = await userObject.API.UserProcessor.GetUserFollowingAsync(userObject.LoginUser, PaginationParameters.MaxPagesToLoad(5));
-                        //foreach (var item in fling.Value)
-                        //{
-                        //    var status = await userObject.API.UserProcessor.GetFriendshipStatusAsync(item.Pk);
-                        //    if (status.Value.Following && status.Value.FollowedBy)
-                        //        userObject.UserData.UserFriends.Add(item);
-                        //    else
-                        //        if (status.Value.Following && !status.Value.FollowedBy)
-                        //        userObject.UserData.UserUnfollowers.Add(item);
-                        //}
                     }
+                    else
+                        _ = new CustomDialog("Message", "Wrong login or password.", "All right");
+                }
+                else
+                {
+                    _ = new CustomDialog("Message", "Cannon be null", "All right");
                 }
             }
         }
@@ -323,6 +314,6 @@ namespace MyInsta.Logic
                 CustomDialog customDialog = new CustomDialog("Warning", "Operation cancel."
                     , "All right");
             }
-        } 
+        }
     }
 }

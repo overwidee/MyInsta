@@ -117,11 +117,47 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Comments.Text" xml:space="preserve">
+    <value>Comments:</value>
+  </data>
+  <data name="DownloadMedia.Content" xml:space="preserve">
+    <value>Download media</value>
+  </data>
+  <data name="DownloadPost.Content" xml:space="preserve">
+    <value>Download post</value>
+  </data>
+  <data name="Follow.Content" xml:space="preserve">
+    <value>Follow</value>
+  </data>
+  <data name="FollowedBy.Text" xml:space="preserve">
+    <value>Following on you:</value>
+  </data>
   <data name="Followers.Content" xml:space="preserve">
     <value>Followers</value>
   </data>
+  <data name="Followers2.Text" xml:space="preserve">
+    <value>Followers:</value>
+  </data>
+  <data name="Following.Text" xml:space="preserve">
+    <value>Following:</value>
+  </data>
+  <data name="FollowingOn.Text" xml:space="preserve">
+    <value>Following to it:</value>
+  </data>
   <data name="Friends.Content" xml:space="preserve">
     <value>Friends</value>
+  </data>
+  <data name="IsPrivate.Text" xml:space="preserve">
+    <value>Is private:</value>
+  </data>
+  <data name="Language.Header" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Language.PlaceholderText" xml:space="preserve">
+    <value>Pick a language</value>
+  </data>
+  <data name="Likes.Text" xml:space="preserve">
+    <value>Likes:</value>
   </data>
   <data name="Login.PlaceholderText" xml:space="preserve">
     <value>Login</value>
@@ -129,13 +165,25 @@
   <data name="LoginIns.Content" xml:space="preserve">
     <value>Login</value>
   </data>
+  <data name="Media.Text" xml:space="preserve">
+    <value>Media:</value>
+  </data>
   <data name="Password.PlaceholderText" xml:space="preserve">
     <value>Password</value>
   </data>
+  <data name="SearchBox.PlaceholderText" xml:space="preserve">
+    <value>Search profile</value>
+  </data>
   <data name="SearchProfile.Content" xml:space="preserve">
-    <value>Поиск профиля</value>
+    <value>SearchProfile</value>
+  </data>
+  <data name="Unfollow.Content" xml:space="preserve">
+    <value>Unfollow</value>
   </data>
   <data name="Unfollowers.Content" xml:space="preserve">
     <value>Unfollowers</value>
+  </data>
+  <data name="UnlikeProfile.Content" xml:space="preserve">
+    <value>Unlike profile</value>
   </data>
 </root>

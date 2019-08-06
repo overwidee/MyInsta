@@ -139,6 +139,9 @@
     <Compile Include="View\FriendsPage.xaml.cs">
       <DependentUpon>FriendsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\SettingPage.xaml.cs">
+      <DependentUpon>SettingPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\UnfollowersPage.xaml.cs">
       <DependentUpon>UnfollowersPage.xaml</DependentUpon>
     </Compile>
@@ -238,6 +241,10 @@
     <Page Include="View\FriendsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\SettingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\UnfollowersPage.xaml">
       <Generator>MSBuild:Compile</Generator>

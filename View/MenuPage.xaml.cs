@@ -38,6 +38,10 @@ namespace MyInsta.View
 
         private void NavigationViewControl_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
+            if (args.IsSettingsInvoked)
+            {
+                contentFrame.Navigate(typeof(SettingPage), InstaUser);
+            }
             var ItemContent = args.InvokedItemContainer.Tag;
             if (ItemContent != null)
             {

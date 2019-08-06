@@ -15,14 +15,12 @@
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="43*"/>
             <RowDefinition Height="60"/>
             <RowDefinition Height="431*"/>
             <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Unfollowers" TextAlignment="Center" VerticalAlignment="Center" FontSize="30"/>
-        <AutoSuggestBox x:Name="searchBox" PlaceholderText="Search profice" Grid.Row="1" Foreground="{ThemeResource BackButtonPointerOverForegroundThemeBrush}" Background="{ThemeResource BackButtonPointerOverBackgroundThemeBrush}" FontSize="20" Margin="100,10,100,0" KeyUp="SearchBox_KeyDown" VerticalContentAlignment="Center"/>
-        <ListView x:Name="listFollowers" ItemsSource="{x:Bind InstaUser.UserData.UserUnfollowers}" Grid.Row="2" Margin="10,10,10,10" SelectionChanged="ListFollowers_SelectionChanged">
+        <AutoSuggestBox x:Name="searchBox" x:Uid="SearchBox" Grid.Row="0" Foreground="{ThemeResource BackButtonPointerOverForegroundThemeBrush}" Background="{ThemeResource BackButtonPointerOverBackgroundThemeBrush}" FontSize="20" Margin="100,10,100,0" KeyUp="SearchBox_KeyDown" VerticalContentAlignment="Center"/>
+        <ListView x:Name="listFollowers" ItemsSource="{x:Bind InstaUser.UserData.UserUnfollowers}" Grid.Row="1" Margin="10,10,10,10" SelectionChanged="ListFollowers_SelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate x:Name="SingleLineDataTemplate" x:DataType="localInsta:InstaUserShort">
                     <StackPanel Orientation="Horizontal" Height="70" Padding="12" Grid.Column="0">
@@ -40,6 +38,6 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Button x:Name="unFollowButton" Click="UnFollowButton_Click" Margin="10" Content="Unfollow from all" Grid.Row="3" HorizontalAlignment="Center" Padding="10"/>
+        <Button x:Name="unFollowButton" Click="UnFollowButton_Click" Margin="10" Content="Unfollow from all" Grid.Row="2" HorizontalAlignment="Center" Padding="10"/>
     </Grid>
 </Page>
