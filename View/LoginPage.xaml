@@ -32,6 +32,7 @@
           
             <TextBox Text="{x:Bind UserInsta.LoginUser, Mode=TwoWay}" x:Uid="Login" PlaceholderText="Login" Width="300" Margin="10"/>
             <PasswordBox Password="{x:Bind UserInsta.PasswordUser, Mode=TwoWay}" x:Uid="Password" PlaceholderText="Password" Margin="10"/>
+            <CheckBox x:Name="checkRemember" x:Uid="RememberLogin" Margin="10"/>
             <Button x:Name="loginButton" Content="Login" x:Uid="LoginIns" HorizontalAlignment="Center" Click="LoginButton_Click"/>
         </StackPanel>
     </Grid>

@@ -37,6 +37,9 @@ namespace MyInsta
             ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             ApplicationLanguages.PrimaryLanguageOverride = localSettings.Values["Language"] != null ?
                 localSettings.Values["Language"].ToString() : "en-US";
+
+            //RequestedTheme = localSettings.Values["Theme"] != null ?
+            //    (ApplicationTheme)localSettings.Values["Theme"] : ApplicationTheme.Light;
         }
 
         /// <summary>

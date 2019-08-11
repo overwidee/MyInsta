@@ -126,6 +126,9 @@
   <data name="DownloadPost.Content" xml:space="preserve">
     <value>Download post</value>
   </data>
+  <data name="DownloadStory.Content" xml:space="preserve">
+    <value>Download story</value>
+  </data>
   <data name="Follow.Content" xml:space="preserve">
     <value>Follow</value>
   </data>
@@ -171,11 +174,20 @@
   <data name="Password.PlaceholderText" xml:space="preserve">
     <value>Password</value>
   </data>
+  <data name="RememberLogin.Content" xml:space="preserve">
+    <value>Remember me</value>
+  </data>
   <data name="SearchBox.PlaceholderText" xml:space="preserve">
     <value>Search profile</value>
   </data>
   <data name="SearchProfile.Content" xml:space="preserve">
     <value>SearchProfile</value>
+  </data>
+  <data name="Theme.Header" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="Theme.PlaceholderText" xml:space="preserve">
+    <value>Pick a theme</value>
   </data>
   <data name="Unfollow.Content" xml:space="preserve">
     <value>Unfollow</value>

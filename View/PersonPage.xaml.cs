@@ -41,6 +41,9 @@ namespace MyInsta.View
         public InstaMediaList MediaUser { get; set; }
 
         public ObservableCollection<CustomMedia> UrlMedias { get; set; }
+        public ObservableCollection<CustomMedia> UrlStories { get; set; }
+
+        int countPosts = 10;
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -58,7 +61,9 @@ namespace MyInsta.View
             ButtonUnFollow = InstaUserInfo.FriendshipStatus.Following;
 
             UrlMedias = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo);
-            mediaList.ItemsSource = UrlMedias;
+            UrlStories = await InstaServer.GetStoryUser(CurrentUser, InstaUserInfo);
+            mediaList.ItemsSource = UrlMedias.Take(countPosts);
+            storiesList.ItemsSource = UrlStories;
         }
 
         private async void UnfollowButton_Click(object sender, RoutedEventArgs e)
@@ -88,6 +93,52 @@ namespace MyInsta.View
         private async void ButtonDownload_Click(object sender, RoutedEventArgs e)
         {
             await InstaServer.DownloadPost(UrlMedias.Where(x => x.Name == ((Button)sender).Tag.ToString()).First());
+        }
+
+        private async void ButtonDownloadStory_Click(object sender, RoutedEventArgs e)
+        {
+            await InstaServer.DownloadStory(UrlStories.Where(x => x.Name == ((Button)sender).Tag.ToString()).First());
+        }
+
+        private void ScrollListPosts_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            ScrollViewer svPosts = sender as ScrollViewer;
+
+            var verticalOffset = svPosts.VerticalOffset;
+            var maxVerticalOffset = svPosts.ScrollableHeight;
+
+            if (verticalOffset == maxVerticalOffset)
+            {
+                countPosts += 3;
+                mediaList.ItemsSource = UrlMedias.Take(countPosts);
+            }
+        }
+
+        private void StoriesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                var story = e.AddedItems[0] as CustomMedia;
+                if (story != null)
+                {
+                    string urlMedia = "";
+                    if (story.MediaType == MediaType.Image)
+                        urlMedia = story.UrlBigImage;
+                    else if (story.MediaType == MediaType.Video)
+                        urlMedia = story.UrlVideo;
+
+                    MediaDialog mediaDialog = new MediaDialog(urlMedia, story.MediaType);
+                    mediaDialog.ShowMedia();
+                }
+            }
+            catch
+            {
+
+            }
+            finally
+            {
+                ((ListView)sender).SelectedItem = null;
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -28,6 +29,13 @@ namespace MyInsta.View
         public LoginPage()
         {
             this.InitializeComponent();
+
+            ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            UserInsta.LoginUser = localSettings.Values["Login"] != null ? localSettings.Values["Login"].ToString() : "";
+            UserInsta.PasswordUser = localSettings.Values["Password"] != null ? localSettings.Values["Password"].ToString() : "";
+            if (localSettings.Values["Login"] != null && localSettings.Values["Password"] != null)
+                checkRemember.IsChecked = true;
+
             DataContext = UserInsta;
         }
 
@@ -35,6 +43,19 @@ namespace MyInsta.View
 
         private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
+            if (checkRemember.IsChecked.Value)
+            {
+                ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+                localSettings.Values["Login"] = UserInsta.LoginUser;
+                localSettings.Values["Password"] = UserInsta.PasswordUser;
+            }
+            else
+            {
+                ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+                localSettings.Values["Login"] = "";
+                localSettings.Values["Password"] = "";
+            }
+
             IsEnabled = false;
             modalRing.Visibility = Visibility.Visible;
 

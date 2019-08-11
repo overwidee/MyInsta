@@ -14,9 +14,14 @@
     </Page.Resources>
     <Grid>
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <ComboBox x:Uid="Language" Width="200" SelectionChanged="ComboBox_SelectionChanged">
+            <ComboBox x:Uid="Language" Width="200" SelectionChanged="ComboBox_SelectionChanged" Margin="10">
                 <x:String>English</x:String>
                 <x:String>Русский</x:String>
+            </ComboBox>
+
+            <ComboBox x:Uid="Theme" Width="200" SelectionChanged="ComboBox_SelectionChanged_1" Margin="10">
+                <x:String>Light</x:String>
+                <x:String>Dark</x:String>
             </ComboBox>
         </StackPanel>
     </Grid>

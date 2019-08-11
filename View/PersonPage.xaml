@@ -9,6 +9,7 @@
     mc:Ignorable="d"
     xml:space="preserve"
     xmlns:model="using:MyInsta.Model"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
         <Style TargetType="TextBlock">
@@ -78,35 +79,66 @@
         </StackPanel>
         </ScrollViewer>
         
-        <Frame Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="1" Grid.RowSpan="3"
-               Background="{ThemeResource FlipViewButtonBorderThemeBrush}"
-               Margin="10" CornerRadius="0">
-            <ScrollViewer>
-                <ListView x:Name="mediaList" ItemsSource="{x:Bind UrlMedias}" HorizontalContentAlignment="Center"> 
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel HorizontalAlignment="Center"/>
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-                    <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="model:CustomMedia">
-                                <StackPanel Orientation="Vertical" >
-                                    <Image Source="{x:Bind UrlSmallImage}" Margin="10" Height="400" Width="500" HorizontalAlignment="Center"/>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <TextBlock x:Uid="Likes" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
-                                        <TextBlock Text="{x:Bind CountLikes}" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <TextBlock x:Uid="Comments" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
-                                        <TextBlock Text="{x:Bind CountComments}" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
-                                    </StackPanel>
-                                    <Button x:Name="buttonDownload" HorizontalAlignment="Center" Click="ButtonDownload_Click" Margin="10" x:Uid="DownloadPost" Tag="{x:Bind Name}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </ScrollViewer>
-        </Frame>
+        <controls:TabView Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="1" Grid.RowSpan="3" TabWidthBehavior="Equal">
+            <controls:TabViewItem Header="Posts" Background="{ThemeResource FlipViewButtonBorderThemeBrush}" Icon="Camera">     
+                <Frame Margin="10" CornerRadius="0">
+                        <ScrollViewer x:Name="scrollListPosts" ViewChanged="ScrollListPosts_ViewChanged" VerticalScrollBarVisibility="Auto">
+                            <ListView x:Name="mediaList" ItemsSource="{x:Bind UrlMedias}" HorizontalContentAlignment="Center"> 
+                                <ListView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel HorizontalAlignment="Center"/>
+                                    </ItemsPanelTemplate>
+                                </ListView.ItemsPanel>
+                                <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="model:CustomMedia">
+                                            <StackPanel Orientation="Vertical" >
+                                                <Image Source="{x:Bind UrlSmallImage}" Margin="10" Height="400" Width="500" HorizontalAlignment="Center"/>
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                    <TextBlock x:Uid="Likes" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
+                                                    <TextBlock Text="{x:Bind CountLikes}" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                    <TextBlock x:Uid="Comments" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
+                                                    <TextBlock Text="{x:Bind CountComments}" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
+                                                </StackPanel>
+                                                <Button x:Name="buttonDownload" HorizontalAlignment="Center" Click="ButtonDownload_Click" Margin="10" x:Uid="DownloadPost" Tag="{x:Bind Name}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </ScrollViewer>
+                </Frame>
+            </controls:TabViewItem>
+            <controls:TabViewItem Header="Stories" Background="{ThemeResource FlipViewButtonBorderThemeBrush}" Icon="View">     
+                <Frame Margin="10" CornerRadius="0">
+                    <ScrollViewer>
+                        <ListView x:Name="storiesList" ItemsSource="{x:Bind UrlStories}" HorizontalContentAlignment="Center" SelectionChanged="StoriesList_SelectionChanged"> 
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel HorizontalAlignment="Center"/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="model:CustomMedia">
+                                        <StackPanel Orientation="Vertical" >
+                                            <Image Source="{x:Bind UrlBigImage}" Margin="10" Height="400" Width="500" HorizontalAlignment="Center"/>
+                                            <!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock x:Uid="Likes" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
+                                                <TextBlock Text="{x:Bind CountLikes}" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock x:Uid="Comments" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
+                                                <TextBlock Text="{x:Bind CountComments}" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
+                                            </StackPanel>-->
+                                            <Button x:Name="buttonDownloadStory" HorizontalAlignment="Center" Click="ButtonDownloadStory_Click" Margin="10" x:Uid="DownloadStory" Tag="{x:Bind Name}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </ScrollViewer>
+                </Frame>
+            </controls:TabViewItem>
+        </controls:TabView>
 
         
         <Button x:Name="followButton" x:Uid="Follow" IsEnabled="{x:Bind ButtonFollow, Mode=TwoWay}" Click="FollowButton_Click" HorizontalAlignment="Stretch" Margin="5" Grid.Column="1" Grid.Row="0"/>

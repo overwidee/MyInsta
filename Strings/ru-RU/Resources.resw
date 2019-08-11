@@ -126,6 +126,9 @@
   <data name="DownloadPost.Content" xml:space="preserve">
     <value>Скачать пост</value>
   </data>
+  <data name="DownloadStory.Content" xml:space="preserve">
+    <value>Скачать сторис</value>
+  </data>
   <data name="Follow.Content" xml:space="preserve">
     <value>Подписаться</value>
   </data>
@@ -171,11 +174,20 @@
   <data name="Password.PlaceholderText" xml:space="preserve">
     <value>Пароль</value>
   </data>
+  <data name="RememberLogin.Content" xml:space="preserve">
+    <value>Запомнить меня</value>
+  </data>
   <data name="SearchBox.PlaceholderText" xml:space="preserve">
     <value>Поиск</value>
   </data>
   <data name="SearchProfile.Content" xml:space="preserve">
     <value>Поиск профиля</value>
+  </data>
+  <data name="Theme.Header" xml:space="preserve">
+    <value>Тема</value>
+  </data>
+  <data name="Theme.PlaceholderText" xml:space="preserve">
+    <value>Выберите тему</value>
   </data>
   <data name="Unfollow.Content" xml:space="preserve">
     <value>Отписаться</value>

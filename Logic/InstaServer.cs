@@ -88,17 +88,24 @@ namespace MyInsta.Logic
 
         public static async Task UnfollowUser(User userObject, InstaUserShort unfUser)
         {
-            if (userObject != null && unfUser != null)
+            try
             {
-                var unF = await userObject.API.UserProcessor.UnFollowUserAsync(unfUser.Pk);
-                if (unF.Succeeded)
+                if (userObject != null && unfUser != null)
                 {
-                    var person = await GetInstaUserShortById(userObject, unfUser.Pk);
-                    if (userObject.UserData.UserUnfollowers.Contains(person))
-                        userObject.UserData.UserUnfollowers.Remove(person);
-                    if (userObject.UserData.UserFriends.Contains(person))
-                        userObject.UserData.UserFriends.Remove(person);
+                    var unF = await userObject.API.UserProcessor.UnFollowUserAsync(unfUser.Pk);
+                    if (unF.Succeeded)
+                    {
+                        var person = await GetInstaUserShortById(userObject, unfUser.Pk);
+                        if (userObject.UserData.UserUnfollowers.Contains(person))
+                            userObject.UserData.UserUnfollowers.Remove(person);
+                        if (userObject.UserData.UserFriends.Contains(person))
+                            userObject.UserData.UserFriends.Remove(person);
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+
             }
         }
 
@@ -149,23 +156,62 @@ namespace MyInsta.Logic
                 return null;
         }
 
+        public static async Task<ObservableCollection<CustomMedia>> GetStoryUser(User userObject, InstaUserInfo unfUser)
+        {
+            if (userObject != null && unfUser != null)
+            {
+                var stories = await userObject.API.StoryProcessor.GetUserStoryAsync(unfUser.Pk);
+                if (stories.Succeeded)
+                    return GetUrlsStoriesUser(stories.Value);
+                else
+                    return null;
+            }
+            else
+                return null;
+        }
+
+        public static ObservableCollection<CustomMedia> GetUrlsStoriesUser(InstaStory stories)
+        {
+            ObservableCollection<CustomMedia> storiesList = new ObservableCollection<CustomMedia>();
+            int i = 0;
+            foreach (var story in stories.Items)
+            {
+                var custM = new CustomMedia()
+                {
+                    Name = $"Story_{i + 1}",
+                    UrlBigImage = story.ImageList[0].Uri,
+                    UrlSmallImage = story.ImageList[1].Uri,
+                    MediaType = MediaType.Image
+                };
+                if (story.VideoList.Count > 0)
+                {
+                    custM.MediaType = MediaType.Video;
+                    custM.UrlVideo = story.VideoList[0].Uri;
+                }
+                storiesList.Add(custM);
+                i++;
+            }
+            return storiesList;
+        }
+
         public static ObservableCollection<CustomMedia> GetUrlsMediasUser(InstaMediaList medias)
         {
             ObservableCollection<CustomMedia> mediaList = new ObservableCollection<CustomMedia>();
             int i = 0;
             foreach (var item in medias)
             {
+                if (i > 250)
+                    return mediaList;
                 if (item.Images != null && item.Images.Count != 0)
                     mediaList.Add(new CustomMedia()
                     {
                         Name = $"ImagePost_{i + 1}",
-                        UrlSmallImage = item.Images[0].Uri,
-                        UrlBigImage = item.Images[1].Uri,
+                        UrlSmallImage = item.Images[1].Uri,
+                        UrlBigImage = item.Images[0].Uri,
                         CountLikes = item.LikesCount,
                         CountComments = int.Parse(item.CommentsCount)
                     });
-                else
-                    if (item.Carousel != null && item.Carousel.Count != 0)
+                else if (item.Carousel != null && item.Carousel.Count != 0)
                 {
                     int x = 0;
                     foreach (var car in item.Carousel)
@@ -266,7 +312,7 @@ namespace MyInsta.Logic
                     foreach (var item in images)
                     {
                         var coverpic_file = await userFolder.CreateFileAsync($"{item.Name}.jpg", CreationCollisionOption.FailIfExists);
-                        var httpWebRequest = HttpWebRequest.CreateHttp(item.UrlSmallImage);
+                        var httpWebRequest = HttpWebRequest.CreateHttp(item.UrlBigImage);
                         HttpWebResponse response = (HttpWebResponse)await httpWebRequest.GetResponseAsync();
                         Stream resStream = response.GetResponseStream();
                         using (var stream = await coverpic_file.OpenAsync(FileAccessMode.ReadWrite))
@@ -297,7 +343,7 @@ namespace MyInsta.Logic
 
             if (file != null)
             {
-                var httpWebRequest = HttpWebRequest.CreateHttp(media.UrlSmallImage);
+                var httpWebRequest = HttpWebRequest.CreateHttp(media.UrlBigImage);
                 HttpWebResponse response = (HttpWebResponse)await httpWebRequest.GetResponseAsync();
                 Stream resStream = response.GetResponseStream();
                 using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
@@ -307,6 +353,47 @@ namespace MyInsta.Logic
                 response.Dispose();
 
                 CustomDialog customDialog = new CustomDialog("Message", "Post downloaded\n" +
+                    $"{file.Path}", "All right");
+            }
+            else
+            {
+                CustomDialog customDialog = new CustomDialog("Warning", "Operation cancel."
+                    , "All right");
+            }
+        }
+
+        public static async Task DownloadStory(CustomMedia media)
+        {
+            string url = "";
+            if (media.MediaType == MediaType.Image)
+                url = media.UrlBigImage;
+            else if (media.MediaType == MediaType.Video)
+                url = media.UrlVideo;
+
+            FileSavePicker savePicker = new FileSavePicker();
+            savePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+
+            if (media.MediaType == MediaType.Image)
+                savePicker.FileTypeChoices.Add("jpeg image", new List<string>() { ".jpg" });
+            else if (media.MediaType == MediaType.Video)
+                savePicker.FileTypeChoices.Add("mp4 video", new List<string>() { ".mp4" });
+
+            savePicker.SuggestedFileName = media.Name;
+            StorageFile file = await savePicker.PickSaveFileAsync();
+
+            if (file != null)
+            {
+                var httpWebRequest = HttpWebRequest.CreateHttp(url);
+                HttpWebResponse response = (HttpWebResponse)await httpWebRequest.GetResponseAsync();
+                Stream resStream = response.GetResponseStream();
+                using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+                {
+                    await resStream.CopyToAsync(stream.AsStreamForWrite());
+                }
+                response.Dispose();
+
+                CustomDialog customDialog = new CustomDialog("Message", "Story downloaded\n" +
                     $"{file.Path}", "All right");
             }
             else

@@ -56,5 +56,19 @@ namespace MyInsta.View
             }
             
         }
+
+        private void ComboBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        {
+            if (((ComboBox)sender).SelectedItem.ToString() == "Light")
+            {
+                ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+                localSettings.Values["Theme"] = ApplicationTheme.Light;
+            }
+            else if (((ComboBox)sender).SelectedItem.ToString() == "Dark")
+            {
+                ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+                localSettings.Values["Theme"] = ApplicationTheme.Dark;
+            }
+        }
     }
 }
