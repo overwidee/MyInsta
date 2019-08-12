@@ -58,13 +58,13 @@ namespace MyInsta.Logic
             userObject.UserData.UserFollowers = new ObservableCollection<InstaUserShort>();
             //userObject.UserData.UserFriends = new ObservableCollection<InstaUserShort>();
             //userObject.UserData.UserUnfollowers = new ObservableCollection<InstaUserShort>();
-            var f = await userObject.API.UserProcessor.GetUserFollowersAsync(userObject.LoginUser, PaginationParameters.MaxPagesToLoad(5));
+            var f = await userObject.API.UserProcessor.GetUserFollowersAsync(userObject.LoginUser, PaginationParameters.MaxPagesToLoad(1));
             foreach (var item in f.Value)
             {
                 if (!userObject.UserData.UserFollowers.Contains(item))
                     userObject.UserData.UserFollowers.Add(item);
             }
-            var fling = await userObject.API.UserProcessor.GetUserFollowingAsync(userObject.LoginUser, PaginationParameters.MaxPagesToLoad(5));
+            var fling = await userObject.API.UserProcessor.GetUserFollowingAsync(userObject.LoginUser, PaginationParameters.MaxPagesToLoad(1));
             foreach (var item in fling.Value)
             {
                 var status = await userObject.API.UserProcessor.GetFriendshipStatusAsync(item.Pk);

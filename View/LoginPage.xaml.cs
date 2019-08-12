@@ -41,7 +41,12 @@ namespace MyInsta.View
 
         public User UserInsta { get; set; } = new User();
 
-        private async void LoginButton_Click(object sender, RoutedEventArgs e)
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            _ = LoginInsta();
+        }
+
+        async Task LoginInsta()
         {
             if (checkRemember.IsChecked.Value)
             {
@@ -64,6 +69,12 @@ namespace MyInsta.View
 
             modalRing.Visibility = Visibility.Collapsed;
             IsEnabled = true;
+        }
+
+        private void Grid_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+                _ = LoginInsta();
         }
     }
 }

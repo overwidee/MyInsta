@@ -12,7 +12,7 @@
             <Setter Property="FontFamily" Value="Century Gothic"/>
         </Style>
     </Page.Resources>
-    <Grid>
+    <Grid KeyUp="Grid_KeyUp">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <Grid>
                 <Path Data="M122.406,0H46.654C20.929,0,0,20.93,0,46.655v75.752c0,25.726,20.929,46.655,46.654,46.655h75.752
