@@ -33,10 +33,11 @@ namespace MyInsta.Logic
                 contentDialog.Content = new MediaElement()
                 {
                     Source = new Uri(Url),
-                    Width = 600,
+                    Width = 350,
                     Height = 900,
                     AutoPlay = true,
-                    HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center
+                    HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
+                    VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center
                 };
             }
             else if (MediaType == MediaType.Image)
@@ -45,8 +46,11 @@ namespace MyInsta.Logic
                 {
                     Source = new BitmapImage(
                         new Uri(Url, UriKind.Absolute)),
-                    Width = 600,
+                    Width = 350,
                     Height = 900,
+                    Stretch = Stretch.Uniform,
+                    HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
+                    VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center
                 };
             }
             _ = contentDialog.ShowAsync();

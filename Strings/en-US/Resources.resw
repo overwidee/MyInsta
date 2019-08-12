@@ -181,7 +181,10 @@
     <value>Search profile</value>
   </data>
   <data name="SearchProfile.Content" xml:space="preserve">
-    <value>SearchProfile</value>
+    <value>Search profile</value>
+  </data>
+  <data name="Sync.Content" xml:space="preserve">
+    <value>Sync</value>
   </data>
   <data name="Theme.Header" xml:space="preserve">
     <value>Theme</value>

@@ -60,10 +60,11 @@ namespace MyInsta.View
             ButtonFollow = !InstaUserInfo.FriendshipStatus.Following;
             ButtonUnFollow = InstaUserInfo.FriendshipStatus.Following;
 
-            UrlMedias = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo);
             UrlStories = await InstaServer.GetStoryUser(CurrentUser, InstaUserInfo);
-            mediaList.ItemsSource = UrlMedias.Take(countPosts);
             storiesList.ItemsSource = UrlStories;
+
+            UrlMedias = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo);
+            mediaList.ItemsSource = UrlMedias.Take(countPosts);
         }
 
         private async void UnfollowButton_Click(object sender, RoutedEventArgs e)

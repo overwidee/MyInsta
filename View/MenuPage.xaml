@@ -16,6 +16,8 @@
                 <NavigationViewItem Content="My unfollowers" x:Uid="Unfollowers" x:Name="page_unfollowers" Icon="Cancel" Tag="Unfollowers" FontFamily="Century Gothic"/>
                 <NavigationViewItem Content="My friends" x:Uid="Friends" x:Name="page_friends" Icon="Favorite" Tag="Friends" FontFamily="Century Gothic"/>
                 <NavigationViewItem Content="Search profile" x:Uid="SearchProfile" x:Name="page_search" Icon="Find" Tag="Search" FontFamily="Century Gothic"/>
+                <NavigationViewItemSeparator />
+                <NavigationViewItem Content="Sync" Icon="Sync" x:Uid="Sync" x:Name="button_sync" Tag="Sync" FontFamily="Century Gothic"/>
             </NavigationView.MenuItems>
             <Frame x:Name="contentFrame"></Frame>
         </NavigationView>

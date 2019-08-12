@@ -1,4 +1,5 @@
-﻿using MyInsta.Model;
+﻿using MyInsta.Logic;
+using MyInsta.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -54,7 +55,7 @@ namespace MyInsta.View
                 ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
                 localSettings.Values["Language"] = "ru-RU";
             }
-            
+            CustomDialog customDialog = new CustomDialog("Message", "Restart app", "All right");
         }
 
         private void ComboBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
@@ -62,13 +63,14 @@ namespace MyInsta.View
             if (((ComboBox)sender).SelectedItem.ToString() == "Light")
             {
                 ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-                localSettings.Values["Theme"] = ApplicationTheme.Light;
+                localSettings.Values["Theme"] = ApplicationTheme.Light.ToString();
             }
             else if (((ComboBox)sender).SelectedItem.ToString() == "Dark")
             {
                 ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-                localSettings.Values["Theme"] = ApplicationTheme.Dark;
+                localSettings.Values["Theme"] = ApplicationTheme.Dark.ToString();
             }
+            CustomDialog customDialog = new CustomDialog("Message", "Restart app", "All right"); 
         }
     }
 }

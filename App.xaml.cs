@@ -38,8 +38,15 @@ namespace MyInsta
             ApplicationLanguages.PrimaryLanguageOverride = localSettings.Values["Language"] != null ?
                 localSettings.Values["Language"].ToString() : "en-US";
 
-            //RequestedTheme = localSettings.Values["Theme"] != null ?
-            //    (ApplicationTheme)localSettings.Values["Theme"] : ApplicationTheme.Light;
+            if (localSettings.Values["Theme"] != null && localSettings.Values["Theme"].ToString() == "Dark")
+            {
+                RequestedTheme = ApplicationTheme.Dark;
+            }
+            else if (localSettings.Values["Theme"] != null &&  localSettings.Values["Theme"].ToString() == "Light")
+            {
+                RequestedTheme = ApplicationTheme.Light;
+            }
+
         }
 
         /// <summary>
@@ -77,7 +84,7 @@ namespace MyInsta
                     // настройка новой страницы путем передачи необходимой информации в качестве параметра
                     // навигации
                     rootFrame.Navigate(typeof(LoginPage), e.Arguments);
-                } 
+                }
                 // Обеспечение активности текущего окна
                 Window.Current.Activate();
             }

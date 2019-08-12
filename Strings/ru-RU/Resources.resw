@@ -183,6 +183,9 @@
   <data name="SearchProfile.Content" xml:space="preserve">
     <value>Поиск профиля</value>
   </data>
+  <data name="Sync.Content" xml:space="preserve">
+    <value>Синхронизировать</value>
+  </data>
   <data name="Theme.Header" xml:space="preserve">
     <value>Тема</value>
   </data>

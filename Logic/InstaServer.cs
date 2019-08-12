@@ -103,7 +103,7 @@ namespace MyInsta.Logic
                     }
                 }
             }
-            catch (Exception e)
+            catch
             {
 
             }
@@ -146,7 +146,7 @@ namespace MyInsta.Logic
         {
             if (userObject != null && unfUser != null)
             {
-                var media = await userObject.API.UserProcessor.GetUserMediaAsync(unfUser.Username, PaginationParameters.MaxPagesToLoad((int)unfUser.MediaCount));
+                var media = await userObject.API.UserProcessor.GetUserMediaAsync(unfUser.Username, PaginationParameters.MaxPagesToLoad(1));
                 if (media.Succeeded)
                     return GetUrlsMediasUser(media.Value);
                 else
@@ -200,8 +200,6 @@ namespace MyInsta.Logic
             int i = 0;
             foreach (var item in medias)
             {
-                if (i > 250)
-                    return mediaList;
                 if (item.Images != null && item.Images.Count != 0)
                     mediaList.Add(new CustomMedia()
                     {
@@ -232,6 +230,7 @@ namespace MyInsta.Logic
             }
             return mediaList;
         }
+
 
         public static async Task<InstaUserShort> GetInstaUserShortById(User user, long id)
         {
@@ -338,7 +337,7 @@ namespace MyInsta.Logic
             savePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
             savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
             savePicker.FileTypeChoices.Add("jpeg image", new List<string>() { ".jpg" });
-            savePicker.SuggestedFileName = "EditedImage";
+            savePicker.SuggestedFileName = media.Name;
             StorageFile file = await savePicker.PickSaveFileAsync();
 
             if (file != null)

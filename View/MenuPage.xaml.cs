@@ -36,7 +36,7 @@ namespace MyInsta.View
             await InstaServer.GetUserData(InstaUser);
         }
 
-        private void NavigationViewControl_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        private async void NavigationViewControl_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
             if (args.IsSettingsInvoked)
             {
@@ -58,6 +58,9 @@ namespace MyInsta.View
                         break;
                     case "Search":
                         contentFrame.Navigate(typeof(SearchPage), InstaUser);
+                        break;
+                    case "Sync":
+                        await InstaServer.GetUserData(InstaUser);
                         break;
                 }
             }
