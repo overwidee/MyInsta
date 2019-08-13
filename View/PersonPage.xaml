@@ -80,7 +80,7 @@
         </ScrollViewer>
         
         <controls:TabView Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="1" Grid.RowSpan="3" TabWidthBehavior="Equal">
-            <controls:TabViewItem Header="Posts" Background="{ThemeResource FlipViewButtonBorderThemeBrush}" Icon="Camera">     
+            <controls:TabViewItem x:Uid="Posts" Background="{ThemeResource FlipViewButtonBorderThemeBrush}" Icon="Camera">     
                 <Frame Margin="10" CornerRadius="0">
                         <ScrollViewer x:Name="scrollListPosts" ViewChanged="ScrollListPosts_ViewChanged" VerticalScrollBarVisibility="Auto">
                             <ListView x:Name="mediaList" ItemsSource="{x:Bind UrlMedias}" HorizontalContentAlignment="Center"> 
@@ -109,7 +109,7 @@
                         </ScrollViewer>
                 </Frame>
             </controls:TabViewItem>
-            <controls:TabViewItem Header="Stories" Background="{ThemeResource FlipViewButtonBorderThemeBrush}" Icon="View">     
+            <controls:TabViewItem x:Uid="Stories" Background="{ThemeResource FlipViewButtonBorderThemeBrush}" Icon="View">     
                 <Frame Margin="10" CornerRadius="0">
                     <ScrollViewer>
                         <ListView x:Name="storiesList" ItemsSource="{x:Bind UrlStories}" HorizontalContentAlignment="Center" SelectionChanged="StoriesList_SelectionChanged"> 

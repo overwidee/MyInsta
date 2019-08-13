@@ -29,86 +29,178 @@ namespace MyInsta.Logic
     {
         public static async Task LoginInstagram(User userObject, LoginPage page)
         {
-            string API = "";
-            Windows.Storage.StorageFolder localFolder =
-                                        Windows.Storage.ApplicationData.Current.LocalFolder;
-            if (File.Exists(localFolder.Path + @"\dataFile.txt"))
+            if (ExistsConnection())
             {
-                StorageFile sampleFile = await localFolder.GetFileAsync("dataFile.txt");
-                API = await FileIO.ReadTextAsync(sampleFile);
-            }
-            if (API != "")
-            {
-                var apiString = API;
+                string savedAPI = await GetSavedApi();
 
                 var api = InstaApiBuilder.CreateBuilder()
                         .SetUser(new UserSessionData() { UserName = userObject.LoginUser, Password = userObject.PasswordUser })
                         .UseLogger(new DebugLogger(LogLevel.Exceptions))
                         .Build();
-                api.LoadStateDataFromString(apiString.ToString());
+                api.LoadStateDataFromString(savedAPI.ToString());
                 userObject.API = api;
                 page.Frame.Navigate(typeof(MenuPage), userObject);
             }
-            else if (userObject != null)
+            else
             {
-                if (userObject.LoginUser != null && userObject.PasswordUser != null)
+                if (userObject != null && userObject.LoginUser != null && userObject.PasswordUser != null)
                 {
                     var api = InstaApiBuilder.CreateBuilder()
                         .SetUser(new UserSessionData() { UserName = userObject.LoginUser, Password = userObject.PasswordUser })
                         .UseLogger(new DebugLogger(LogLevel.Exceptions))
                         .Build();
-                    var login = await SessionHelper.LoadAndLogin(api, userObject.LoginUser, userObject.PasswordUser);
+                    userObject.API = api;
 
-
-                    if (!login)
+                    var logResult = await userObject.API.LoginAsync();
+                    if (logResult.Succeeded)
                     {
-                        userObject.API = api;
-                        var ok = await userObject.API.LoginAsync();
-                        if (ok.Succeeded)
-                        {
-                            page.Frame.Navigate(typeof(MenuPage), userObject);
-                        }
-                        else if (ok.Value == InstaLoginResult.ChallengeRequired)
-                        {
-                            var challenge = await userObject.API.GetChallengeRequireVerifyMethodAsync();
-                            if (challenge.Value.StepData != null &&
-                                challenge.Value.StepData.PhoneNumber != null)
-                            {
-                                var request = await userObject.API.RequestVerifyCodeToSMSForChallengeRequireAsync();
-                            }
-                            ContentDialog dialog = new ContentDialog()
-                            {
-                                Width = 500,
-                                Height = 300,
-                                CloseButtonText = "Cancel",
-                                PrimaryButtonText = "Send"
-                            };
-                            TextBox inputTextBox = new TextBox();
-                            dialog.Content = inputTextBox;
-                            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
-                            {
-                                var code = await userObject.API.VerifyCodeForChallengeRequireAsync(inputTextBox.Text);
-                                if (code.Succeeded)
-                                {
-                                    StorageFile sampleFile = await localFolder.CreateFileAsync("dataFile.txt",
-                                        CreationCollisionOption.ReplaceExisting);
-                                    await FileIO.WriteTextAsync(sampleFile, userObject.API.GetStateDataAsString());
-                                    page.Frame.Navigate(typeof(MenuPage), userObject);
-                                }
-                            }
-                        };
+                        page.Frame.Navigate(typeof(MenuPage), userObject);
                     }
-
-                    //_ = new CustomDialog("Message", "Wrong login or password.", "All right");
-                }
-                else
-                {
-                    _ = new CustomDialog("Message", "Cannon be null", "All right");
+                    else
+                    {
+                        if (logResult.Value == InstaLoginResult.ChallengeRequired)
+                        {
+                            var resultApi = await AccountVerify(userObject.API);
+                            if (resultApi != null)
+                            {
+                                userObject.API = resultApi;
+                                page.Frame.Navigate(typeof(MenuPage), userObject);
+                            }
+                        }
+                    }
                 }
             }
+
+            //string API = "";
+            //Windows.Storage.StorageFolder localFolder =
+            //                            Windows.Storage.ApplicationData.Current.LocalFolder;
+            //if (File.Exists(localFolder.Path + @"\dataFile.txt"))
+            //{
+            //    StorageFile sampleFile = await localFolder.GetFileAsync("dataFile.txt");
+            //    API = await FileIO.ReadTextAsync(sampleFile);
+            //}
+            //if (API != "")
+            //{
+            //    var apiString = API;
+
+            //    var api = InstaApiBuilder.CreateBuilder()
+            //            .SetUser(new UserSessionData() { UserName = userObject.LoginUser, Password = userObject.PasswordUser })
+            //            .UseLogger(new DebugLogger(LogLevel.Exceptions))
+            //            .Build();
+            //    api.LoadStateDataFromString(apiString.ToString());
+            //    userObject.API = api;
+            //    page.Frame.Navigate(typeof(MenuPage), userObject);
+            //}
+            //else if (userObject != null)
+            //{
+            //    if (userObject.LoginUser != null && userObject.PasswordUser != null)
+            //    {
+            //        var api = InstaApiBuilder.CreateBuilder()
+            //            .SetUser(new UserSessionData() { UserName = userObject.LoginUser, Password = userObject.PasswordUser })
+            //            .UseLogger(new DebugLogger(LogLevel.Exceptions))
+            //            .Build();
+            //        var login = await SessionHelper.LoadAndLogin(api, userObject.LoginUser, userObject.PasswordUser);
+
+
+            //        if (!login)
+            //        {
+            //            userObject.API = api;
+            //            var ok = await userObject.API.LoginAsync();
+            //            if (ok.Succeeded)
+            //            {
+            //                page.Frame.Navigate(typeof(MenuPage), userObject);
+            //            }
+            //            else if (ok.Value == InstaLoginResult.ChallengeRequired)
+            //            {
+            //                var challenge = await userObject.API.GetChallengeRequireVerifyMethodAsync();
+            //                if (challenge.Value.StepData != null &&
+            //                    challenge.Value.StepData.PhoneNumber != null)
+            //                {
+            //                    var request = await userObject.API.RequestVerifyCodeToSMSForChallengeRequireAsync();
+            //                }
+            //                ContentDialog dialog = new ContentDialog()
+            //                {
+            //                    Width = 500,
+            //                    Height = 300,
+            //                    CloseButtonText = "Cancel",
+            //                    PrimaryButtonText = "Send"
+            //                };
+            //                TextBox inputTextBox = new TextBox();
+            //                dialog.Content = inputTextBox;
+            //                if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            //                {
+            //                    var code = await userObject.API.VerifyCodeForChallengeRequireAsync(inputTextBox.Text);
+            //                    if (code.Succeeded)
+            //                    {
+            //                        StorageFile sampleFile = await localFolder.CreateFileAsync("dataFile.txt",
+            //                            CreationCollisionOption.ReplaceExisting);
+            //                        await FileIO.WriteTextAsync(sampleFile, userObject.API.GetStateDataAsString());
+            //                        page.Frame.Navigate(typeof(MenuPage), userObject);
+            //                    }
+            //                }
+            //            };
+            //        }
+
+            //        //_ = new CustomDialog("Message", "Wrong login or password.", "All right");
+            //    }
+            //    else
+            //    {
+            //        _ = new CustomDialog("Message", "Cannon be null", "All right");
+            //    }
+            //}
         }
 
+        private static bool ExistsConnection()
+        {
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            if (File.Exists(localFolder.Path + @"\dataFile.txt"))
+                return true;
+            else
+                return false;
+        }
 
+        private static async Task<string> GetSavedApi()
+        {
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            StorageFile sampleFile = await localFolder.GetFileAsync("dataFile.txt");
+            return await FileIO.ReadTextAsync(sampleFile);
+        }
+
+        private static async Task<IInstaApi> AccountVerify(IInstaApi api)
+        {
+            var challenge = await api.GetChallengeRequireVerifyMethodAsync();
+            if (challenge.Value.StepData != null && challenge.Value.StepData.PhoneNumber != null)
+            {
+                var request = await api.RequestVerifyCodeToSMSForChallengeRequireAsync();
+                ContentDialog dialog = new ContentDialog()
+                {
+                    Width = 500,
+                    Height = 150,
+                    CloseButtonText = "Cancel",
+                    PrimaryButtonText = "Send"
+                };
+                StackPanel stackPanel = new StackPanel() { Orientation = Orientation.Vertical };
+                TextBlock textBlock = new TextBlock() { Text = "Write SMS code from phone" };
+                TextBox inputTextBox = new TextBox() { TextAlignment = Windows.UI.Xaml.TextAlignment.Center, PlaceholderText = "Code" };
+                stackPanel.Children.Add(textBlock);
+                stackPanel.Children.Add(inputTextBox);
+                dialog.Content = stackPanel;
+                if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+                {
+                    var code = await api.VerifyCodeForChallengeRequireAsync(inputTextBox.Text);
+                    if (code.Succeeded)
+                    {
+                        StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+                        StorageFile sampleFile = await localFolder.CreateFileAsync("dataFile.txt",
+                            CreationCollisionOption.ReplaceExisting);
+                        await FileIO.WriteTextAsync(sampleFile, api.GetStateDataAsString());
+                        return api;
+                    }
+                }
+                return null;
+            }
+            return null;
+        }
 
         public static async Task GetUserData(User userObject)
         {
