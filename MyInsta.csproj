@@ -127,8 +127,11 @@
     </Compile>
     <Compile Include="Logic\AsyncHelpers.cs" />
     <Compile Include="Logic\CustomDialog.cs" />
+    <Compile Include="Logic\Helper.cs" />
     <Compile Include="Logic\InstaServer.cs" />
     <Compile Include="Logic\MediaDialog.cs" />
+    <Compile Include="Logic\SessionHelper.cs" />
+    <Compile Include="Logic\Settings.cs" />
     <Compile Include="Model\CustomMedia.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserData.cs" />

@@ -21,6 +21,7 @@ using Windows.Storage;
 using System.Text.RegularExpressions;
 using Windows.Storage.Pickers;
 using Windows.Storage.AccessCache;
+using InstagramApiSharp.API;
 
 namespace MyInsta.Logic
 {
@@ -28,23 +29,77 @@ namespace MyInsta.Logic
     {
         public static async Task LoginInstagram(User userObject, LoginPage page)
         {
-            if (userObject != null)
+            string API = "";
+            Windows.Storage.StorageFolder localFolder =
+                                        Windows.Storage.ApplicationData.Current.LocalFolder;
+            if (File.Exists(localFolder.Path + @"\dataFile.txt"))
+            {
+                StorageFile sampleFile = await localFolder.GetFileAsync("dataFile.txt");
+                API = await FileIO.ReadTextAsync(sampleFile);
+            }
+            if (API != "")
+            {
+                var apiString = API;
+
+                var api = InstaApiBuilder.CreateBuilder()
+                        .SetUser(new UserSessionData() { UserName = userObject.LoginUser, Password = userObject.PasswordUser })
+                        .UseLogger(new DebugLogger(LogLevel.Exceptions))
+                        .Build();
+                api.LoadStateDataFromString(apiString.ToString());
+                userObject.API = api;
+                page.Frame.Navigate(typeof(MenuPage), userObject);
+            }
+            else if (userObject != null)
             {
                 if (userObject.LoginUser != null && userObject.PasswordUser != null)
                 {
                     var api = InstaApiBuilder.CreateBuilder()
-                    .SetUser(new UserSessionData() { UserName = userObject.LoginUser, Password = userObject.PasswordUser })
-                    .UseLogger(new DebugLogger(LogLevel.Exceptions))
-                    .Build();
+                        .SetUser(new UserSessionData() { UserName = userObject.LoginUser, Password = userObject.PasswordUser })
+                        .UseLogger(new DebugLogger(LogLevel.Exceptions))
+                        .Build();
+                    var login = await SessionHelper.LoadAndLogin(api, userObject.LoginUser, userObject.PasswordUser);
 
-                    userObject.API = api;
-                    var ok = await userObject.API.LoginAsync();
-                    if (ok.Succeeded)
+
+                    if (!login)
                     {
-                        page.Frame.Navigate(typeof(MenuPage), userObject);
+                        userObject.API = api;
+                        var ok = await userObject.API.LoginAsync();
+                        if (ok.Succeeded)
+                        {
+                            page.Frame.Navigate(typeof(MenuPage), userObject);
+                        }
+                        else if (ok.Value == InstaLoginResult.ChallengeRequired)
+                        {
+                            var challenge = await userObject.API.GetChallengeRequireVerifyMethodAsync();
+                            if (challenge.Value.StepData != null &&
+                                challenge.Value.StepData.PhoneNumber != null)
+                            {
+                                var request = await userObject.API.RequestVerifyCodeToSMSForChallengeRequireAsync();
+                            }
+                            ContentDialog dialog = new ContentDialog()
+                            {
+                                Width = 500,
+                                Height = 300,
+                                CloseButtonText = "Cancel",
+                                PrimaryButtonText = "Send"
+                            };
+                            TextBox inputTextBox = new TextBox();
+                            dialog.Content = inputTextBox;
+                            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+                            {
+                                var code = await userObject.API.VerifyCodeForChallengeRequireAsync(inputTextBox.Text);
+                                if (code.Succeeded)
+                                {
+                                    StorageFile sampleFile = await localFolder.CreateFileAsync("dataFile.txt",
+                                        CreationCollisionOption.ReplaceExisting);
+                                    await FileIO.WriteTextAsync(sampleFile, userObject.API.GetStateDataAsString());
+                                    page.Frame.Navigate(typeof(MenuPage), userObject);
+                                }
+                            }
+                        };
                     }
-                    else
-                        _ = new CustomDialog("Message", "Wrong login or password.", "All right");
+
+                    //_ = new CustomDialog("Message", "Wrong login or password.", "All right");
                 }
                 else
                 {
@@ -52,6 +107,8 @@ namespace MyInsta.Logic
                 }
             }
         }
+
+
 
         public static async Task GetUserData(User userObject)
         {
