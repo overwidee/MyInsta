@@ -33,8 +33,6 @@ namespace MyInsta.View
             ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             UserInsta.LoginUser = localSettings.Values["Login"] != null ? localSettings.Values["Login"].ToString() : null;
             UserInsta.PasswordUser = localSettings.Values["Password"] != null ? localSettings.Values["Password"].ToString() : null;
-            //if (localSettings.Values["Login"] != null && localSettings.Values["Password"] != null)
-            //    checkRemember.IsChecked = true;
 
             DataContext = UserInsta;
         }

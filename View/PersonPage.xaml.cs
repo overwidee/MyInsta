@@ -141,5 +141,32 @@ namespace MyInsta.View
                 ((ListView)sender).SelectedItem = null;
             }
         }
+
+        private void MediaList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                var post = e.AddedItems[0] as CustomMedia;
+                if (post != null)
+                {
+                    string urlMedia = "";
+                    if (post.MediaType == MediaType.Image)
+                        urlMedia = post.UrlBigImage;
+                    else if (post.MediaType == MediaType.Video)
+                        urlMedia = post.UrlVideo;
+
+                    MediaDialog mediaDialog = new MediaDialog(urlMedia, post.MediaType);
+                    mediaDialog.ShowMedia();
+                }
+            }
+            catch
+            {
+
+            }
+            finally
+            {
+                ((ListView)sender).SelectedItem = null;
+            }
+        }
     }
 }

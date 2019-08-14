@@ -288,14 +288,24 @@ namespace MyInsta.Logic
             foreach (var item in medias)
             {
                 if (item.Images != null && item.Images.Count != 0)
-                    mediaList.Add(new CustomMedia()
+                {
+                    var post = new CustomMedia()
                     {
                         Name = $"ImagePost_{i + 1}",
                         UrlSmallImage = item.Images[1].Uri,
                         UrlBigImage = item.Images[0].Uri,
                         CountLikes = item.LikesCount,
-                        CountComments = int.Parse(item.CommentsCount)
-                    });
+                        CountComments = int.Parse(item.CommentsCount),
+                        MediaType = MediaType.Image
+                    };
+                    if (item.Videos != null && item.Videos.Count != 0)
+                    {
+                        post.MediaType = MediaType.Video;
+                        post.UrlVideo = item.Videos[0].Uri;
+                    }
+                    mediaList.Add(post);
+                }
+
                 else if (item.Carousel != null && item.Carousel.Count != 0)
                 {
                     int x = 0;
@@ -303,14 +313,23 @@ namespace MyInsta.Logic
                     {
                         x++;
                         if (car.Images != null && car.Images.Count != 0)
-                            mediaList.Add(new CustomMedia()
+                        {
+                            var postCar = new CustomMedia()
                             {
                                 Name = $"ImagePost_{i + 1}_Carousel_{x + 1}",
                                 UrlSmallImage = car.Images[0].Uri,
                                 UrlBigImage = car.Images[1].Uri,
                                 CountLikes = item.LikesCount,
-                                CountComments = int.Parse(item.CommentsCount)
-                            });
+                                CountComments = int.Parse(item.CommentsCount),
+                                MediaType = MediaType.Image
+                            };
+                            if (car.Videos != null && car.Videos.Count != 0)
+                            {
+                                postCar.MediaType = MediaType.Video;
+                                postCar.UrlVideo = car.Videos[0].Uri;
+                            }
+                            mediaList.Add(postCar);
+                        }
                     }
                 }
                 i++;

@@ -83,7 +83,7 @@
             <controls:TabViewItem x:Uid="Posts" Background="{ThemeResource FlipViewButtonBorderThemeBrush}" Icon="Camera">     
                 <Frame Margin="10" CornerRadius="0">
                         <ScrollViewer x:Name="scrollListPosts" ViewChanged="ScrollListPosts_ViewChanged" VerticalScrollBarVisibility="Auto">
-                            <ListView x:Name="mediaList" ItemsSource="{x:Bind UrlMedias}" HorizontalContentAlignment="Center"> 
+                            <ListView x:Name="mediaList" SelectionChanged="MediaList_SelectionChanged"  ItemsSource="{x:Bind UrlMedias}" HorizontalContentAlignment="Center"> 
                                 <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel HorizontalAlignment="Center"/>
