@@ -93,12 +93,12 @@ namespace MyInsta.View
 
         private async void ButtonDownload_Click(object sender, RoutedEventArgs e)
         {
-            await InstaServer.DownloadPost(UrlMedias.Where(x => x.Name == ((Button)sender).Tag.ToString()).First());
+            await InstaServer.DownloadMedia(UrlMedias.Where(x => x.Name == ((Button)sender).Tag.ToString()).First());
         }
 
         private async void ButtonDownloadStory_Click(object sender, RoutedEventArgs e)
         {
-            await InstaServer.DownloadStory(UrlStories.Where(x => x.Name == ((Button)sender).Tag.ToString()).First());
+            await InstaServer.DownloadMedia(UrlStories.Where(x => x.Name == ((Button)sender).Tag.ToString()).First());
         }
 
         private void ScrollListPosts_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
@@ -128,7 +128,7 @@ namespace MyInsta.View
                     else if (story.MediaType == MediaType.Video)
                         urlMedia = story.UrlVideo;
 
-                    MediaDialog mediaDialog = new MediaDialog(urlMedia, story.MediaType);
+                    MediaDialog mediaDialog = new MediaDialog(urlMedia, story.MediaType, 0);
                     mediaDialog.ShowMedia();
                 }
             }
@@ -155,7 +155,7 @@ namespace MyInsta.View
                     else if (post.MediaType == MediaType.Video)
                         urlMedia = post.UrlVideo;
 
-                    MediaDialog mediaDialog = new MediaDialog(urlMedia, post.MediaType);
+                    MediaDialog mediaDialog = new MediaDialog(urlMedia, post.MediaType, 1);
                     mediaDialog.ShowMedia();
                 }
             }

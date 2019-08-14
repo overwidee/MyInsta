@@ -14,7 +14,6 @@ namespace MyInsta.Model
         public int CountLikes { get; set; }
         public int CountComments { get; set; }
         public MediaType MediaType { get; set; }
-
         public string UrlVideo { get; set; }
     }
 

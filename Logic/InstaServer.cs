@@ -145,12 +145,25 @@ namespace MyInsta.Logic
             userObject.UserData.UserFollowers = new ObservableCollection<InstaUserShort>();
             //userObject.UserData.UserFriends = new ObservableCollection<InstaUserShort>();
             //userObject.UserData.UserUnfollowers = new ObservableCollection<InstaUserShort>();
+            userObject.UserData.SavedItems = new ObservableCollection<SavedItem>();
             var f = await userObject.API.UserProcessor.GetUserFollowersAsync(userObject.LoginUser, PaginationParameters.MaxPagesToLoad(1));
             foreach (var item in f.Value)
             {
                 if (!userObject.UserData.UserFollowers.Contains(item))
                     userObject.UserData.UserFollowers.Add(item);
             }
+
+            // Saved items
+            var items = await userObject.API.FeedProcessor.GetSavedFeedAsync(PaginationParameters.MaxPagesToLoad(1));
+            int i = 1;
+            foreach (var itemS in items.Value)
+            {
+                var savedPost = GetSavedItem(itemS, i);
+                i++;
+                userObject.UserData.SavedItems.Add(savedPost);
+            }
+
+
             var fling = await userObject.API.UserProcessor.GetUserFollowingAsync(userObject.LoginUser, PaginationParameters.MaxPagesToLoad(1));
             foreach (var item in fling.Value)
             {
@@ -161,6 +174,7 @@ namespace MyInsta.Logic
                 if (status.Value.Following && !status.Value.FollowedBy && !userObject.UserData.UserUnfollowers.Contains(item))
                     userObject.UserData.UserUnfollowers.Add(item);
             }
+            
         }
 
         public static async Task<InstaUserInfo> GetInfoUser(User userObject, string nick)
@@ -281,10 +295,67 @@ namespace MyInsta.Logic
             return storiesList;
         }
 
+        public static SavedItem GetSavedItem(InstaMedia item, int id)
+        {
+            SavedItem savedItem = new SavedItem()
+            {
+                Id = id,
+                UserNamePost = item.User.UserName,
+                UserPk = item.User.Pk,
+                UserPicture = item.User.ProfilePicture
+            };
+            if (item.Images != null && item.Images.Count != 0)
+            {
+                var post = new CustomMedia()
+                {
+                    Name = $"SavedPost_{id}",
+                    UrlSmallImage = item.Images[1].Uri,
+                    UrlBigImage = item.Images[0].Uri,
+                    CountLikes = item.LikesCount,
+                    CountComments = item.CommentsCount != null ? int.Parse(item.CommentsCount) : 0,
+                    MediaType = MediaType.Image
+                };
+                if (item.Videos != null && item.Videos.Count != 0)
+                {
+                    post.MediaType = MediaType.Video;
+                    post.UrlVideo = item.Videos[0].Uri;
+                }
+                savedItem.Item = post;
+            }
+            else if (item.Carousel != null && item.Carousel.Count != 0)
+            {
+                int x = 0;
+                foreach (var car in item.Carousel)
+                {
+                    x++;
+                    if (car.Images != null && car.Images.Count != 0)
+                    {
+                        var postCar = new CustomMedia()
+                        {
+                            Name = $"SavedPost_{id}_Carousel_{x + 1}",
+                            UrlSmallImage = car.Images[0].Uri,
+                            UrlBigImage = car.Images[1].Uri,
+                            CountLikes = item.LikesCount,
+                            CountComments = int.Parse(item.CommentsCount),
+                            MediaType = MediaType.Image
+                        };
+                        if (car.Videos != null && car.Videos.Count != 0)
+                        {
+                            postCar.MediaType = MediaType.Video;
+                            postCar.UrlVideo = car.Videos[0].Uri;
+                        }
+                        savedItem.Item = postCar;
+                    }
+                }
+            }
+            return savedItem;
+        }
+
         public static ObservableCollection<CustomMedia> GetUrlsMediasUser(InstaMediaList medias)
         {
             ObservableCollection<CustomMedia> mediaList = new ObservableCollection<CustomMedia>();
             int i = 0;
+
             foreach (var item in medias)
             {
                 if (item.Images != null && item.Images.Count != 0)
@@ -295,7 +366,7 @@ namespace MyInsta.Logic
                         UrlSmallImage = item.Images[1].Uri,
                         UrlBigImage = item.Images[0].Uri,
                         CountLikes = item.LikesCount,
-                        CountComments = int.Parse(item.CommentsCount),
+                        CountComments = item.CommentsCount != null ? int.Parse(item.CommentsCount) : 0,
                         MediaType = MediaType.Image
                     };
                     if (item.Videos != null && item.Videos.Count != 0)
@@ -467,7 +538,7 @@ namespace MyInsta.Logic
             }
         }
 
-        public static async Task DownloadStory(CustomMedia media)
+        public static async Task DownloadMedia(CustomMedia media)
         {
             string url = "";
             if (media.MediaType == MediaType.Image)
@@ -498,7 +569,7 @@ namespace MyInsta.Logic
                 }
                 response.Dispose();
 
-                CustomDialog customDialog = new CustomDialog("Message", "Story downloaded\n" +
+                CustomDialog customDialog = new CustomDialog("Message", "Media downloaded\n" +
                     $"{file.Path}", "All right");
             }
             else

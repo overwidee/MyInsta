@@ -18,15 +18,15 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-    <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <PackageCertificateThumbprint>3E417588C230CEB6D1D4D2C1DB4FFF3852DD6491</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>B5016611D227458B9444ADD19172554289EE5127</PackageCertificateThumbprint>
     <PackageCertificateKeyFile />
-    <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
+    <AppInstallerUpdateFrequency>0</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
@@ -131,16 +131,17 @@
     </Compile>
     <Compile Include="Logic\AsyncHelpers.cs" />
     <Compile Include="Logic\CustomDialog.cs" />
-    <Compile Include="Logic\Helper.cs" />
     <Compile Include="Logic\InstaServer.cs" />
     <Compile Include="Logic\MediaDialog.cs" />
-    <Compile Include="Logic\SessionHelper.cs" />
-    <Compile Include="Logic\Settings.cs" />
     <Compile Include="Model\CustomMedia.cs" />
+    <Compile Include="Model\SavedItem.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\InstaUserViewModel.cs" />
+    <Compile Include="View\SavedPostsPage.xaml.cs">
+      <DependentUpon>SavedPostsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SearchPage.xaml.cs">
       <DependentUpon>SearchPage.xaml</DependentUpon>
     </Compile>
@@ -242,6 +243,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="View\SavedPostsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\SearchPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

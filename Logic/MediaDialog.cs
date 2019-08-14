@@ -14,18 +14,20 @@ namespace MyInsta.Logic
     {
         public string Url { get; set; }
         public MediaType MediaType { get; set; }
-        public MediaDialog(string url, MediaType mediaType)
+        int type;
+        public MediaDialog(string url, MediaType mediaType, int i)
         {
             Url = url;
             MediaType = mediaType;
+            type = i;
         }
 
         public void ShowMedia()
         {
             ContentDialog contentDialog = new ContentDialog()
             {
-                Height = 1000,
-                Width = 700,
+                Height = (type == 0) ? 1100 : 800,
+                Width = (type == 0) ? 800 : 1100,
                 SecondaryButtonText = "All right"
             };
             if (MediaType == MediaType.Video)
@@ -33,8 +35,8 @@ namespace MyInsta.Logic
                 contentDialog.Content = new MediaElement()
                 {
                     Source = new Uri(Url),
-                    Width = 350,
-                    Height = 900,
+                    Width = (type == 0) ? 350 : 1000,
+                    Height = (type == 0) ? 900 : 450,
                     AutoPlay = true,
                     HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
                     VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center
@@ -46,8 +48,8 @@ namespace MyInsta.Logic
                 {
                     Source = new BitmapImage(
                         new Uri(Url, UriKind.Absolute)),
-                    Width = 350,
-                    Height = 900,
+                    Width = (type == 0) ? 350 : 1000,
+                    Height = (type == 0) ? 900 : 450,
                     Stretch = Stretch.Uniform,
                     HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
                     VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center

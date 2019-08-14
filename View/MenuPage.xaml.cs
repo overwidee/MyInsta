@@ -62,6 +62,9 @@ namespace MyInsta.View
                     case "Sync":
                         await InstaServer.GetUserData(InstaUser);
                         break;
+                    case "Saved":
+                        contentFrame.Navigate(typeof(SavedPostsPage), InstaUser);
+                        break;
                 }
             }
         }

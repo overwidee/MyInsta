@@ -18,6 +18,8 @@
                 <NavigationViewItem Content="Search profile" x:Uid="SearchProfile" x:Name="page_search" Icon="Find" Tag="Search" FontFamily="Century Gothic"/>
                 <NavigationViewItemSeparator />
                 <NavigationViewItem Content="Sync" Icon="Sync" x:Uid="Sync" x:Name="button_sync" Tag="Sync" FontFamily="Century Gothic"/>
+                <NavigationViewItemSeparator />
+                <NavigationViewItem Content="Saved posts" Icon="Emoji" x:Name="button_savedPosts" Tag="Saved" FontFamily="Century Gothic"/>
             </NavigationView.MenuItems>
             <Frame x:Name="contentFrame"></Frame>
         </NavigationView>
