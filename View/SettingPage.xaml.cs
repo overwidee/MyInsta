@@ -72,5 +72,15 @@ namespace MyInsta.View
             }
             CustomDialog customDialog = new CustomDialog("Message", "Restart app", "All right"); 
         }
+
+        private async void ButtonLogout_Click(object sender, RoutedEventArgs e)
+        {
+            var log = await InstaServer.RemoveConnection(InstaUser.API);
+            if (log)
+            {
+                var frame = Window.Current.Content as Frame;
+                frame.Navigate(typeof(LoginPage));
+            }
+        }
     }
 }

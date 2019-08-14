@@ -70,84 +70,6 @@ namespace MyInsta.Logic
                     }
                 }
             }
-
-            //string API = "";
-            //Windows.Storage.StorageFolder localFolder =
-            //                            Windows.Storage.ApplicationData.Current.LocalFolder;
-            //if (File.Exists(localFolder.Path + @"\dataFile.txt"))
-            //{
-            //    StorageFile sampleFile = await localFolder.GetFileAsync("dataFile.txt");
-            //    API = await FileIO.ReadTextAsync(sampleFile);
-            //}
-            //if (API != "")
-            //{
-            //    var apiString = API;
-
-            //    var api = InstaApiBuilder.CreateBuilder()
-            //            .SetUser(new UserSessionData() { UserName = userObject.LoginUser, Password = userObject.PasswordUser })
-            //            .UseLogger(new DebugLogger(LogLevel.Exceptions))
-            //            .Build();
-            //    api.LoadStateDataFromString(apiString.ToString());
-            //    userObject.API = api;
-            //    page.Frame.Navigate(typeof(MenuPage), userObject);
-            //}
-            //else if (userObject != null)
-            //{
-            //    if (userObject.LoginUser != null && userObject.PasswordUser != null)
-            //    {
-            //        var api = InstaApiBuilder.CreateBuilder()
-            //            .SetUser(new UserSessionData() { UserName = userObject.LoginUser, Password = userObject.PasswordUser })
-            //            .UseLogger(new DebugLogger(LogLevel.Exceptions))
-            //            .Build();
-            //        var login = await SessionHelper.LoadAndLogin(api, userObject.LoginUser, userObject.PasswordUser);
-
-
-            //        if (!login)
-            //        {
-            //            userObject.API = api;
-            //            var ok = await userObject.API.LoginAsync();
-            //            if (ok.Succeeded)
-            //            {
-            //                page.Frame.Navigate(typeof(MenuPage), userObject);
-            //            }
-            //            else if (ok.Value == InstaLoginResult.ChallengeRequired)
-            //            {
-            //                var challenge = await userObject.API.GetChallengeRequireVerifyMethodAsync();
-            //                if (challenge.Value.StepData != null &&
-            //                    challenge.Value.StepData.PhoneNumber != null)
-            //                {
-            //                    var request = await userObject.API.RequestVerifyCodeToSMSForChallengeRequireAsync();
-            //                }
-            //                ContentDialog dialog = new ContentDialog()
-            //                {
-            //                    Width = 500,
-            //                    Height = 300,
-            //                    CloseButtonText = "Cancel",
-            //                    PrimaryButtonText = "Send"
-            //                };
-            //                TextBox inputTextBox = new TextBox();
-            //                dialog.Content = inputTextBox;
-            //                if (await dialog.ShowAsync() == ContentDialogResult.Primary)
-            //                {
-            //                    var code = await userObject.API.VerifyCodeForChallengeRequireAsync(inputTextBox.Text);
-            //                    if (code.Succeeded)
-            //                    {
-            //                        StorageFile sampleFile = await localFolder.CreateFileAsync("dataFile.txt",
-            //                            CreationCollisionOption.ReplaceExisting);
-            //                        await FileIO.WriteTextAsync(sampleFile, userObject.API.GetStateDataAsString());
-            //                        page.Frame.Navigate(typeof(MenuPage), userObject);
-            //                    }
-            //                }
-            //            };
-            //        }
-
-            //        //_ = new CustomDialog("Message", "Wrong login or password.", "All right");
-            //    }
-            //    else
-            //    {
-            //        _ = new CustomDialog("Message", "Cannon be null", "All right");
-            //    }
-            //}
         }
 
         private static bool ExistsConnection()
@@ -175,13 +97,12 @@ namespace MyInsta.Logic
                 ContentDialog dialog = new ContentDialog()
                 {
                     Width = 500,
-                    Height = 150,
                     CloseButtonText = "Cancel",
                     PrimaryButtonText = "Send"
                 };
                 StackPanel stackPanel = new StackPanel() { Orientation = Orientation.Vertical };
-                TextBlock textBlock = new TextBlock() { Text = "Write SMS code from phone" };
-                TextBox inputTextBox = new TextBox() { TextAlignment = Windows.UI.Xaml.TextAlignment.Center, PlaceholderText = "Code" };
+                TextBlock textBlock = new TextBlock() { Text = "Write SMS code from phone", Margin = new Windows.UI.Xaml.Thickness(10) };
+                TextBox inputTextBox = new TextBox() { TextAlignment = Windows.UI.Xaml.TextAlignment.Center, PlaceholderText = "Code", Margin = new Windows.UI.Xaml.Thickness(10) };
                 stackPanel.Children.Add(textBlock);
                 stackPanel.Children.Add(inputTextBox);
                 dialog.Content = stackPanel;
@@ -200,6 +121,23 @@ namespace MyInsta.Logic
                 return null;
             }
             return null;
+        }
+
+        public static async Task<bool> RemoveConnection(IInstaApi api)
+        {
+            var x = await api.LogoutAsync();
+            if (ExistsConnection())
+            {
+                StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+                var file = await localFolder.GetFileAsync("dataFile.txt");
+                await file.DeleteAsync();
+
+                ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+                localSettings.Values["Login"] = null;
+                localSettings.Values["Password"] = null;
+                return true;
+            }
+            else return false;
         }
 
         public static async Task GetUserData(User userObject)

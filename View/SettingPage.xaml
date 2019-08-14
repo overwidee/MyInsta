@@ -23,6 +23,7 @@
                 <x:String>Light</x:String>
                 <x:String>Dark</x:String>
             </ComboBox>
+            <Button x:Name="buttonLogout" Click="ButtonLogout_Click" Content="Log out" HorizontalAlignment="Center" Margin="10"/>
         </StackPanel>
     </Grid>
 </Page>

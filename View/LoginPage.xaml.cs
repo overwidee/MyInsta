@@ -33,8 +33,8 @@ namespace MyInsta.View
             ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             UserInsta.LoginUser = localSettings.Values["Login"] != null ? localSettings.Values["Login"].ToString() : null;
             UserInsta.PasswordUser = localSettings.Values["Password"] != null ? localSettings.Values["Password"].ToString() : null;
-            if (localSettings.Values["Login"] != null && localSettings.Values["Password"] != null)
-                checkRemember.IsChecked = true;
+            //if (localSettings.Values["Login"] != null && localSettings.Values["Password"] != null)
+            //    checkRemember.IsChecked = true;
 
             DataContext = UserInsta;
         }
@@ -48,12 +48,9 @@ namespace MyInsta.View
 
         async Task LoginInsta()
         {
-            if (checkRemember.IsChecked.Value)
-            {
-                ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-                localSettings.Values["Login"] = UserInsta.LoginUser;
-                localSettings.Values["Password"] = UserInsta.PasswordUser;
-            }
+            ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            localSettings.Values["Login"] = UserInsta.LoginUser;
+            localSettings.Values["Password"] = UserInsta.PasswordUser;
 
             IsEnabled = false;
             modalRing.Visibility = Visibility.Visible;
@@ -69,6 +66,11 @@ namespace MyInsta.View
         {
             if (e.Key == Windows.System.VirtualKey.Enter)
                 _ = LoginInsta();
+        }
+
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            await InstaServer.LoginInstagram(UserInsta, this);
         }
     }
 }
