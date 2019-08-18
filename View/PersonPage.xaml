@@ -10,7 +10,7 @@
     xml:space="preserve"
     xmlns:model="using:MyInsta.Model"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Unloaded="Page_Unloaded">
     <Page.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="FontFamily" Value="Century Gothic"/>

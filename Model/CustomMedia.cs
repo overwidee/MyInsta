@@ -8,6 +8,7 @@ namespace MyInsta.Model
 {
     public class CustomMedia
     {
+        public string Pk { get; set; }
         public string Name { get; set; }
         public string UrlSmallImage { get; set; }
         public string UrlBigImage { get; set; }

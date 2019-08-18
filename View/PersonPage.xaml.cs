@@ -63,8 +63,11 @@ namespace MyInsta.View
             UrlStories = await InstaServer.GetStoryUser(CurrentUser, InstaUserInfo);
             storiesList.ItemsSource = UrlStories;
 
-            UrlMedias = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo);
+            UrlMedias = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo, 0);
             mediaList.ItemsSource = UrlMedias.Take(countPosts);
+
+            UrlMedias = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo, 1);
+            mediaList.ItemsSource = UrlMedias?.Take(countPosts);
         }
 
         private async void UnfollowButton_Click(object sender, RoutedEventArgs e)
@@ -88,7 +91,7 @@ namespace MyInsta.View
 
         private async void UnlikeButton_Click(object sender, RoutedEventArgs e)
         {
-            await InstaServer.UnlikeProfile(CurrentUser, SelectUser);
+            await InstaServer.UnlikeProfile(CurrentUser, SelectUser, UrlMedias);
         }
 
         private async void ButtonDownload_Click(object sender, RoutedEventArgs e)
@@ -167,6 +170,11 @@ namespace MyInsta.View
             {
                 ((ListView)sender).SelectedItem = null;
             }
+        }
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            InstaServer.CancelTasks();
         }
     }
 }

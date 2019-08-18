@@ -22,11 +22,14 @@ using System.Text.RegularExpressions;
 using Windows.Storage.Pickers;
 using Windows.Storage.AccessCache;
 using InstagramApiSharp.API;
+using System.Threading;
 
 namespace MyInsta.Logic
 {
     public static class InstaServer
     {
+        public static string LatestMediaMaxId = "";
+        private static CancellationTokenSource cancellationTokenMedia;
         public static async Task LoginInstagram(User userObject, LoginPage page)
         {
             if (ExistsConnection())
@@ -54,6 +57,7 @@ namespace MyInsta.Logic
                     var logResult = await userObject.API.LoginAsync();
                     if (logResult.Succeeded)
                     {
+                        await SaveApiString(userObject.API);
                         page.Frame.Navigate(typeof(MenuPage), userObject);
                     }
                     else
@@ -111,16 +115,21 @@ namespace MyInsta.Logic
                     var code = await api.VerifyCodeForChallengeRequireAsync(inputTextBox.Text);
                     if (code.Succeeded)
                     {
-                        StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-                        StorageFile sampleFile = await localFolder.CreateFileAsync("dataFile.txt",
-                            CreationCollisionOption.ReplaceExisting);
-                        await FileIO.WriteTextAsync(sampleFile, api.GetStateDataAsString());
+                        await SaveApiString(api);
                         return api;
                     }
                 }
                 return null;
             }
             return null;
+        }
+
+        public static async Task SaveApiString(IInstaApi api)
+        {
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            StorageFile sampleFile = await localFolder.CreateFileAsync("dataFile.txt",
+                CreationCollisionOption.ReplaceExisting);
+            await FileIO.WriteTextAsync(sampleFile, api.GetStateDataAsString());
         }
 
         public static async Task<bool> RemoveConnection(IInstaApi api)
@@ -146,35 +155,46 @@ namespace MyInsta.Logic
             //userObject.UserData.UserFriends = new ObservableCollection<InstaUserShort>();
             //userObject.UserData.UserUnfollowers = new ObservableCollection<InstaUserShort>();
             userObject.UserData.SavedItems = new ObservableCollection<SavedItem>();
-            var f = await userObject.API.UserProcessor.GetUserFollowersAsync(userObject.LoginUser, PaginationParameters.MaxPagesToLoad(1));
+
+            await GetUserSavedItems(userObject);
+            await GetUserFollowers(userObject);
+            await GetUserFriendsAndUnfollowers(userObject);
+        }
+
+        private static async Task GetUserFollowers(User user)
+        {
+            var f = await user.API.UserProcessor.GetUserFollowersAsync(user.LoginUser, PaginationParameters.MaxPagesToLoad(5));
             foreach (var item in f.Value)
             {
-                if (!userObject.UserData.UserFollowers.Contains(item))
-                    userObject.UserData.UserFollowers.Add(item);
+                if (!user.UserData.UserFollowers.Contains(item))
+                    user.UserData.UserFollowers.Add(item);
             }
+        }
 
-            // Saved items
-            var items = await userObject.API.FeedProcessor.GetSavedFeedAsync(PaginationParameters.MaxPagesToLoad(1));
+        private static async Task GetUserSavedItems(User user)
+        {
+            var items = await user.API.FeedProcessor.GetSavedFeedAsync(PaginationParameters.MaxPagesToLoad(5));
             int i = 1;
             foreach (var itemS in items.Value)
             {
                 var savedPost = GetSavedItem(itemS, i);
                 i++;
-                userObject.UserData.SavedItems.Add(savedPost);
+                user.UserData.SavedItems.Add(savedPost);
             }
+        }
 
-
-            var fling = await userObject.API.UserProcessor.GetUserFollowingAsync(userObject.LoginUser, PaginationParameters.MaxPagesToLoad(1));
+        private static async Task GetUserFriendsAndUnfollowers(User user)
+        {
+            var fling = await user.API.UserProcessor.GetUserFollowingAsync(user.LoginUser, PaginationParameters.MaxPagesToLoad(5));
             foreach (var item in fling.Value)
             {
-                var status = await userObject.API.UserProcessor.GetFriendshipStatusAsync(item.Pk);
-                if (status.Value.Following && status.Value.FollowedBy && !userObject.UserData.UserFriends.Contains(item))
-                    userObject.UserData.UserFriends.Add(item);
+                var status = await user.API.UserProcessor.GetFriendshipStatusAsync(item.Pk);
+                if (status.Value.Following && status.Value.FollowedBy && !user.UserData.UserFriends.Contains(item))
+                    user.UserData.UserFriends.Add(item);
                 else
-                if (status.Value.Following && !status.Value.FollowedBy && !userObject.UserData.UserUnfollowers.Contains(item))
-                    userObject.UserData.UserUnfollowers.Add(item);
+                if (status.Value.Following && !status.Value.FollowedBy && !user.UserData.UserUnfollowers.Contains(item))
+                    user.UserData.UserUnfollowers.Add(item);
             }
-            
         }
 
         public static async Task<InstaUserInfo> GetInfoUser(User userObject, string nick)
@@ -243,18 +263,70 @@ namespace MyInsta.Logic
                 return null;
         }
 
-        public static async Task<ObservableCollection<CustomMedia>> GetMediaUser(User userObject, InstaUserInfo unfUser)
+        public static async Task<ObservableCollection<CustomMedia>> GetMediaUser(User userObject, InstaUserInfo unfUser, int count)
         {
             if (userObject != null && unfUser != null)
             {
-                var media = await userObject.API.UserProcessor.GetUserMediaAsync(unfUser.Username, PaginationParameters.MaxPagesToLoad(1));
-                if (media.Succeeded)
-                    return GetUrlsMediasUser(media.Value);
+                InstaMediaList media = new InstaMediaList();
+                if (count == 0)
+                {
+                    var response = await userObject.API.UserProcessor.GetUserMediaAsync(unfUser.Username, PaginationParameters.MaxPagesToLoad(5));
+                    media = response.Value;
+                }
+                else
+                    media = await GetMediaUserAll(userObject, unfUser);
+                if (media.Count != 0)
+                    return GetUrlsMediasUser(media);
                 else
                     return null;
             }
             else
                 return null;
+        }
+
+        private static async Task<InstaMediaList> GetMediaUser(User userObject, InstaUserInfo unfUser)
+        {
+            var media = await userObject.API.UserProcessor.GetUserMediaAsync(unfUser.Username, PaginationParameters.MaxPagesToLoad(1).StartFromMaxId(LatestMediaMaxId));
+            LatestMediaMaxId = media.Value.NextMaxId;
+            return media.Value;
+        }
+
+        private static async Task<InstaMediaList> GetMediaUserAll(User userObject, InstaUserInfo unfUser)
+        {
+            cancellationTokenMedia = new CancellationTokenSource();
+            CancellationToken token = cancellationTokenMedia.Token;
+            try
+            {
+                InstaMediaList instaMedias = new InstaMediaList();
+                await Task.Run(async () =>
+                {
+                    do
+                    {
+                        token.ThrowIfCancellationRequested();
+                        var medias = await GetMediaUser(userObject, unfUser);
+                        instaMedias.AddRange(medias);
+                    }
+                    while (LatestMediaMaxId != null);
+                }, token);
+                return instaMedias;
+            }
+            catch
+            {
+                return new InstaMediaList();
+            }
+
+        }
+
+        public static void CancelTasks()
+        {
+            try
+            {
+                cancellationTokenMedia.Cancel();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public static async Task<ObservableCollection<CustomMedia>> GetStoryUser(User userObject, InstaUserInfo unfUser)
@@ -279,6 +351,7 @@ namespace MyInsta.Logic
             {
                 var custM = new CustomMedia()
                 {
+                    Pk = story.Pk.ToString(),
                     Name = $"Story_{i + 1}",
                     UrlBigImage = story.ImageList[0].Uri,
                     UrlSmallImage = story.ImageList[1].Uri,
@@ -308,6 +381,7 @@ namespace MyInsta.Logic
             {
                 var post = new CustomMedia()
                 {
+                    Pk = item.Pk.ToString(),
                     Name = $"SavedPost_{id}",
                     UrlSmallImage = item.Images[1].Uri,
                     UrlBigImage = item.Images[0].Uri,
@@ -332,6 +406,7 @@ namespace MyInsta.Logic
                     {
                         var postCar = new CustomMedia()
                         {
+                            Pk = item.Pk.ToString(),
                             Name = $"SavedPost_{id}_Carousel_{x + 1}",
                             UrlSmallImage = car.Images[0].Uri,
                             UrlBigImage = car.Images[1].Uri,
@@ -362,6 +437,7 @@ namespace MyInsta.Logic
                 {
                     var post = new CustomMedia()
                     {
+                        Pk = item.Pk,
                         Name = $"ImagePost_{i + 1}",
                         UrlSmallImage = item.Images[1].Uri,
                         UrlBigImage = item.Images[0].Uri,
@@ -387,6 +463,7 @@ namespace MyInsta.Logic
                         {
                             var postCar = new CustomMedia()
                             {
+                                Pk = item.Pk,
                                 Name = $"ImagePost_{i + 1}_Carousel_{x + 1}",
                                 UrlSmallImage = car.Images[0].Uri,
                                 UrlBigImage = car.Images[1].Uri,
@@ -450,15 +527,28 @@ namespace MyInsta.Logic
             }
         }
 
-        public static async Task UnlikeProfile(User currentUser, InstaUserShort selectUser)
+        public static async Task UnlikeProfile(User currentUser, InstaUserShort selectUser, ObservableCollection<CustomMedia> medias)
         {
-            CustomDialog customDialog = new CustomDialog("Message", "Process started", "All right");
-            var mediaUser = await currentUser.API.UserProcessor.GetUserMediaByIdAsync(selectUser.Pk, PaginationParameters.MaxPagesToLoad(100));
-            foreach (var item in mediaUser.Value)
+            try
             {
-                var p = await currentUser.API.MediaProcessor.UnLikeMediaAsync(item.Pk);
+                CustomDialog customDialog = new CustomDialog("Message", "Process started", "All right");
+                //var mediaUser = await currentUser.API.UserProcessor.GetUserMediaByIdAsync(selectUser.Pk, PaginationParameters.MaxPagesToLoad(30));
+                string unlike = "";
+                foreach (var item in medias)
+                {
+                    var p = await currentUser.API.MediaProcessor.UnLikeMediaAsync(item.Pk);
+                    if (p.Succeeded)
+                    {
+                        unlike += item.Name + "\n";
+                    }
+                }
+                customDialog = new CustomDialog("Message", $"Profile ({selectUser.UserName}) unliked \n {unlike}", "All right");
             }
-            customDialog = new CustomDialog("Message", $"Profile ({selectUser.UserName}) unliked", "All right");
+            catch (Exception e)
+            {
+                CustomDialog dialog = new CustomDialog("Message", e.Message, "Ok");
+            }
+
         }
 
         public static async Task UnFollowFromList(User currentUser, ObservableCollection<InstaUserShort> instaUsers)
