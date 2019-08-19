@@ -1,4 +1,5 @@
 ﻿using MyInsta.Model;
+using MyInsta.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,14 +16,18 @@ namespace MyInsta.Logic
         public string Url { get; set; }
         public MediaType MediaType { get; set; }
         int type;
-        public MediaDialog(string url, MediaType mediaType, int i)
+        public User InstaUser { get;set; }
+        public string PkMedia { get; set; }
+        public MediaDialog(User user, string pk, string url, MediaType mediaType, int i)
         {
             Url = url;
             MediaType = mediaType;
             type = i;
+            InstaUser = user;
+            PkMedia = pk;
         }
 
-        public void ShowMedia()
+        public async Task ShowMediaAsync()
         {
             ContentDialog contentDialog = new ContentDialog()
             {
@@ -30,9 +35,10 @@ namespace MyInsta.Logic
                 Width = (type == 0) ? 800 : 1100,
                 SecondaryButtonText = "All right"
             };
+            StackPanel stackPanel = new StackPanel() { HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center };
             if (MediaType == MediaType.Video)
             {
-                contentDialog.Content = new MediaElement()
+                var media = new MediaElement()
                 {
                     Source = new Uri(Url),
                     Width = (type == 0) ? 350 : 1000,
@@ -41,10 +47,11 @@ namespace MyInsta.Logic
                     HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
                     VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center
                 };
+                stackPanel.Children.Add(media);
             }
             else if (MediaType == MediaType.Image)
             {
-                contentDialog.Content = new Image()
+                var imageMedia = new Image()
                 {
                     Source = new BitmapImage(
                         new Uri(Url, UriKind.Absolute)),
@@ -54,8 +61,49 @@ namespace MyInsta.Logic
                     HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
                     VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center
                 };
+                stackPanel.Children.Add(imageMedia);
             }
-            _ = contentDialog.ShowAsync();
+            StackPanel panelButtons = new StackPanel() { Orientation = Orientation.Horizontal };
+            if (type != 0)
+            {
+                Button button = new Button() { Margin = new Windows.UI.Xaml.Thickness(0, 10, 10, 0), CornerRadius = new Windows.UI.Xaml.CornerRadius(5) };
+                button.Content = new SymbolIcon() { Symbol = Symbol.Emoji };
+                button.Click += async (s, e) => {
+                    await InstaServer.SaveMediaInProfile(InstaUser, PkMedia);
+                };
+                panelButtons.Children.Add(button);
+            }
+
+            Button buttonSend = new Button() { Margin = new Windows.UI.Xaml.Thickness(0, 10, 10, 0), CornerRadius = new Windows.UI.Xaml.CornerRadius(5) };
+            buttonSend.Content = new SymbolIcon() { Symbol = Symbol.Share };
+            buttonSend.Click += async (s, e) => {
+                contentDialog.Hide();
+                ContentDialog contentShared = new ContentDialog()
+                {
+                    PrimaryButtonText = "Send",
+                    SecondaryButtonText = "Cancel",
+                    Width = 1200
+                    
+                };
+                Frame frame = new Frame() { Width = 1000, Height = 400 };
+                frame.Navigate(typeof(SharedPage), new object[] { InstaUser, MediaType, PkMedia });
+                contentShared.Content = frame;
+                var dialog = await contentShared.ShowAsync();
+                if (dialog == ContentDialogResult.Primary)
+                {
+                    var page = frame.Content as SharedPage;
+                    if (page.SelectedUser != null)
+                    {
+                        var b = await InstaServer.SharedInDirect(InstaUser, PkMedia, MediaType, page.SelectedUser.Pk);
+                    };
+                    //_ = contentDialog.ShowAsync();
+                }
+            };
+            panelButtons.Children.Add(buttonSend);
+
+            stackPanel.Children.Add(panelButtons);
+            contentDialog.Content = stackPanel;
+            _ = await contentDialog.ShowAsync();
         }
     }
 }

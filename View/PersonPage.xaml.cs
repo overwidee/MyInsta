@@ -131,8 +131,8 @@ namespace MyInsta.View
                     else if (story.MediaType == MediaType.Video)
                         urlMedia = story.UrlVideo;
 
-                    MediaDialog mediaDialog = new MediaDialog(urlMedia, story.MediaType, 0);
-                    mediaDialog.ShowMedia();
+                    MediaDialog mediaDialog = new MediaDialog(CurrentUser, story.Pk, urlMedia, story.MediaType, 0);
+                    mediaDialog.ShowMediaAsync();
                 }
             }
             catch
@@ -158,8 +158,8 @@ namespace MyInsta.View
                     else if (post.MediaType == MediaType.Video)
                         urlMedia = post.UrlVideo;
 
-                    MediaDialog mediaDialog = new MediaDialog(urlMedia, post.MediaType, 1);
-                    mediaDialog.ShowMedia();
+                    MediaDialog mediaDialog = new MediaDialog(CurrentUser, post.Pk, urlMedia, post.MediaType, 1);
+                    mediaDialog.ShowMediaAsync();
                 }
             }
             catch

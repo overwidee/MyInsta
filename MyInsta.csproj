@@ -24,7 +24,7 @@
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <PackageCertificateThumbprint>887792ED56FE28F86128D766D0E66435BD22D850</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>B5016611D227458B9444ADD19172554289EE5127</PackageCertificateThumbprint>
     <PackageCertificateKeyFile />
     <AppInstallerUpdateFrequency>0</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
@@ -151,6 +151,9 @@
     <Compile Include="View\SettingPage.xaml.cs">
       <DependentUpon>SettingPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\SharedPage.xaml.cs">
+      <DependentUpon>SharedPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\UnfollowersPage.xaml.cs">
       <DependentUpon>UnfollowersPage.xaml</DependentUpon>
     </Compile>
@@ -256,6 +259,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\SettingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SharedPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

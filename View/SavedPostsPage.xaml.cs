@@ -31,7 +31,7 @@ namespace MyInsta.View
 
         public User InstaUser { get; set; }
         int countPosts = 10;
-
+        bool profileClick = false;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         { 
             base.OnNavigatedTo(e);
@@ -67,8 +67,11 @@ namespace MyInsta.View
                     else if (sav.Item.MediaType == MediaType.Video)
                         urlMedia = sav.Item.UrlVideo;
 
-                    MediaDialog mediaDialog = new MediaDialog(urlMedia, sav.Item.MediaType, 1);
-                    mediaDialog.ShowMedia();
+                    if (!profileClick)
+                    {
+                        MediaDialog mediaDialog = new MediaDialog(InstaUser, sav.Item.Pk, urlMedia, sav.Item.MediaType, 1);
+                        _ = mediaDialog.ShowMediaAsync();
+                    }
                 }
             }
             catch
@@ -84,6 +87,12 @@ namespace MyInsta.View
         private async void ButtonDownload_Click(object sender, RoutedEventArgs e)
         {
             await InstaServer.DownloadMedia(InstaUser.UserData.SavedItems.Where(x => x.Item.Name == ((Button)sender).Tag.ToString()).First().Item);
+        }
+
+        private async void ButtonProfile_Click(object sender, RoutedEventArgs e)
+        {
+            var user = await InstaServer.GetInstaUserShortById(InstaUser, long.Parse(((Button)sender).Tag.ToString()));
+            this.Frame.Navigate(typeof(PersonPage), new object[] { user, InstaUser });
         }
     }
 }

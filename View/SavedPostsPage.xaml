@@ -39,7 +39,8 @@
                                         </ImageBrush>
                                     </Ellipse.Fill>
                                 </Ellipse>
-                                <TextBlock Text="{x:Bind UserNamePost}" Margin="10" FontSize="17" VerticalAlignment="Center"/>
+                                <!--<TextBlock Text="{x:Bind UserNamePost}" Margin="10" Tag="{x:Bind UserPk}" FontSize="17" VerticalAlignment="Center"/>-->
+                                <Button x:Name="buttonProfile" CornerRadius="5" Background="{ThemeResource ListViewItemOverlayForegroundThemeBrush}" Tag="{x:Bind UserPk}" Click="ButtonProfile_Click" Margin="10" VerticalAlignment="Center" Content="{x:Bind UserNamePost}"/>
                             </StackPanel>
                             
                             <StackPanel Orientation="Vertical" Grid.Row="1">

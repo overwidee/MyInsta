@@ -291,6 +291,31 @@ namespace MyInsta.Logic
             return media.Value;
         }
 
+        public static async Task<bool> SaveMediaInProfile(User userObject, string mediaPk)
+        {
+            var result = await userObject.API.MediaProcessor.SaveMediaAsync(mediaPk);
+            if (result.Succeeded)
+                return true;
+            else
+                return false;
+        }
+
+        public static async Task<bool> SharedInDirect(User userObject, string id, MediaType mediaType, long idUser)
+        {
+            InstaMediaType instaMedia = InstaMediaType.Video;
+            if (mediaType == MediaType.Video)
+                instaMedia = InstaMediaType.Video;
+            else
+                if (mediaType == MediaType.Image)
+                instaMedia = InstaMediaType.Image;
+            var shared = await userObject.API.MessagingProcessor.ShareMediaToUserAsync(id, instaMedia, "", idUser);
+            if (shared.Succeeded)
+                return true;
+            else
+                return false;
+        }
+
+
         private static async Task<InstaMediaList> GetMediaUserAll(User userObject, InstaUserInfo unfUser)
         {
             cancellationTokenMedia = new CancellationTokenSource();
@@ -325,7 +350,7 @@ namespace MyInsta.Logic
             }
             catch (Exception)
             {
-                throw;
+                
             }
         }
 
@@ -502,6 +527,7 @@ namespace MyInsta.Logic
             };
         }
 
+
         public static IEnumerable<InstaUserShort> SearchByUserName(ObservableCollection<InstaUserShort> collection, string srt)
         {
             if (string.IsNullOrEmpty(srt))
@@ -534,7 +560,7 @@ namespace MyInsta.Logic
                 CustomDialog customDialog = new CustomDialog("Message", "Process started", "All right");
                 //var mediaUser = await currentUser.API.UserProcessor.GetUserMediaByIdAsync(selectUser.Pk, PaginationParameters.MaxPagesToLoad(30));
                 string unlike = "";
-                foreach (var item in medias)
+                foreach (var item in medias.Take(30))
                 {
                     var p = await currentUser.API.MediaProcessor.UnLikeMediaAsync(item.Pk);
                     if (p.Succeeded)
@@ -542,7 +568,7 @@ namespace MyInsta.Logic
                         unlike += item.Name + "\n";
                     }
                 }
-                customDialog = new CustomDialog("Message", $"Profile ({selectUser.UserName}) unliked \n {unlike}", "All right");
+                customDialog = new CustomDialog("Message", $"30 posts of {selectUser.UserName} unliked \n {unlike}", "All right");
             }
             catch (Exception e)
             {
@@ -554,7 +580,7 @@ namespace MyInsta.Logic
         public static async Task UnFollowFromList(User currentUser, ObservableCollection<InstaUserShort> instaUsers)
         {
             CustomDialog customDialog = new CustomDialog("Message", "Process started", "All right");
-            foreach (var item in instaUsers)
+            foreach (var item in instaUsers.Take(30))
             {
                 var p = await currentUser.API.UserProcessor.UnFollowUserAsync(item.Pk);
             }

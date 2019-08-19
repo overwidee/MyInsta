@@ -126,6 +126,9 @@
   <data name="DownloadPost.Content" xml:space="preserve">
     <value>Скачать пост</value>
   </data>
+  <data name="DownloadSavedPost.Content" xml:space="preserve">
+    <value>Скачать сохраненный пост</value>
+  </data>
   <data name="DownloadStory.Content" xml:space="preserve">
     <value>Скачать сторис</value>
   </data>
@@ -204,7 +207,10 @@
   <data name="Unfollowers.Content" xml:space="preserve">
     <value>Отписки</value>
   </data>
+  <data name="UnfollowFrom30.Content" xml:space="preserve">
+    <value>Отписаться от 30-ти профилей</value>
+  </data>
   <data name="UnlikeProfile.Content" xml:space="preserve">
-    <value>Убрать лайки</value>
+    <value>Убрать 30 лайков</value>
   </data>
 </root>

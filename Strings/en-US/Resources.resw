@@ -126,6 +126,9 @@
   <data name="DownloadPost.Content" xml:space="preserve">
     <value>Download post</value>
   </data>
+  <data name="DownloadSavedPost.Content" xml:space="preserve">
+    <value>Download saved post</value>
+  </data>
   <data name="DownloadStory.Content" xml:space="preserve">
     <value>Download story</value>
   </data>
@@ -204,7 +207,10 @@
   <data name="Unfollowers.Content" xml:space="preserve">
     <value>Unfollowers</value>
   </data>
+  <data name="UnfollowFrom30.Content" xml:space="preserve">
+    <value>Unfollow from 30 profiles</value>
+  </data>
   <data name="UnlikeProfile.Content" xml:space="preserve">
-    <value>Unlike profile</value>
+    <value>Unlike 30 posts</value>
   </data>
 </root>
