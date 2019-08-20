@@ -35,8 +35,7 @@ namespace MyInsta.Logic
                 Width = (type == 0) ? 800 : 1100,
                 SecondaryButtonText = "All right"
             };
-            Grid grid = new Grid();
-            Col
+            
             //StackPanel stackPanel = new StackPanel() { Width = (type == 0) ? 800 : 1100,
             //    Height = (type == 0) ? 1100 : 800,
             //    HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center };

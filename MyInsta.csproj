@@ -24,7 +24,7 @@
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <PackageCertificateThumbprint>B5016611D227458B9444ADD19172554289EE5127</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>3E417588C230CEB6D1D4D2C1DB4FFF3852DD6491</PackageCertificateThumbprint>
     <PackageCertificateKeyFile />
     <AppInstallerUpdateFrequency>0</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
