@@ -94,14 +94,14 @@
                                             <StackPanel Orientation="Vertical" >
                                                 <Image Source="{x:Bind UrlSmallImage}" Margin="10" Height="400" Width="500" HorizontalAlignment="Center"/>
                                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                    <TextBlock x:Uid="Likes" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
+                                                    <TextBlock x:Uid="Likes" Margin="5, 5, 10, 5" FontSize="20" FontFamily="Century Gothic"/>
                                                     <TextBlock Text="{x:Bind CountLikes}" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                    <TextBlock x:Uid="Comments" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
+                                                    <TextBlock x:Uid="Comments" Margin="5, 5, 10, 5" FontSize="20" FontFamily="Century Gothic"/>
                                                     <TextBlock Text="{x:Bind CountComments}" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
                                                 </StackPanel>
-                                                <Button x:Name="buttonDownload" HorizontalAlignment="Center" Click="ButtonDownload_Click" Margin="10" x:Uid="DownloadPost" Tag="{x:Bind Name}"/>
+                                                <Button x:Name="buttonDownload" CornerRadius="5" HorizontalAlignment="Center" Click="ButtonDownload_Click" Margin="10" x:Uid="DownloadPost" Tag="{x:Bind Name}"/>
                                             </StackPanel>
                                         </DataTemplate>
                                 </ListView.ItemTemplate>
@@ -130,7 +130,7 @@
                                                 <TextBlock x:Uid="Comments" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
                                                 <TextBlock Text="{x:Bind CountComments}" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
                                             </StackPanel>-->
-                                            <Button x:Name="buttonDownloadStory" HorizontalAlignment="Center" Click="ButtonDownloadStory_Click" Margin="10" x:Uid="DownloadStory" Tag="{x:Bind Name}"/>
+                                            <Button x:Name="buttonDownloadStory" CornerRadius="5" HorizontalAlignment="Center" Click="ButtonDownloadStory_Click" Margin="10" x:Uid="DownloadStory" Tag="{x:Bind Name}"/>
                                         </StackPanel>
                                     </DataTemplate>
                             </ListView.ItemTemplate>
@@ -141,11 +141,11 @@
         </controls:TabView>
 
         
-        <Button x:Name="followButton" x:Uid="Follow" IsEnabled="{x:Bind ButtonFollow, Mode=TwoWay}" Click="FollowButton_Click" HorizontalAlignment="Stretch" Margin="5" Grid.Column="1" Grid.Row="0"/>
-        <Button x:Name="unfollowButton" IsEnabled="{x:Bind ButtonUnFollow, Mode=TwoWay}" x:Uid="Unfollow" Click="UnfollowButton_Click" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Stretch" Margin="5"/>
-        <Button x:Name="saveButton" Click="SaveButton_Click" x:Uid="DownloadMedia" Margin="5" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Stretch"/>
+        <Button x:Name="followButton" x:Uid="Follow" CornerRadius="5" IsEnabled="{x:Bind ButtonFollow, Mode=TwoWay}" Click="FollowButton_Click" HorizontalAlignment="Stretch" Margin="5" Grid.Column="1" Grid.Row="0"/>
+        <Button x:Name="unfollowButton" CornerRadius="5" IsEnabled="{x:Bind ButtonUnFollow, Mode=TwoWay}" x:Uid="Unfollow" Click="UnfollowButton_Click" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Stretch" Margin="5"/>
+        <Button x:Name="saveButton" CornerRadius="5" Click="SaveButton_Click" x:Uid="DownloadMedia" Margin="5" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Stretch"/>
         
-        <Button x:Name="unlikeButton"  x:Uid="UnlikeProfile" Click="UnlikeButton_Click"  HorizontalAlignment="Stretch" Margin="5" Grid.Column="4" Grid.Row="0"/>
+        <Button x:Name="unlikeButton" CornerRadius="5"  x:Uid="UnlikeProfile" Click="UnlikeButton_Click"  HorizontalAlignment="Stretch" Margin="5" Grid.Column="4" Grid.Row="0"/>
         
     </Grid>
 </Page>

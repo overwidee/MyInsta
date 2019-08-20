@@ -65,6 +65,9 @@ namespace MyInsta.View
                     case "Saved":
                         contentFrame.Navigate(typeof(SavedPostsPage), InstaUser);
                         break;
+                    case "Stories":
+                        contentFrame.Navigate(typeof(StoriesPage), InstaUser);
+                        break;
                 }
             }
         }

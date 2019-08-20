@@ -38,6 +38,6 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Button x:Name="unFollowButton" Click="UnFollowButton_Click" Margin="10" x:Uid="UnfollowFrom30" Grid.Row="2" HorizontalAlignment="Center" Padding="10"/>
+        <Button x:Name="unFollowButton" CornerRadius="5" Click="UnFollowButton_Click" Margin="10" x:Uid="UnfollowFrom30" Grid.Row="2" HorizontalAlignment="Center" Padding="10"/>
     </Grid>
 </Page>

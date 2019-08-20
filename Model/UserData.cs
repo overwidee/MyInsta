@@ -15,6 +15,7 @@ namespace MyInsta.Model
         public ObservableCollection<InstaUserShort> UserUnfollowers { get; set; }
         public ObservableCollection<InstaUserShort> UserFriends { get; set; }
         public ObservableCollection<SavedItem> SavedItems { get; set; }
+        public ObservableCollection<UserStory> Stories { get; set; }
 
         public UserData()
         {

@@ -118,7 +118,7 @@ namespace MyInsta.View
             }
         }
 
-        private void StoriesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void StoriesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
             {
@@ -132,7 +132,7 @@ namespace MyInsta.View
                         urlMedia = story.UrlVideo;
 
                     MediaDialog mediaDialog = new MediaDialog(CurrentUser, story.Pk, urlMedia, story.MediaType, 0);
-                    mediaDialog.ShowMediaAsync();
+                    await mediaDialog.ShowMediaAsync();
                 }
             }
             catch
@@ -145,7 +145,7 @@ namespace MyInsta.View
             }
         }
 
-        private void MediaList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void MediaList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
             {
@@ -159,7 +159,7 @@ namespace MyInsta.View
                         urlMedia = post.UrlVideo;
 
                     MediaDialog mediaDialog = new MediaDialog(CurrentUser, post.Pk, urlMedia, post.MediaType, 1);
-                    mediaDialog.ShowMediaAsync();
+                    await mediaDialog.ShowMediaAsync();
                 }
             }
             catch

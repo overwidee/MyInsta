@@ -20,6 +20,7 @@
                 <NavigationViewItem Content="Sync" Icon="Sync" x:Uid="Sync" x:Name="button_sync" Tag="Sync" FontFamily="Century Gothic"/>
                 <NavigationViewItemSeparator />
                 <NavigationViewItem Content="Saved posts" Icon="Emoji" x:Name="button_savedPosts" Tag="Saved" FontFamily="Century Gothic"/>
+                <NavigationViewItem Content="Stories" Icon="Emoji" x:Name="button_stories" Tag="Stories" FontFamily="Century Gothic"/>
             </NavigationView.MenuItems>
             <Frame x:Name="contentFrame"></Frame>
         </NavigationView>

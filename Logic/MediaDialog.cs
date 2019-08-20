@@ -35,19 +35,24 @@ namespace MyInsta.Logic
                 Width = (type == 0) ? 800 : 1100,
                 SecondaryButtonText = "All right"
             };
-            StackPanel stackPanel = new StackPanel() { HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center };
+            Grid grid = new Grid();
+            Col
+            //StackPanel stackPanel = new StackPanel() { Width = (type == 0) ? 800 : 1100,
+            //    Height = (type == 0) ? 1100 : 800,
+            //    HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center };
             if (MediaType == MediaType.Video)
             {
                 var media = new MediaElement()
                 {
                     Source = new Uri(Url),
                     Width = (type == 0) ? 350 : 1000,
-                    Height = (type == 0) ? 900 : 450,
+                    Height = (type == 0) ? 1100 : 450,
                     AutoPlay = true,
                     HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
                     VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center
                 };
-                stackPanel.Children.Add(media);
+                contentDialog.Content = media;
+                //stackPanel.Children.Add(media);
             }
             else if (MediaType == MediaType.Image)
             {
@@ -56,53 +61,54 @@ namespace MyInsta.Logic
                     Source = new BitmapImage(
                         new Uri(Url, UriKind.Absolute)),
                     Width = (type == 0) ? 350 : 1000,
-                    Height = (type == 0) ? 900 : 450,
+                    Height = (type == 0) ? 1100 : 450,
                     Stretch = Stretch.Uniform,
                     HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
                     VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center
                 };
-                stackPanel.Children.Add(imageMedia);
+                contentDialog.Content = imageMedia;
+                //stackPanel.Children.Add(imageMedia);
             }
-            StackPanel panelButtons = new StackPanel() { Orientation = Orientation.Horizontal };
-            if (type != 0)
-            {
-                Button button = new Button() { Margin = new Windows.UI.Xaml.Thickness(0, 10, 10, 0), CornerRadius = new Windows.UI.Xaml.CornerRadius(5) };
-                button.Content = new SymbolIcon() { Symbol = Symbol.Emoji };
-                button.Click += async (s, e) => {
-                    await InstaServer.SaveMediaInProfile(InstaUser, PkMedia);
-                };
-                panelButtons.Children.Add(button);
-            }
+            //StackPanel panelButtons = new StackPanel() { Orientation = Orientation.Horizontal };
+            //if (type != 0)
+            //{
+            //    Button button = new Button() { Margin = new Windows.UI.Xaml.Thickness(0, 10, 10, 0), CornerRadius = new Windows.UI.Xaml.CornerRadius(5) };
+            //    button.Content = new SymbolIcon() { Symbol = Symbol.Emoji };
+            //    button.Click += async (s, e) => {
+            //        await InstaServer.SaveMediaInProfile(InstaUser, PkMedia);
+            //    };
+            //    panelButtons.Children.Add(button);
+            //    Button buttonSend = new Button() { Margin = new Windows.UI.Xaml.Thickness(0, 10, 10, 0), CornerRadius = new Windows.UI.Xaml.CornerRadius(5) };
+            //    buttonSend.Content = new SymbolIcon() { Symbol = Symbol.Share };
+            //    buttonSend.Click += async (s, e) => {
+            //        contentDialog.Hide();
+            //        ContentDialog contentShared = new ContentDialog()
+            //        {
+            //            PrimaryButtonText = "Send",
+            //            SecondaryButtonText = "Cancel",
+            //            Width = 1200
 
-            Button buttonSend = new Button() { Margin = new Windows.UI.Xaml.Thickness(0, 10, 10, 0), CornerRadius = new Windows.UI.Xaml.CornerRadius(5) };
-            buttonSend.Content = new SymbolIcon() { Symbol = Symbol.Share };
-            buttonSend.Click += async (s, e) => {
-                contentDialog.Hide();
-                ContentDialog contentShared = new ContentDialog()
-                {
-                    PrimaryButtonText = "Send",
-                    SecondaryButtonText = "Cancel",
-                    Width = 1200
-                    
-                };
-                Frame frame = new Frame() { Width = 1000, Height = 400 };
-                frame.Navigate(typeof(SharedPage), new object[] { InstaUser, MediaType, PkMedia });
-                contentShared.Content = frame;
-                var dialog = await contentShared.ShowAsync();
-                if (dialog == ContentDialogResult.Primary)
-                {
-                    var page = frame.Content as SharedPage;
-                    if (page.SelectedUser != null)
-                    {
-                        var b = await InstaServer.SharedInDirect(InstaUser, PkMedia, MediaType, page.SelectedUser.Pk);
-                    };
-                    //_ = contentDialog.ShowAsync();
-                }
-            };
-            panelButtons.Children.Add(buttonSend);
+            //        };
+            //        Frame frame = new Frame() { Width = 1000, Height = 400 };
+            //        frame.Navigate(typeof(SharedPage), new object[] { InstaUser, MediaType, PkMedia });
+            //        contentShared.Content = frame;
+            //        var dialog = await contentShared.ShowAsync();
+            //        if (dialog == ContentDialogResult.Primary)
+            //        {
+            //            var page = frame.Content as SharedPage;
+            //            if (page.SelectedUser != null)
+            //            {
+            //                var b = await InstaServer.SharedInDirect(InstaUser, PkMedia, MediaType, page.SelectedUser.Pk);
+            //            };
+            //            //_ = contentDialog.ShowAsync();
+            //        }
+            //    };
+            //    panelButtons.Children.Add(buttonSend);
 
-            stackPanel.Children.Add(panelButtons);
-            contentDialog.Content = stackPanel;
+            //    stackPanel.Children.Add(panelButtons);
+            //}
+
+            //contentDialog.Content = //stackPanel;
             _ = await contentDialog.ShowAsync();
         }
     }
