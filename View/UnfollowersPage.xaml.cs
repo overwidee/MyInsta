@@ -38,9 +38,16 @@ namespace MyInsta.View
 
         private void ListFollowers_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var user = e.AddedItems[0] as InstaUserShort;
-            if (user != null)
-                this.Frame.Navigate(typeof(PersonPage), new object[] { user, InstaUser });
+            try
+            {
+                var user = e.AddedItems[0] as InstaUserShort;
+                if (user != null)
+                    this.Frame.Navigate(typeof(PersonPage), new object[] { user, InstaUser });
+            }
+            catch
+            {
+
+            }
         }
 
         private void SearchBox_KeyDown(object sender, KeyRoutedEventArgs e)

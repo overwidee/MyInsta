@@ -24,7 +24,7 @@
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <PackageCertificateThumbprint>3E417588C230CEB6D1D4D2C1DB4FFF3852DD6491</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>B5016611D227458B9444ADD19172554289EE5127</PackageCertificateThumbprint>
     <PackageCertificateKeyFile />
     <AppInstallerUpdateFrequency>0</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
@@ -134,12 +134,16 @@
     <Compile Include="Logic\InstaServer.cs" />
     <Compile Include="Logic\MediaDialog.cs" />
     <Compile Include="Model\CustomMedia.cs" />
-    <Compile Include="Model\SavedItem.cs" />
+    <Compile Include="Model\PostItem.cs" />
+    <Compile Include="Model\PreviewPost.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserData.cs" />
     <Compile Include="Model\UserStory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\InstaUserViewModel.cs" />
+    <Compile Include="View\PreviewPostsPage.xaml.cs">
+      <DependentUpon>PreviewPostsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SavedPostsPage.xaml.cs">
       <DependentUpon>SavedPostsPage.xaml</DependentUpon>
     </Compile>
@@ -250,6 +254,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="View\PreviewPostsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\SavedPostsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

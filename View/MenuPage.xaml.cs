@@ -68,6 +68,9 @@ namespace MyInsta.View
                     case "Stories":
                         contentFrame.Navigate(typeof(StoriesPage), InstaUser);
                         break;
+                    case "Preview":
+                        contentFrame.Navigate(typeof(PreviewPostsPage), InstaUser);
+                        break;
                 }
             }
         }

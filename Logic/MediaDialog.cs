@@ -35,10 +35,6 @@ namespace MyInsta.Logic
                 Width = (type == 0) ? 800 : 1100,
                 SecondaryButtonText = "All right"
             };
-            
-            //StackPanel stackPanel = new StackPanel() { Width = (type == 0) ? 800 : 1100,
-            //    Height = (type == 0) ? 1100 : 800,
-            //    HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center };
             if (MediaType == MediaType.Video)
             {
                 var media = new MediaElement()
@@ -51,7 +47,6 @@ namespace MyInsta.Logic
                     VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center
                 };
                 contentDialog.Content = media;
-                //stackPanel.Children.Add(media);
             }
             else if (MediaType == MediaType.Image)
             {
@@ -66,7 +61,6 @@ namespace MyInsta.Logic
                     VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center
                 };
                 contentDialog.Content = imageMedia;
-                //stackPanel.Children.Add(imageMedia);
             }
             //StackPanel panelButtons = new StackPanel() { Orientation = Orientation.Horizontal };
             //if (type != 0)

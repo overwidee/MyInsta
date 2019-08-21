@@ -31,13 +31,12 @@ namespace MyInsta.View
 
         public User InstaUser { get; set; }
         int countPosts = 10;
-        bool profileClick = false;
         protected override void OnNavigatedTo(NavigationEventArgs e)
-        { 
+        {
             base.OnNavigatedTo(e);
 
             InstaUser = e.Parameter as User;
-            savedList.ItemsSource = InstaUser.UserData.SavedItems.Take(10);
+            savedList.ItemsSource = InstaUser.UserData.SavedPostItems.Take(10);
         }
 
         private void ScrollListPosts_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
@@ -50,28 +49,25 @@ namespace MyInsta.View
             if (verticalOffset == maxVerticalOffset)
             {
                 countPosts += 3;
-                savedList.ItemsSource = InstaUser.UserData.SavedItems.Take(countPosts);
+                savedList.ItemsSource = InstaUser.UserData.SavedPostItems.Take(countPosts);
             }
         }
 
-        private void SavedList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void SavedList_SelectionChanged(object sender, TappedRoutedEventArgs e)
         {
             try
             {
-                var sav = e.AddedItems[0] as SavedItem;
-                if (sav.Item != null)
+                var sav = ((FlipView)sender).SelectedItem as CustomMedia;
+                if (sav != null)
                 {
                     string urlMedia = "";
-                    if (sav.Item.MediaType == MediaType.Image)
-                        urlMedia = sav.Item.UrlBigImage;
-                    else if (sav.Item.MediaType == MediaType.Video)
-                        urlMedia = sav.Item.UrlVideo;
+                    if (sav.MediaType == MediaType.Image)
+                        urlMedia = sav.UrlBigImage;
+                    else if (sav.MediaType == MediaType.Video)
+                        urlMedia = sav.UrlVideo;
 
-                    if (!profileClick)
-                    {
-                        MediaDialog mediaDialog = new MediaDialog(InstaUser, sav.Item.Pk, urlMedia, sav.Item.MediaType, 1);
-                        _ = mediaDialog.ShowMediaAsync();
-                    }
+                    MediaDialog mediaDialog = new MediaDialog(InstaUser, sav.Pk, urlMedia, sav.MediaType, 1);
+                    _ = mediaDialog.ShowMediaAsync();
                 }
             }
             catch
@@ -80,19 +76,27 @@ namespace MyInsta.View
             }
             finally
             {
-                ((ListView)sender).SelectedItem = null;
+                ((FlipView)sender).SelectedItem = null;
             }
         }
 
         private async void ButtonDownload_Click(object sender, RoutedEventArgs e)
         {
-            await InstaServer.DownloadMedia(InstaUser.UserData.SavedItems.Where(x => x.Item.Name == ((Button)sender).Tag.ToString()).First().Item);
+            await InstaServer.DownloadAnyPost(
+                await InstaServer.GetInstaUserShortById(InstaUser,
+                    InstaUser.UserData.SavedPostItems.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().UserPk),
+                InstaUser.UserData.SavedPostItems.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().Items);
         }
 
         private async void ButtonProfile_Click(object sender, RoutedEventArgs e)
         {
             var user = await InstaServer.GetInstaUserShortById(InstaUser, long.Parse(((Button)sender).Tag.ToString()));
             this.Frame.Navigate(typeof(PersonPage), new object[] { user, InstaUser });
+        }
+
+        private async void ButtonShare_Click(object sender, RoutedEventArgs e)
+        {
+            await InstaServer.ShareMedia(InstaUser, InstaUser.UserData.SavedPostItems.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().Items);
         }
     }
 }

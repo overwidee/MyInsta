@@ -8,7 +8,7 @@
 
   <Identity
     Name="d7d7f0d6-b545-4d27-a44e-8b673d52ac3e"
-    Publisher="CN=Shichko Software, O=Shichko Corporation, C=BY"
+    Publisher="CN=Shichok Software, O=Shichok Corporation, C=US"
     Version="1.2.10.0" />
 
   <mp:PhoneIdentity PhoneProductId="d7d7f0d6-b545-4d27-a44e-8b673d52ac3e" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>

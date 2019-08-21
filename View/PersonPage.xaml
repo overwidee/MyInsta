@@ -83,25 +83,51 @@
             <controls:TabViewItem x:Uid="Posts" Background="{ThemeResource FlipViewButtonBorderThemeBrush}" Icon="Camera">     
                 <Frame Margin="10" CornerRadius="0">
                         <ScrollViewer x:Name="scrollListPosts" ViewChanged="ScrollListPosts_ViewChanged" VerticalScrollBarVisibility="Auto">
-                            <ListView x:Name="mediaList" SelectionChanged="MediaList_SelectionChanged"  ItemsSource="{x:Bind UrlMedias}" HorizontalContentAlignment="Center"> 
+                            <ListView x:Name="mediaList" SelectionMode="None" ItemsSource="{x:Bind Posts}" HorizontalContentAlignment="Center"> 
                                 <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel HorizontalAlignment="Center"/>
                                     </ItemsPanelTemplate>
                                 </ListView.ItemsPanel>
                                 <ListView.ItemTemplate>
-                                        <DataTemplate x:DataType="model:CustomMedia">
-                                            <StackPanel Orientation="Vertical" >
-                                                <Image Source="{x:Bind UrlSmallImage}" Margin="10" Height="400" Width="500" HorizontalAlignment="Center"/>
+                                        <DataTemplate x:DataType="model:PostItem">
+                                            <StackPanel Orientation="Vertical" > 
+                                                <FlipView Width="500" x:Name="itemsList" Tapped="MediaList_SelectionChanged" ItemsSource="{x:Bind Items}" HorizontalContentAlignment="Center">
+                                                    <FlipView.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                                                        </ItemsPanelTemplate>
+                                                    </FlipView.ItemsPanel>
+                                                    <FlipView.ItemTemplate>
+                                                        <DataTemplate x:DataType="model:CustomMedia">
+                                                            <StackPanel>
+                                                                <Image Source="{x:Bind UrlSmallImage}" Margin="10" Height="400" />
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </FlipView.ItemTemplate>
+                                                </FlipView>     
+                                                <!--<Image Source="{x:Bind }" Margin="10" Height="400" Width="500" HorizontalAlignment="Center"/>-->
                                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                                     <TextBlock x:Uid="Likes" Margin="5, 5, 10, 5" FontSize="20" FontFamily="Century Gothic"/>
-                                                    <TextBlock Text="{x:Bind CountLikes}" Margin="5, 5, 10, 5" FontSize="20" FontFamily="Century Gothic"/>
+                                                    <TextBlock Text="{x:Bind Items[0].CountLikes}" Margin="5, 5, 10, 5" FontSize="20" FontFamily="Century Gothic"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                                     <TextBlock x:Uid="Comments" Margin="5, 5, 10, 5" FontSize="20" FontFamily="Century Gothic"/>
-                                                    <TextBlock Text="{x:Bind CountComments}" Margin="5, 5, 10, 5" FontSize="20" FontFamily="Century Gothic"/>
+                                                    <TextBlock Text="{x:Bind Items[0].CountComments}" Margin="5, 5, 10, 5" FontSize="20" FontFamily="Century Gothic"/>
                                                 </StackPanel>
-                                                <Button x:Name="buttonDownload" CornerRadius="5" HorizontalAlignment="Center" Click="ButtonDownload_Click" Margin="10" x:Uid="DownloadPost" Tag="{x:Bind Name}"/>
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                    <Button x:Name="buttonSaveInProfile" Tag="{x:Bind Id}" Click="ButtonSaveInProfile_Click" CornerRadius="5" Margin="10">
+                                                        <Button.Content>
+                                                            <SymbolIcon Symbol="Emoji"/>
+                                                        </Button.Content>
+                                                    </Button>
+                                                    <Button x:Name="buttonDownload" CornerRadius="5" HorizontalAlignment="Center" Click="ButtonDownload_Click" Margin="10" x:Uid="DownloadPost" Tag="{x:Bind Id}"/>
+                                                    <Button x:Name="buttonShare" Tag="{x:Bind Id}" Click="ButtonShare_Click" CornerRadius="5" Margin="10">
+                                                        <Button.Content>
+                                                            <SymbolIcon Symbol="Share"/>
+                                                        </Button.Content>
+                                                    </Button>
+                                                </StackPanel>
                                             </StackPanel>
                                         </DataTemplate>
                                 </ListView.ItemTemplate>

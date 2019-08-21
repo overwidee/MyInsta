@@ -40,7 +40,7 @@ namespace MyInsta.View
 
         public InstaMediaList MediaUser { get; set; }
 
-        public ObservableCollection<CustomMedia> UrlMedias { get; set; }
+        public ObservableCollection<PostItem> Posts { get; set; }
         public ObservableCollection<CustomMedia> UrlStories { get; set; }
 
         int countPosts = 10;
@@ -63,11 +63,11 @@ namespace MyInsta.View
             UrlStories = await InstaServer.GetStoryUser(CurrentUser, InstaUserInfo);
             storiesList.ItemsSource = UrlStories;
 
-            UrlMedias = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo, 0);
-            mediaList.ItemsSource = UrlMedias.Take(countPosts);
+            Posts = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo, 0);
+            mediaList.ItemsSource = Posts.Take(countPosts);
 
-            UrlMedias = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo, 1);
-            mediaList.ItemsSource = UrlMedias?.Take(countPosts);
+            Posts = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo, 1);
+            mediaList.ItemsSource = Posts?.Take(countPosts);
         }
 
         private async void UnfollowButton_Click(object sender, RoutedEventArgs e)
@@ -86,17 +86,20 @@ namespace MyInsta.View
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            await InstaServer.SaveImages(UrlMedias, SelectUser);
+            await InstaServer.DownloadAnyPosts(SelectUser, Posts);
         }
 
         private async void UnlikeButton_Click(object sender, RoutedEventArgs e)
         {
-            await InstaServer.UnlikeProfile(CurrentUser, SelectUser, UrlMedias);
+            await InstaServer.UnlikeProfile(CurrentUser, SelectUser, Posts);
         }
 
         private async void ButtonDownload_Click(object sender, RoutedEventArgs e)
         {
-            await InstaServer.DownloadMedia(UrlMedias.Where(x => x.Name == ((Button)sender).Tag.ToString()).First());
+            await InstaServer.DownloadAnyPost(
+                await InstaServer.GetInstaUserShortById(CurrentUser,
+                    Posts.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().UserPk),
+                Posts.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().Items);
         }
 
         private async void ButtonDownloadStory_Click(object sender, RoutedEventArgs e)
@@ -114,7 +117,7 @@ namespace MyInsta.View
             if (verticalOffset == maxVerticalOffset)
             {
                 countPosts += 3;
-                mediaList.ItemsSource = UrlMedias.Take(countPosts);
+                mediaList.ItemsSource = Posts.Take(countPosts);
             }
         }
 
@@ -145,11 +148,11 @@ namespace MyInsta.View
             }
         }
 
-        private async void MediaList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void MediaList_SelectionChanged(object sender, TappedRoutedEventArgs e)
         {
             try
             {
-                var post = e.AddedItems[0] as CustomMedia;
+                var post = ((FlipView)sender).SelectedItem as CustomMedia;
                 if (post != null)
                 {
                     string urlMedia = "";
@@ -159,7 +162,7 @@ namespace MyInsta.View
                         urlMedia = post.UrlVideo;
 
                     MediaDialog mediaDialog = new MediaDialog(CurrentUser, post.Pk, urlMedia, post.MediaType, 1);
-                    await mediaDialog.ShowMediaAsync();
+                    _ = mediaDialog.ShowMediaAsync();
                 }
             }
             catch
@@ -168,13 +171,23 @@ namespace MyInsta.View
             }
             finally
             {
-                ((ListView)sender).SelectedItem = null;
+                ((FlipView)sender).SelectedItem = null;
             }
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
             InstaServer.CancelTasks();
+        }
+
+        private async void ButtonSaveInProfile_Click(object sender, RoutedEventArgs e)
+        {
+            await InstaServer.SaveMediaInProfile(CurrentUser, ((Button)sender).Tag.ToString());
+        }
+
+        private async void ButtonShare_Click(object sender, RoutedEventArgs e)
+        {
+            await InstaServer.ShareMedia(CurrentUser, Posts.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().Items);
         }
     }
 }
