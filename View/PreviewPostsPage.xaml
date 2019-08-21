@@ -9,39 +9,58 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:model="using:MyInsta.Model"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    <Page.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Century Gothic"/>
+        </Style>
+    </Page.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="6*"/>
+            <ColumnDefinition Width="15*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="70"/>
             <RowDefinition Height="253*"/>
+            <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
-        
-        <GridView x:Name="grid" ItemsSource="{x:Bind PreviewPosts, Mode=TwoWay}" 
+
+        <TextBlock Text="{x:Bind InstaUser.LoginUser}" FontSize="25" VerticalAlignment="Center" Margin="10" Grid.ColumnSpan="4" HorizontalAlignment="Center"/>
+        <GridView x:Name="mainGrid" ItemsSource="{x:Bind PreviewPosts}" 
                   Grid.Row="1" Grid.ColumnSpan="4" ScrollViewer.VerticalScrollBarVisibility="Hidden"
                   HorizontalAlignment="Center">
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <VariableSizedWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="3" ItemHeight="400" ItemWidth="400" ></VariableSizedWrapGrid>
+                    <VariableSizedWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="3" ItemHeight="300" ItemWidth="300" ></VariableSizedWrapGrid>
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="model:PreviewPost">
                     <Image 
                         Source="{x:Bind Url}"
-                        Height="400"
-                        Width="400"
-                        Stretch="UniformToFill"/>
+                        Height="300"
+                        Width="300"
+                        Stretch="UniformToFill">
+                    </Image>
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>
-        <!--<VariableSizedWrapGrid MaxWidth="1220" MinHeight="1220" ItemHeight="400" ItemWidth="400" Grid.Row="1" Grid.ColumnSpan="4">
-            <Image></Image>
-        </VariableSizedWrapGrid>-->
+        <Button x:Name="addButton" Click="AddButton_Click" Grid.Row="2" Height="50" Width="50" CornerRadius="5" HorizontalAlignment="Center">
+            <Button.Content>
+                <SymbolIcon Symbol="Add"/>
+            </Button.Content>
+        </Button>
+        <Button x:Name="removeButton" Click="RemoveButton_Click" Grid.Row="2" Grid.Column="1" Height="50" Width="50" CornerRadius="5" HorizontalAlignment="Center">
+            <Button.Content>
+                <SymbolIcon Symbol="Remove"/>
+            </Button.Content>
+        </Button>
+        <!--<Button x:Name="addButton" Grid.Row="2" Height="50" Width="50" CornerRadius="5" HorizontalAlignment="Center">
+            <Button.Content>
+                <SymbolIcon Symbol="Add"/>
+            </Button.Content>
+        </Button>-->
     </Grid>
 </Page>
