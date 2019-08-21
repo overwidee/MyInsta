@@ -15,7 +15,7 @@
     </Page.Resources>
     <Grid>
         <ScrollViewer x:Name="scrollListPosts" ViewChanged="ScrollListPosts_ViewChanged" VerticalScrollBarVisibility="Auto">
-            <ListView x:Name="savedList" SelectionMode="None" ItemsSource="{x:Bind InstaUser.UserData.SavedPostItems}" HorizontalContentAlignment="Center">
+            <ListView x:Name="savedList" SelectionMode="None"  HorizontalContentAlignment="Center">
                 <ListView.Resources>
                     <ResourceDictionary>
                         <ResourceDictionary.MergedDictionaries>
@@ -51,7 +51,7 @@
                                     </Ellipse.Fill>
                                 </Ellipse>
                                 <!--<TextBlock Text="{x:Bind UserNamePost}" Margin="10" Tag="{x:Bind UserPk}" FontSize="17" VerticalAlignment="Center"/>-->
-                                <Button x:Name="buttonProfile" CornerRadius="5" Background="{ThemeResource ListViewItemOverlayForegroundThemeBrush}" Tag="{x:Bind UserPk}" Click="ButtonProfile_Click" Margin="10" VerticalAlignment="Center" Content="{x:Bind UserNamePost}"/>
+                                <Button x:Name="buttonProfile" CornerRadius="5" Tag="{x:Bind UserPk}" Click="ButtonProfile_Click" Margin="10" VerticalAlignment="Center" Content="{x:Bind UserNamePost}"/>
                             </StackPanel>
 
                             <StackPanel Orientation="Vertical" Grid.Row="1">
