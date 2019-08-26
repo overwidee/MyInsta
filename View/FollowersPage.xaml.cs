@@ -43,9 +43,6 @@ namespace MyInsta.View
                 this.Frame.Navigate(typeof(PersonPage), new object[] { user, InstaUser});
         }
 
-        private void SearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            listFollowers.ItemsSource = InstaServer.SearchByUserName(InstaUser.UserData.UserFollowers, ((AutoSuggestBox)sender).Text);
-        }
+        private void SearchBox_KeyDown(object sender, KeyRoutedEventArgs e) => listFollowers.ItemsSource = InstaServer.SearchByUserName(InstaUser.UserData.UserFollowers, ((AutoSuggestBox)sender).Text);
     }
 }

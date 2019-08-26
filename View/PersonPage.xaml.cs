@@ -84,28 +84,16 @@ namespace MyInsta.View
             unfollowButton.IsEnabled = true;
         }
 
-        private async void SaveButton_Click(object sender, RoutedEventArgs e)
-        {
-            await InstaServer.DownloadAnyPosts(SelectUser, Posts);
-        }
+        private async void SaveButton_Click(object sender, RoutedEventArgs e) => await InstaServer.DownloadAnyPosts(SelectUser, Posts);
 
-        private async void UnlikeButton_Click(object sender, RoutedEventArgs e)
-        {
-            await InstaServer.UnlikeProfile(CurrentUser, SelectUser, Posts);
-        }
+        private async void UnlikeButton_Click(object sender, RoutedEventArgs e) => await InstaServer.UnlikeProfile(CurrentUser, SelectUser, Posts);
 
-        private async void ButtonDownload_Click(object sender, RoutedEventArgs e)
-        {
-            await InstaServer.DownloadAnyPost(
+        private async void ButtonDownload_Click(object sender, RoutedEventArgs e) => await InstaServer.DownloadAnyPost(
                 await InstaServer.GetInstaUserShortById(CurrentUser,
                     Posts.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().UserPk),
                 Posts.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().Items);
-        }
 
-        private async void ButtonDownloadStory_Click(object sender, RoutedEventArgs e)
-        {
-            await InstaServer.DownloadMedia(UrlStories.Where(x => x.Name == ((Button)sender).Tag.ToString()).First());
-        }
+        private async void ButtonDownloadStory_Click(object sender, RoutedEventArgs e) => await InstaServer.DownloadMedia(UrlStories.Where(x => x.Name == ((Button)sender).Tag.ToString()).First());
 
         private void ScrollListPosts_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
@@ -175,34 +163,25 @@ namespace MyInsta.View
             }
         }
 
-        private void Page_Unloaded(object sender, RoutedEventArgs e)
-        {
-            InstaServer.CancelTasks();
-        }
+        private void Page_Unloaded(object sender, RoutedEventArgs e) => InstaServer.CancelTasks();
 
-        private async void ButtonSaveInProfile_Click(object sender, RoutedEventArgs e)
-        {
-            await InstaServer.SaveMediaInProfile(CurrentUser, ((Button)sender).Tag.ToString());
-        }
+        private async void ButtonSaveInProfile_Click(object sender, RoutedEventArgs e) => await InstaServer.SaveMediaInProfile(CurrentUser, ((Button)sender).Tag.ToString());
 
-        private async void ButtonShare_Click(object sender, RoutedEventArgs e)
-        {
-            await InstaServer.ShareMedia(CurrentUser, Posts.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().Items);
-        }
+        private async void ButtonShare_Click(object sender, RoutedEventArgs e) => await InstaServer.ShareMedia(CurrentUser, Posts.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().Items);
 
-        private void PostBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        private void PostBox_TextChanged(AutoSuggestBox sender,
+                                         AutoSuggestBoxTextChangedEventArgs args)
         {
-            if (!string.IsNullOrEmpty(((AutoSuggestBox)sender).Text))
+            if (!string.IsNullOrEmpty(sender.Text))
             {
                 int i;
-                var b = int.TryParse(((AutoSuggestBox)sender).Text, out i);
+                var b = int.TryParse(sender.Text, out i);
                 if (b)
                 {
                     var items = Posts?.Where(x => x.Id == i);
                     if (items != null)
                         mediaList.ItemsSource = items;
                 }
-                    
                 else
                     mediaList.ItemsSource = Posts;
             }
@@ -211,19 +190,19 @@ namespace MyInsta.View
 
         }
 
-        private void PostBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        private void PostBox_QuerySubmitted(AutoSuggestBox sender, 
+                                            AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            if (!string.IsNullOrEmpty(((AutoSuggestBox)sender).Text))
+            if (!string.IsNullOrEmpty(sender.Text))
             {
                 int i;
-                var b = int.TryParse(((AutoSuggestBox)sender).Text, out i);
+                var b = int.TryParse(sender.Text, out i);
                 if (b)
                 {
                     var items = Posts?.Where(x => x.Id == i);
                     if (items != null)
                         mediaList.ItemsSource = items;
                 }
-
                 else
                     mediaList.ItemsSource = Posts;
             }
