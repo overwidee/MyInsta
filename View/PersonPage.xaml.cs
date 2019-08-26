@@ -189,5 +189,46 @@ namespace MyInsta.View
         {
             await InstaServer.ShareMedia(CurrentUser, Posts.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().Items);
         }
+
+        private void PostBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (!string.IsNullOrEmpty(((AutoSuggestBox)sender).Text))
+            {
+                int i;
+                var b = int.TryParse(((AutoSuggestBox)sender).Text, out i);
+                if (b)
+                {
+                    var items = Posts?.Where(x => x.Id == i);
+                    if (items != null)
+                        mediaList.ItemsSource = items;
+                }
+                    
+                else
+                    mediaList.ItemsSource = Posts;
+            }
+            else
+                mediaList.ItemsSource = Posts;
+
+        }
+
+        private void PostBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            if (!string.IsNullOrEmpty(((AutoSuggestBox)sender).Text))
+            {
+                int i;
+                var b = int.TryParse(((AutoSuggestBox)sender).Text, out i);
+                if (b)
+                {
+                    var items = Posts?.Where(x => x.Id == i);
+                    if (items != null)
+                        mediaList.ItemsSource = items;
+                }
+
+                else
+                    mediaList.ItemsSource = Posts;
+            }
+            else
+                mediaList.ItemsSource = Posts;
+        }
     }
 }

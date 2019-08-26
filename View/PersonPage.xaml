@@ -82,7 +82,13 @@
         <controls:TabView Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="1" Grid.RowSpan="3" TabWidthBehavior="Equal">
             <controls:TabViewItem x:Uid="Posts" Background="{ThemeResource FlipViewButtonBorderThemeBrush}" Icon="Camera">     
                 <Frame Margin="10" CornerRadius="0">
-                        <ScrollViewer x:Name="scrollListPosts" ViewChanged="ScrollListPosts_ViewChanged" VerticalScrollBarVisibility="Auto">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <AutoSuggestBox x:Name="postBox" QuerySubmitted="PostBox_QuerySubmitted" QueryIcon="Find" TextChanged="PostBox_TextChanged" PlaceholderText="Number of post"  Margin="10" Grid.Row="0"/>
+                        <ScrollViewer x:Name="scrollListPosts" Grid.Row="1" ViewChanged="ScrollListPosts_ViewChanged" VerticalScrollBarVisibility="Auto">
                             <ListView x:Name="mediaList" SelectionMode="None" ItemsSource="{x:Bind Posts}" HorizontalContentAlignment="Center"> 
                                 <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -133,6 +139,7 @@
                                 </ListView.ItemTemplate>
                             </ListView>
                         </ScrollViewer>
+                    </Grid>
                 </Frame>
             </controls:TabViewItem>
             <controls:TabViewItem x:Uid="Stories" Background="{ThemeResource FlipViewButtonBorderThemeBrush}" Icon="View">     

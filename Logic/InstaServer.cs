@@ -815,6 +815,7 @@ namespace MyInsta.Logic
             }
         }
         #endregion
+
         #region Preview Post
         public static async Task<ObservableCollection<PreviewPost>> GetPreviewPosts(User instaUser)
         {
@@ -856,6 +857,13 @@ namespace MyInsta.Logic
             }
             return previewPost;
         }
+        #endregion
+
+        #region Location
+        //public static async Task Location(User currentUser)
+        //{
+        //    currentUser.API.WebProcessor.
+        //}
         #endregion
     }
 

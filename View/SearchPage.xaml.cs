@@ -57,5 +57,18 @@ namespace MyInsta.View
                 listSearch.ItemsSource = SearchUsers;
             }
         }
+
+        private async void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            var user = await InstaServer.SearchByUserName(InstaUser, ((AutoSuggestBox)sender).Text);
+            if (user != null)
+            {
+                SearchUsers = new ObservableCollection<InstaUserShort>();
+                SearchUsers.Add(user);
+
+                listSearch.ItemsSource = null;
+                listSearch.ItemsSource = SearchUsers;
+            }
+        }
     }
 }
