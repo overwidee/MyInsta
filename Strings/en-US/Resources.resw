@@ -172,7 +172,7 @@
     <value>Login</value>
   </data>
   <data name="Media.Text" xml:space="preserve">
-    <value>Media:</value>
+    <value>Posts:</value>
   </data>
   <data name="Password.PlaceholderText" xml:space="preserve">
     <value>Password</value>

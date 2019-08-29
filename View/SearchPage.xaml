@@ -18,7 +18,7 @@
             <RowDefinition Height="60"/>
             <RowDefinition Height="153*"/>
         </Grid.RowDefinitions>
-        <AutoSuggestBox x:Name="searchBox" x:Uid="SearchBox" QuerySubmitted="SearchBox_QuerySubmitted" QueryIcon="Find" Grid.Row="0" Foreground="{ThemeResource BackButtonPointerOverForegroundThemeBrush}" Background="{ThemeResource BackButtonPointerOverBackgroundThemeBrush}" FontSize="20" Margin="100,10,100,10" KeyUp="SearchBox_KeyDown" VerticalContentAlignment="Center"/>
+        <AutoSuggestBox x:Name="searchBox" x:Uid="SearchBox" QuerySubmitted="SearchBox_QuerySubmitted" QueryIcon="Find" Grid.Row="0" Foreground="{ThemeResource BackButtonPointerOverForegroundThemeBrush}" Background="{ThemeResource BackButtonPointerOverBackgroundThemeBrush}" FontSize="20" Margin="100,10,100,10" VerticalContentAlignment="Center"/>
         <ListView x:Name="listSearch" AllowFocusWhenDisabled="True" ItemsSource="{x:Bind SearchUsers}" Grid.Row="1" Margin="10" SelectionChanged="ListFollowers_SelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate x:Name="SingleLineDataTemplate" x:DataType="localInsta:InstaUserShort">

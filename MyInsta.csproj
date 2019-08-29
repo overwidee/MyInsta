@@ -144,6 +144,9 @@
     <Compile Include="View\PreviewPostsPage.xaml.cs">
       <DependentUpon>PreviewPostsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ProfilePage.xaml.cs">
+      <DependentUpon>ProfilePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SavedPostsPage.xaml.cs">
       <DependentUpon>SavedPostsPage.xaml</DependentUpon>
     </Compile>
@@ -255,6 +258,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="View\PreviewPostsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ProfilePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

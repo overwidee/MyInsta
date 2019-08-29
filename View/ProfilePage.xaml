@@ -1,0 +1,158 @@
+﻿<Page
+    x:Class="MyInsta.View.ProfilePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MyInsta.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:model="using:MyInsta.Model"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="787*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="140"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <CommandBar Grid.Column="3" Width="50" HorizontalAlignment="Right">
+            <AppBarButton Icon="Accept" x:Name="followButton" Label="Follow" CornerRadius="5" IsEnabled="{x:Bind ButtonFollow, Mode=TwoWay}" Click="FollowButton_Click" HorizontalAlignment="Stretch"/>
+            <AppBarButton Icon="Cancel" x:Name="unfollowButton" Label="Unfollow" CornerRadius="5" IsEnabled="{x:Bind ButtonUnFollow, Mode=TwoWay}" Click="UnfollowButton_Click" HorizontalAlignment="Stretch"/>
+            <AppBarButton Icon="Download" x:Name="saveButton" Label="Download posts" CornerRadius="5" Click="SaveButton_Click" HorizontalAlignment="Stretch"/>
+            <AppBarButton Icon="Dislike" x:Name="unlikeButton" Label="Unlike 30 posts" CornerRadius="5" Click="UnlikeButton_Click"  HorizontalAlignment="Stretch"/>
+        </CommandBar>
+        <Ellipse  Grid.Column="0" Grid.Row="0" Margin="10,10,10,10">
+            <Ellipse.Fill>
+                <ImageBrush>
+                    <ImageBrush.ImageSource>
+                        <BitmapImage UriSource="{x:Bind InstaUserInfo.ProfilePicUrl}"/>
+                    </ImageBrush.ImageSource>
+                </ImageBrush>
+            </Ellipse.Fill>
+        </Ellipse>
+        <!--<Button Grid.Row="1" Grid.Column="0" Content="Action" CornerRadius="5" HorizontalAlignment="Stretch" Margin="10">
+            <Button.Flyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem x:Name="followButton" CornerRadius="5" IsEnabled="{x:Bind ButtonFollow, Mode=TwoWay}" Click="FollowButton_Click" HorizontalAlignment="Stretch" Text="Follow"/>
+                    <MenuFlyoutItem x:Name="unfollowButton" CornerRadius="5" IsEnabled="{x:Bind ButtonUnFollow, Mode=TwoWay}" Click="UnfollowButton_Click" HorizontalAlignment="Stretch" Text="Unfollow"/>
+                    <MenuFlyoutItem x:Name="saveButton" CornerRadius="5" Click="SaveButton_Click" HorizontalAlignment="Stretch" Text="Download posts"/>
+                    <MenuFlyoutItem x:Name="unlikeButton" CornerRadius="5"  Click="UnlikeButton_Click"  HorizontalAlignment="Stretch" Text="Unlike 30 posts"/>
+                </MenuFlyout>
+            </Button.Flyout>
+        </Button>-->
+        <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Text="{x:Bind InstaUserInfo.MediaCount}" HorizontalAlignment="Center"  
+                        Grid.Column="1" FontSize="20" TextWrapping="Wrap"/>
+            <TextBlock x:Uid="Media" FontSize="20" Margin="0, 0, 10, 0" HorizontalAlignment="Center"/>
+        </StackPanel>
+        <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Text="{x:Bind InstaUserInfo.FollowerCount}"  
+                        Grid.Column="1" FontSize="20" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+            <TextBlock x:Uid="Followers2" FontSize="20" Margin="0, 0, 10, 0" HorizontalAlignment="Center"/>
+
+        </StackPanel>
+        <StackPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Text="{x:Bind InstaUserInfo.FollowingCount}"  
+                        Grid.Column="1" FontSize="20" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+            <TextBlock x:Uid="Following" FontSize="20" Margin="0, 0, 10, 0" HorizontalAlignment="Center"/>
+        </StackPanel>
+        <controls:TabView Grid.ColumnSpan="4" Grid.Row="1" TabWidthBehavior="Equal" Margin="10">
+            <controls:TabViewItem x:Uid="Posts" Background="{ThemeResource FlipViewButtonBorderThemeBrush}" Icon="Camera">
+                <Frame Margin="10" CornerRadius="0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <AutoSuggestBox x:Name="postBox" QuerySubmitted="PostBox_QuerySubmitted" QueryIcon="Find" TextChanged="PostBox_TextChanged" PlaceholderText="Number of post"  Margin="10" Grid.Row="0"/>
+                        <ScrollViewer x:Name="scrollListPosts" Grid.Row="1" ViewChanged="ScrollListPosts_ViewChanged" VerticalScrollBarVisibility="Auto">
+                            <ListView x:Name="mediaList" SelectionMode="None" ItemsSource="{x:Bind Posts}" HorizontalContentAlignment="Center">
+                                <ListView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel HorizontalAlignment="Center"/>
+                                    </ItemsPanelTemplate>
+                                </ListView.ItemsPanel>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="model:PostItem">
+                                        <StackPanel Orientation="Vertical" >
+                                            <FlipView Width="500" x:Name="itemsList" Tapped="MediaList_SelectionChanged" ItemsSource="{x:Bind Items}" HorizontalContentAlignment="Center">
+                                                <FlipView.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"/>
+                                                    </ItemsPanelTemplate>
+                                                </FlipView.ItemsPanel>
+                                                <FlipView.ItemTemplate>
+                                                    <DataTemplate x:DataType="model:CustomMedia">
+                                                        <StackPanel>
+                                                            <Image Source="{x:Bind UrlSmallImage}" Margin="10" Height="400" />
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </FlipView.ItemTemplate>
+                                            </FlipView>
+                                            <!--<Image Source="{x:Bind }" Margin="10" Height="400" Width="500" HorizontalAlignment="Center"/>-->
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock x:Uid="Likes" Margin="5, 5, 10, 5" FontSize="20" FontFamily="Century Gothic"/>
+                                                <TextBlock Text="{x:Bind Items[0].CountLikes}" Margin="5, 5, 10, 5" FontSize="20" FontFamily="Century Gothic"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock x:Uid="Comments" Margin="5, 5, 10, 5" FontSize="20" FontFamily="Century Gothic"/>
+                                                <TextBlock Text="{x:Bind Items[0].CountComments}" Margin="5, 5, 10, 5" FontSize="20" FontFamily="Century Gothic"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <Button x:Name="buttonSaveInProfile" Tag="{x:Bind Id}" Click="ButtonSaveInProfile_Click" CornerRadius="5" Margin="10">
+                                                    <Button.Content>
+                                                        <SymbolIcon Symbol="Emoji"/>
+                                                    </Button.Content>
+                                                </Button>
+                                                <Button x:Name="buttonDownload" CornerRadius="5" HorizontalAlignment="Center" Click="ButtonDownload_Click" Margin="10" x:Uid="DownloadPost" Tag="{x:Bind Id}"/>
+                                                <Button x:Name="buttonShare" Tag="{x:Bind Id}" Click="ButtonShare_Click" CornerRadius="5" Margin="10">
+                                                    <Button.Content>
+                                                        <SymbolIcon Symbol="Share"/>
+                                                    </Button.Content>
+                                                </Button>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </ScrollViewer>
+                    </Grid>
+                </Frame>
+            </controls:TabViewItem>
+            <controls:TabViewItem x:Uid="Stories" Background="{ThemeResource FlipViewButtonBorderThemeBrush}" Icon="View">
+                <Frame Margin="10" CornerRadius="0">
+                    <ScrollViewer>
+                        <ListView x:Name="storiesList" ItemsSource="{x:Bind UrlStories}" HorizontalContentAlignment="Center" SelectionChanged="StoriesList_SelectionChanged">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel HorizontalAlignment="Center"/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="model:CustomMedia">
+                                    <StackPanel Orientation="Vertical" >
+                                        <Image Source="{x:Bind UrlBigImage}" Margin="10" Height="400" Width="500" HorizontalAlignment="Center"/>
+                                        <!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock x:Uid="Likes" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
+                                                <TextBlock Text="{x:Bind CountLikes}" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock x:Uid="Comments" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
+                                                <TextBlock Text="{x:Bind CountComments}" Margin="5, 5, 10, 5" FontSize="25" FontFamily="Century Gothic"/>
+                                            </StackPanel>-->
+                                        <Button x:Name="buttonDownloadStory" CornerRadius="5" HorizontalAlignment="Center" Click="ButtonDownloadStory_Click" Margin="10" x:Uid="DownloadStory" Tag="{x:Bind Name}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </ScrollViewer>
+                </Frame>
+            </controls:TabViewItem>
+        </controls:TabView>
+    </Grid>
+</Page>

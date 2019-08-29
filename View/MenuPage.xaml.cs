@@ -79,7 +79,7 @@ namespace MyInsta.View
         {
             foreach (NavigationViewItemBase item in NavigationViewControl.MenuItems)
             {
-                if (item is NavigationViewItem && item.Tag.ToString() == "Home_Page")
+                if (item is NavigationViewItem && item.Tag.ToString() == "Followers")
                 {
                     NavigationViewControl.SelectedItem = item;
                     break;

@@ -7,7 +7,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -18,16 +17,16 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=234238
+// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace MyInsta.View
 {
     /// <summary>
-    /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
+    /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class PersonPage : Page
+    public sealed partial class ProfilePage : Page
     {
-        public PersonPage()
+        public ProfilePage()
         {
             this.InitializeComponent();
         }
@@ -44,7 +43,6 @@ namespace MyInsta.View
         public ObservableCollection<CustomMedia> UrlStories { get; set; }
 
         int countPosts = 10;
-
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -72,16 +70,16 @@ namespace MyInsta.View
 
         private async void UnfollowButton_Click(object sender, RoutedEventArgs e)
         {
-            unfollowButton.IsEnabled = false;
+            ///unfollowButton.IsEnabled = false;
             await InstaServer.UnfollowUser(CurrentUser, SelectUser);
-            followButton.IsEnabled = true;
+            //followButton.IsEnabled = true;
         }
 
         private async void FollowButton_Click(object sender, RoutedEventArgs e)
         {
-            followButton.IsEnabled = false;
+            //followButton.IsEnabled = false;
             await InstaServer.FollowUser(CurrentUser, InstaUserInfo);
-            unfollowButton.IsEnabled = true;
+            //unfollowButton.IsEnabled = true;
         }
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e) => await InstaServer.DownloadAnyPosts(SelectUser, Posts);
@@ -186,7 +184,7 @@ namespace MyInsta.View
 
         }
 
-        private void PostBox_QuerySubmitted(AutoSuggestBox sender, 
+        private void PostBox_QuerySubmitted(AutoSuggestBox sender,
                                             AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             if (!string.IsNullOrEmpty(sender.Text))

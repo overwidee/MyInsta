@@ -29,7 +29,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate x:Name="SingleLineDataTemplate" x:DataType="localInsta1:UserStory">
                     <StackPanel Orientation="Horizontal" Height="100" Width="100" Padding="12" Grid.Column="0">
-                        <Ellipse Height="60" Width="60" VerticalAlignment="Center">
+                        <Ellipse Height="78" Width="78" VerticalAlignment="Center" HorizontalAlignment="Center">
                             <Ellipse.Fill>
                                 <ImageBrush>
                                     <ImageBrush.ImageSource>

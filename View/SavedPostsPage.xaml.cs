@@ -74,10 +74,6 @@ namespace MyInsta.View
             {
 
             }
-            finally
-            {
-                ((FlipView)sender).SelectedItem = null;
-            }
         }
 
         private async void ButtonDownload_Click(object sender, RoutedEventArgs e)

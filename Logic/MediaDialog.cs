@@ -44,7 +44,8 @@ namespace MyInsta.Logic
                     Height = (type == 0) ? 1100 : 450,
                     AutoPlay = true,
                     HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
-                    VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center
+                    VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center,
+                    IsLooping = true
                 };
                 contentDialog.Content = media;
             }

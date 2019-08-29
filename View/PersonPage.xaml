@@ -18,20 +18,20 @@
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="64"/>
+            <RowDefinition Height="34"/>
             <RowDefinition Height="166"/>
             <RowDefinition Height="46"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="276"/>
+            <ColumnDefinition Width="300"/>
             <ColumnDefinition Width="131*"/>
             <ColumnDefinition Width="131*"/>
             <ColumnDefinition Width="131*"/>
             <ColumnDefinition Width="131*"/>
         </Grid.ColumnDefinitions>
         
-        <Ellipse  Grid.Column="0" Grid.Row="0" Margin="20,20,20,20" Grid.RowSpan="3">
+        <Ellipse  Grid.Column="0" Grid.Row="0" Margin="20,20,20,20" Grid.RowSpan="3" Height="200" Width="200">
             <Ellipse.Fill>
                 <ImageBrush>
                     <ImageBrush.ImageSource>
@@ -43,7 +43,17 @@
         
         
         <ScrollViewer Grid.Row="3">
-            <StackPanel  Margin="10">
+            <StackPanel  Margin="10, 0, 10, 0">
+            <Button Grid.Row="1" Grid.Column="0" Content="Action" CornerRadius="5" HorizontalAlignment="Stretch" Margin="10">
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem x:Name="followButton" CornerRadius="5" IsEnabled="{x:Bind ButtonFollow, Mode=TwoWay}" Click="FollowButton_Click" HorizontalAlignment="Stretch" Text="Follow"/>
+                        <MenuFlyoutItem x:Name="unfollowButton" CornerRadius="5" IsEnabled="{x:Bind ButtonUnFollow, Mode=TwoWay}" Click="UnfollowButton_Click" HorizontalAlignment="Stretch" Text="Unfollow"/>
+                        <MenuFlyoutItem x:Name="saveButton" CornerRadius="5" Click="SaveButton_Click" HorizontalAlignment="Stretch" Text="Download posts"/>
+                        <MenuFlyoutItem x:Name="unlikeButton" CornerRadius="5"  Click="UnlikeButton_Click"  HorizontalAlignment="Stretch" Text="Unlike 30 posts"/>
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
             <TextBlock Text="{x:Bind InstaUserInfo.FullName}"  
                         Grid.Column="1" FontSize="25" TextWrapping="Wrap" HorizontalAlignment="Center"/>
             <StackPanel Orientation="Horizontal" Margin="5, 30, 5, 5">
@@ -79,7 +89,7 @@
         </StackPanel>
         </ScrollViewer>
         
-        <controls:TabView Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="1" Grid.RowSpan="3" TabWidthBehavior="Equal">
+        <controls:TabView Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="0" Grid.RowSpan="4" TabWidthBehavior="Equal" Margin="10">
             <controls:TabViewItem x:Uid="Posts" Background="{ThemeResource FlipViewButtonBorderThemeBrush}" Icon="Camera">     
                 <Frame Margin="10" CornerRadius="0">
                     <Grid>
@@ -174,11 +184,11 @@
         </controls:TabView>
 
         
-        <Button x:Name="followButton" x:Uid="Follow" CornerRadius="5" IsEnabled="{x:Bind ButtonFollow, Mode=TwoWay}" Click="FollowButton_Click" HorizontalAlignment="Stretch" Margin="5" Grid.Column="1" Grid.Row="0"/>
+        <!--<Button x:Name="followButton" x:Uid="Follow" CornerRadius="5" IsEnabled="{x:Bind ButtonFollow, Mode=TwoWay}" Click="FollowButton_Click" HorizontalAlignment="Stretch" Margin="5" Grid.Column="1" Grid.Row="0"/>
         <Button x:Name="unfollowButton" CornerRadius="5" IsEnabled="{x:Bind ButtonUnFollow, Mode=TwoWay}" x:Uid="Unfollow" Click="UnfollowButton_Click" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Stretch" Margin="5"/>
         <Button x:Name="saveButton" CornerRadius="5" Click="SaveButton_Click" x:Uid="DownloadMedia" Margin="5" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Stretch"/>
         
-        <Button x:Name="unlikeButton" CornerRadius="5"  x:Uid="UnlikeProfile" Click="UnlikeButton_Click"  HorizontalAlignment="Stretch" Margin="5" Grid.Column="4" Grid.Row="0"/>
+        <Button x:Name="unlikeButton" CornerRadius="5"  x:Uid="UnlikeProfile" Click="UnlikeButton_Click"  HorizontalAlignment="Stretch" Margin="5" Grid.Column="4" Grid.Row="0"/>-->
         
     </Grid>
 </Page>

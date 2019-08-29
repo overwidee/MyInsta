@@ -45,19 +45,6 @@ namespace MyInsta.View
                 this.Frame.Navigate(typeof(PersonPage), new object[] { user, InstaUser });
         }
 
-        private async void SearchBox_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            var user = await InstaServer.SearchByUserName(InstaUser, ((AutoSuggestBox)sender).Text);
-            if (user != null)
-            {
-                SearchUsers = new ObservableCollection<InstaUserShort>();
-                SearchUsers.Add(user);
-
-                listSearch.ItemsSource = null;
-                listSearch.ItemsSource = SearchUsers;
-            }
-        }
-
         private async void SearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             var user = await InstaServer.SearchByUserName(InstaUser, ((AutoSuggestBox)sender).Text);
