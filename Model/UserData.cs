@@ -17,6 +17,7 @@ namespace MyInsta.Model
         public ObservableCollection<PostItem> Feed { get; set; }
         public ObservableCollection<PostItem> SavedPostItems { get; set; }
         public ObservableCollection<UserStory> Stories { get; set; }
+        public ObservableCollection<InstaUserShort> Bookmarks { get; set; }
 
         public UserData()
         {
@@ -25,6 +26,7 @@ namespace MyInsta.Model
             UserUnfollowers = new ObservableCollection<InstaUserShort>();
             SavedPostItems = new ObservableCollection<PostItem>();
             Feed = new ObservableCollection<PostItem>();
+            Bookmarks = new ObservableCollection<InstaUserShort>();
         }
     }
 }

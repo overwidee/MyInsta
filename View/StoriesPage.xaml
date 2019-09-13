@@ -20,7 +20,8 @@
             ScrollViewer.VerticalScrollMode="Disabled"
             ItemsSource="{x:Bind InstaUser.UserData.Stories}"
             SelectedItem="{x:Bind SelectedUserStory, Mode=TwoWay}"
-                  SelectionChanged="ListView_SelectionChanged">
+            SelectionChanged="ListView_SelectionChanged"
+            SelectedIndex="1">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Background="Transparent" Orientation="Horizontal" />

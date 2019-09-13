@@ -65,8 +65,8 @@ namespace MyInsta.View
                     case "Saved":
                         contentFrame.Navigate(typeof(PostsPage), new object[] { InstaUser, 1 });
                         break;
-                    case "Map":
-                        contentFrame.Navigate(typeof(MapPage));
+                    case "Bookmarks":
+                        contentFrame.Navigate(typeof(BookmarksPage), InstaUser);
                         break;
                     case "Stories":
                         contentFrame.Navigate(typeof(StoriesPage), InstaUser);

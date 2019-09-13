@@ -1,0 +1,43 @@
+﻿<Page
+    x:Class="MyInsta.View.BookmarksPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MyInsta.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="using:InstagramApiSharp.Classes.Models"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Century Gothic"/>
+        </Style>
+    </Page.Resources>
+    <Grid>
+        <GridView x:Name="mainGrid" ItemsSource="{x:Bind InstaUser.UserData.Bookmarks}" 
+                  Grid.Row="1" Grid.ColumnSpan="4" ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                  HorizontalAlignment="Center" ItemClick="MainGrid_ItemClick" IsItemClickEnabled="True">
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VariableSizedWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="5" ItemHeight="250" ItemWidth="250" ></VariableSizedWrapGrid>
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="model:InstaUserShort">
+                    <StackPanel Orientation="Vertical">
+                        <Ellipse  Grid.Column="0" Grid.Row="0" Margin="10" Grid.RowSpan="3" Height="170" Width="170">
+                            <Ellipse.Fill>
+                                <ImageBrush>
+                                    <ImageBrush.ImageSource>
+                                        <BitmapImage UriSource="{x:Bind ProfilePicture}"/>
+                                    </ImageBrush.ImageSource>
+                                </ImageBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <TextBlock Text="{x:Bind UserName}" FontSize="20" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+    </Grid>
+</Page>

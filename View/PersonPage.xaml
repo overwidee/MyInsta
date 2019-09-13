@@ -51,6 +51,10 @@
                         <MenuFlyoutItem x:Name="unfollowButton" CornerRadius="5" IsEnabled="{x:Bind ButtonUnFollow, Mode=TwoWay}" Click="UnfollowButton_Click" HorizontalAlignment="Stretch" Text="Unfollow"/>
                         <MenuFlyoutItem x:Name="saveButton" CornerRadius="5" Click="SaveButton_Click" HorizontalAlignment="Stretch" Text="Download posts"/>
                         <MenuFlyoutItem x:Name="unlikeButton" CornerRadius="5"  Click="UnlikeButton_Click"  HorizontalAlignment="Stretch" Text="Unlike 30 posts"/>
+                        <MenuFlyoutSubItem Text="Bookmark">
+                            <MenuFlyoutItem x:Name="bookMarksButton" CornerRadius="5"  Click="BookMarksButton_Click"  HorizontalAlignment="Stretch" Text="Add to bookmarks"/>
+                            <MenuFlyoutItem x:Name="d_bookMarksButton" CornerRadius="5"  Click="D_bookMarksButton_Click"  HorizontalAlignment="Stretch" Text="Remove from bookmarks"/>
+                        </MenuFlyoutSubItem>
                     </MenuFlyout>
                 </Button.Flyout>
             </Button>

@@ -38,6 +38,7 @@ namespace MyInsta.View
             base.OnNavigatedTo(e);
 
             InstaUser = e.Parameter as User;
+            SelectedUserStory = InstaUser.UserData.Stories?[0] ?? new UserStory();
         }
 
         private async void ButtonDownloadStory_Click(object sender, RoutedEventArgs e)

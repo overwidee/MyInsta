@@ -159,6 +159,7 @@ namespace MyInsta.Logic
 
             await GetCurrentUserStories(userObject);
             await GetUserPostItems(userObject);
+            await GetBookmarksAsync(userObject);
             await GetUserFollowers(userObject);
             await GetUserFeed(userObject);
             await GetUserFriendsAndUnfollowers(userObject);
@@ -196,7 +197,7 @@ namespace MyInsta.Logic
                     user.UserData.UserUnfollowers.Add(item);
             }
         }
-         
+
         private static async Task GetUserFeed(User user)
         {
             ///var feed = await user.API.Pro(PaginationParameters.MaxPagesToLoad(5));
@@ -871,8 +872,42 @@ namespace MyInsta.Logic
             var users = await currentUser.API.LocationProcessor.SearchUserByLocationAsync(latitude, longitude, "");
         }
         #endregion
+
+        #region Bookmarks
+        public static async Task SaveBookmarksAsync(User user)
+        {
+            string longIds = "";
+            foreach (var item in user.UserData.Bookmarks)
+            {
+                longIds += item.Pk.ToString() + ",";
+            }
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            StorageFile sampleFile = await localFolder.CreateFileAsync("dataBookmarks.txt",
+                CreationCollisionOption.ReplaceExisting);
+            await FileIO.WriteTextAsync(sampleFile, longIds);
+        }
+        public static async Task GetBookmarksAsync(User user)
+        {
+            ObservableCollection<InstaUserShort> results = new ObservableCollection<InstaUserShort>();
+            StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+            if (File.Exists(localFolder.Path + @"\dataBookmarks.txt"))
+            {
+                StorageFile sampleFile = await localFolder.GetFileAsync("dataBookmarks.txt");
+                string ids = await FileIO.ReadTextAsync(sampleFile);
+                string[] longIds = ids.Split(',');
+                foreach (var item in longIds)
+                {
+                    if (!string.IsNullOrEmpty(item))
+                        results.Add(await GetInstaUserShortById(user, long.Parse(item)));
+                }
+                user.UserData.Bookmarks = results;
+            }
+        }
+
+        public static bool IsContrainsAccount(User user, long id)
+        {
+            return user.UserData.Bookmarks.Where(x => x.Pk == id).ToList().Count > 0 ? true : false;
+        }
+        #endregion
     }
-
-
-
 }

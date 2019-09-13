@@ -59,6 +59,8 @@ namespace MyInsta.View
                 InstaServer.GetFriendshipStatus(CurrentUser, InstaUserInfo));
             ButtonFollow = !InstaUserInfo.FriendshipStatus.Following;
             ButtonUnFollow = InstaUserInfo.FriendshipStatus.Following;
+            bookMarksButton.IsEnabled = !InstaServer.IsContrainsAccount(CurrentUser, SelectUser.Pk);
+            d_bookMarksButton.IsEnabled = !bookMarksButton.IsEnabled;
 
             UrlStories = await InstaServer.GetStoryUser(CurrentUser, InstaUserInfo);
             storiesList.ItemsSource = UrlStories;
@@ -105,7 +107,7 @@ namespace MyInsta.View
             if (verticalOffset == maxVerticalOffset)
             {
                 countPosts += 3;
-                mediaList.ItemsSource = Posts.Take(countPosts);
+                mediaList.ItemsSource = Posts?.Take(countPosts);
             }
         }
 
@@ -186,7 +188,7 @@ namespace MyInsta.View
 
         }
 
-        private void PostBox_QuerySubmitted(AutoSuggestBox sender, 
+        private void PostBox_QuerySubmitted(AutoSuggestBox sender,
                                             AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             if (!string.IsNullOrEmpty(sender.Text))
@@ -204,6 +206,22 @@ namespace MyInsta.View
             }
             else
                 mediaList.ItemsSource = Posts;
+        }
+
+        private async void BookMarksButton_Click(object sender, RoutedEventArgs e)
+        {
+            d_bookMarksButton.IsEnabled = true;
+            CurrentUser.UserData.Bookmarks.Add(SelectUser);
+            await InstaServer.SaveBookmarksAsync(CurrentUser);
+            bookMarksButton.IsEnabled = false;
+        }
+
+        private async void D_bookMarksButton_Click(object sender, RoutedEventArgs e)
+        {
+            bookMarksButton.IsEnabled = true;
+            CurrentUser.UserData.Bookmarks.Remove(SelectUser);
+            await InstaServer.SaveBookmarksAsync(CurrentUser);
+            d_bookMarksButton.IsEnabled = false;
         }
     }
 }
