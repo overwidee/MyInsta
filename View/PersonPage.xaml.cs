@@ -64,7 +64,7 @@ namespace MyInsta.View
             storiesList.ItemsSource = UrlStories;
 
             Posts = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo, 0);
-            mediaList.ItemsSource = Posts.Take(countPosts);
+            mediaList.ItemsSource = Posts?.Take(countPosts);
 
             Posts = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo, 1);
             mediaList.ItemsSource = Posts?.Take(countPosts);

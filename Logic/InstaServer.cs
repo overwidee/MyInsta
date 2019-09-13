@@ -160,6 +160,7 @@ namespace MyInsta.Logic
             await GetCurrentUserStories(userObject);
             await GetUserPostItems(userObject);
             await GetUserFollowers(userObject);
+            await GetUserFeed(userObject);
             await GetUserFriendsAndUnfollowers(userObject);
         }
         private static async Task GetUserFollowers(User user)
@@ -194,6 +195,11 @@ namespace MyInsta.Logic
                 if (status.Value.Following && !status.Value.FollowedBy && !user.UserData.UserUnfollowers.Contains(item))
                     user.UserData.UserUnfollowers.Add(item);
             }
+        }
+         
+        private static async Task GetUserFeed(User user)
+        {
+            ///var feed = await user.API.Pro(PaginationParameters.MaxPagesToLoad(5));
         }
         #endregion
 
@@ -316,7 +322,7 @@ namespace MyInsta.Logic
             try
             {
                 CustomDialog customDialog = new CustomDialog("Message", "Process started", "All right");
-                foreach (var item in medias.Take(30))
+                foreach (var item in medias?.Take(30))
                 {
                     var p = await currentUser.API.MediaProcessor.UnLikeMediaAsync(item.Items[0].Pk);
                 }
@@ -860,10 +866,10 @@ namespace MyInsta.Logic
         #endregion
 
         #region Location
-        //public static async Task Location(User currentUser)
-        //{
-        //    currentUser.API.WebProcessor.
-        //}
+        public static async Task Location(User currentUser, double latitude, double longitude)
+        {
+            var users = await currentUser.API.LocationProcessor.SearchUserByLocationAsync(latitude, longitude, "");
+        }
         #endregion
     }
 

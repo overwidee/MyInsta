@@ -63,7 +63,10 @@ namespace MyInsta.View
                         await InstaServer.GetUserData(InstaUser);
                         break;
                     case "Saved":
-                        contentFrame.Navigate(typeof(SavedPostsPage), InstaUser);
+                        contentFrame.Navigate(typeof(PostsPage), new object[] { InstaUser, 1 });
+                        break;
+                    case "Map":
+                        contentFrame.Navigate(typeof(MapPage));
                         break;
                     case "Stories":
                         contentFrame.Navigate(typeof(StoriesPage), InstaUser);

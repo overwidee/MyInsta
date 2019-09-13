@@ -40,7 +40,7 @@ namespace MyInsta.View
         {
             var user = e.AddedItems[0] as InstaUserShort;
             if (user != null)
-                this.Frame.Navigate(typeof(ProfilePage), new object[] { user, InstaUser });
+                this.Frame.Navigate(typeof(PersonPage), new object[] { user, InstaUser });
         }
 
         private void SearchBox_KeyDown(object sender, KeyRoutedEventArgs e)

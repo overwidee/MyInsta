@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="MyInsta.View.SavedPostsPage"
+    x:Class="MyInsta.View.PostsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:local="using:MyInsta.View"
@@ -15,7 +15,7 @@
     </Page.Resources>
     <Grid>
         <ScrollViewer x:Name="scrollListPosts" ViewChanged="ScrollListPosts_ViewChanged" VerticalScrollBarVisibility="Auto">
-            <ListView x:Name="savedList" SelectionMode="None"  HorizontalContentAlignment="Center">
+            <ListView x:Name="postsList" SelectionMode="None"  HorizontalContentAlignment="Center">
                 <ListView.Resources>
                     <ResourceDictionary>
                         <ResourceDictionary.MergedDictionaries>
@@ -55,7 +55,7 @@
                             </StackPanel>
 
                             <StackPanel Orientation="Vertical" Grid.Row="1">
-                                <FlipView Width="500" x:Name="itemsList" Tapped="SavedList_SelectionChanged" ItemsSource="{x:Bind Items}" HorizontalContentAlignment="Center">
+                                <FlipView Width="500" x:Name="itemsList" Tapped="PostsList_SelectionChanged" ItemsSource="{x:Bind Items}" HorizontalContentAlignment="Center">
                                     <FlipView.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"/>

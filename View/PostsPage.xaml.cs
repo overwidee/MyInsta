@@ -22,21 +22,33 @@ namespace MyInsta.View
     /// <summary>
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
-    public sealed partial class SavedPostsPage : Page
+    public sealed partial class PostsPage : Page
     {
-        public SavedPostsPage()
+        public PostsPage()
         {
             this.InitializeComponent();
         }
 
         public User InstaUser { get; set; }
         int countPosts = 10;
+        int typePage;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            InstaUser = e.Parameter as User;
-            savedList.ItemsSource = InstaUser.UserData.SavedPostItems.Take(10);
+            var objs = e.Parameter as object[];
+            InstaUser = objs[0] as User;
+            typePage = (int)objs[1];
+            switch (typePage)
+            {
+                case 0: postsList.ItemsSource = InstaUser.UserData.Feed?.Take(10);
+                    break;
+                case 1: postsList.ItemsSource = InstaUser.UserData.SavedPostItems?.Take(10);
+                    break;
+                default:
+                    break;
+            }
+            
         }
 
         private void ScrollListPosts_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
@@ -49,11 +61,11 @@ namespace MyInsta.View
             if (verticalOffset == maxVerticalOffset)
             {
                 countPosts += 3;
-                savedList.ItemsSource = InstaUser.UserData.SavedPostItems.Take(countPosts);
+                postsList.ItemsSource = typePage == 1 ? InstaUser.UserData.SavedPostItems?.Take(countPosts) : InstaUser.UserData.Feed?.Take(countPosts);
             }
         }
 
-        private void SavedList_SelectionChanged(object sender, TappedRoutedEventArgs e)
+        private void PostsList_SelectionChanged(object sender, TappedRoutedEventArgs e)
         {
             try
             {
@@ -80,8 +92,10 @@ namespace MyInsta.View
         {
             await InstaServer.DownloadAnyPost(
                 await InstaServer.GetInstaUserShortById(InstaUser,
-                    InstaUser.UserData.SavedPostItems.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().UserPk),
-                InstaUser.UserData.SavedPostItems.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().Items);
+                    typePage == 1 ? InstaUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).UserPk 
+                    : InstaUser.UserData.Feed.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).UserPk),
+                typePage == 1 ? InstaUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items 
+                    : InstaUser.UserData.Feed.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items);
         }
 
         private async void ButtonProfile_Click(object sender, RoutedEventArgs e)
@@ -92,7 +106,9 @@ namespace MyInsta.View
 
         private async void ButtonShare_Click(object sender, RoutedEventArgs e)
         {
-            await InstaServer.ShareMedia(InstaUser, InstaUser.UserData.SavedPostItems.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().Items);
+            await InstaServer.ShareMedia(InstaUser, 
+                typePage == 1 ? InstaUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items 
+                : InstaUser.UserData.Feed.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items);
         }
     }
 }

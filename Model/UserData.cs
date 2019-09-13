@@ -14,15 +14,17 @@ namespace MyInsta.Model
         public ObservableCollection<InstaUserShort> UserFollowers { get; set; }
         public ObservableCollection<InstaUserShort> UserUnfollowers { get; set; }
         public ObservableCollection<InstaUserShort> UserFriends { get; set; }
+        public ObservableCollection<PostItem> Feed { get; set; }
         public ObservableCollection<PostItem> SavedPostItems { get; set; }
         public ObservableCollection<UserStory> Stories { get; set; }
 
         public UserData()
         {
-            this.UserFollowers = new ObservableCollection<InstaUserShort>();
-            this.UserFriends = new ObservableCollection<InstaUserShort>();
-            this.UserUnfollowers = new ObservableCollection<InstaUserShort>();
-            this.SavedPostItems = new ObservableCollection<PostItem>();
+            UserFollowers = new ObservableCollection<InstaUserShort>();
+            UserFriends = new ObservableCollection<InstaUserShort>();
+            UserUnfollowers = new ObservableCollection<InstaUserShort>();
+            SavedPostItems = new ObservableCollection<PostItem>();
+            Feed = new ObservableCollection<PostItem>();
         }
     }
 }
