@@ -27,6 +27,9 @@ namespace MyInsta.View
         public PostsPage()
         {
             this.InitializeComponent();
+
+            progressPosts.IsActive = !InstaServer.IsSavedPostsLoaded;
+            InstaServer.OnUserSavedPostsLoaded += () => progressPosts.IsActive = false;
         }
 
         public User InstaUser { get; set; }
@@ -39,16 +42,18 @@ namespace MyInsta.View
             var objs = e.Parameter as object[];
             InstaUser = objs[0] as User;
             typePage = (int)objs[1];
-            switch (typePage)
-            {
-                case 0: postsList.ItemsSource = InstaUser.UserData.Feed?.Take(10);
-                    break;
-                case 1: postsList.ItemsSource = InstaUser.UserData.SavedPostItems?.Take(10);
-                    break;
-                default:
-                    break;
-            }
-            
+
+            postsList.ItemsSource = InstaUser.UserData.SavedPostItems?.Take(10);
+            //switch (typePage)
+            //{
+            //    case 0: postsList.ItemsSource = InstaUser.UserData.Feed?.Take(10);
+            //        break;
+            //    case 1: postsList.ItemsSource = InstaUser.UserData.SavedPostItems?.Take(10);
+            //        break;
+            //    default:
+            //        break;
+            //}
+
         }
 
         private void ScrollListPosts_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)

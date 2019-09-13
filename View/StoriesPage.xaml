@@ -15,6 +15,7 @@
             <RowDefinition Height="110"/>
             <RowDefinition Height="107*"/>
         </Grid.RowDefinitions>
+        <ProgressRing x:Name="progressStories" Height="100" Width="100" Grid.Row="1"/>
         <ListView ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Hidden"
             ScrollViewer.HorizontalScrollMode="Enabled"                  
             ScrollViewer.VerticalScrollMode="Disabled"

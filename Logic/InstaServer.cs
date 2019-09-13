@@ -30,6 +30,18 @@ namespace MyInsta.Logic
     {
         public static string LatestMediaMaxId = "";
         private static CancellationTokenSource cancellationTokenMedia;
+        public delegate void CompleteHandler();
+
+        public static event CompleteHandler OnUserFollowersLoaded;
+        public static event CompleteHandler OnUserStoriesLoaded;
+        public static event CompleteHandler OnUserSavedPostsLoaded;
+
+        #region Progress
+        public static bool IsFollowersLoaded { get; set; }
+        public static bool IsStoriesLoaded { get; set; }
+        public static bool IsSavedPostsLoaded { get; set; }
+        #endregion  
+
 
         #region Login instagram and API
         public static async Task LoginInstagram(User userObject, LoginPage page)
@@ -153,8 +165,6 @@ namespace MyInsta.Logic
         public static async Task GetUserData(User userObject)
         {
             userObject.UserData.UserFollowers = new ObservableCollection<InstaUserShort>();
-            //userObject.UserData.UserFriends = new ObservableCollection<InstaUserShort>();
-            //userObject.UserData.UserUnfollowers = new ObservableCollection<InstaUserShort>();
             userObject.UserData.SavedPostItems = new ObservableCollection<PostItem>();
 
             await GetCurrentUserStories(userObject);
@@ -172,6 +182,8 @@ namespace MyInsta.Logic
                 if (!user.UserData.UserFollowers.Contains(item))
                     user.UserData.UserFollowers.Add(item);
             }
+            OnUserFollowersLoaded?.Invoke();
+            IsFollowersLoaded = true;
         }
         private static async Task GetUserPostItems(User user)
         {
@@ -183,6 +195,8 @@ namespace MyInsta.Logic
                 i++;
                 user.UserData.SavedPostItems.Add(savedPost);
             }
+            OnUserSavedPostsLoaded?.Invoke();
+            IsSavedPostsLoaded = true;
         }
         private static async Task GetUserFriendsAndUnfollowers(User user)
         {
@@ -567,6 +581,8 @@ namespace MyInsta.Logic
             var currentStories = await userObject.API.StoryProcessor.GetStoryFeedAsync();
             if (currentStories.Succeeded)
                 userObject.UserData.Stories = GetUserStoriesCustom(currentStories.Value);
+            OnUserStoriesLoaded?.Invoke();
+            IsStoriesLoaded = true;
         }
         public static ObservableCollection<UserStory> GetUserStoriesCustom(InstaStoryFeed instaStoryFeed)
         {

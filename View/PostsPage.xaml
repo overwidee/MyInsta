@@ -14,6 +14,7 @@
         </Style>
     </Page.Resources>
     <Grid>
+        <ProgressRing x:Name="progressPosts" Height="100" Width="100" Grid.Row="1"/>
         <ScrollViewer x:Name="scrollListPosts" ViewChanged="ScrollListPosts_ViewChanged" VerticalScrollBarVisibility="Auto">
             <ListView x:Name="postsList" SelectionMode="None"  HorizontalContentAlignment="Center">
                 <ListView.Resources>

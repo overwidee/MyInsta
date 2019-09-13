@@ -27,9 +27,13 @@ namespace MyInsta.View
     {
         public FollowersPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+
+            progressFollowers.IsActive = !InstaServer.IsFollowersLoaded;
+            InstaServer.OnUserFollowersLoaded += () => progressFollowers.IsActive = false;
         }
         public User InstaUser { get; set; }
+        public bool ActiveBar { get; set; } = true;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -40,9 +44,8 @@ namespace MyInsta.View
         {
             var user = e.AddedItems[0] as InstaUserShort;
             if (user != null)
-                this.Frame.Navigate(typeof(PersonPage), new object[] { user, InstaUser});
+                this.Frame.Navigate(typeof(PersonPage), new object[] { user, InstaUser });
         }
 
-        private void SearchBox_KeyDown(object sender, KeyRoutedEventArgs e) => listFollowers.ItemsSource = InstaServer.SearchByUserName(InstaUser.UserData.UserFollowers, ((AutoSuggestBox)sender).Text);
-    }
+        private void SearchBox_KeyDown(object sender, KeyRoutedEventArgs e) => listFollowers.ItemsSource = InstaServer.SearchByUserName(InstaUser.UserData.UserFollowers, ((AutoSuggestBox)sender).Text);    }
 }

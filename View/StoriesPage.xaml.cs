@@ -31,6 +31,9 @@ namespace MyInsta.View
         public StoriesPage()
         {
             this.InitializeComponent();
+
+            progressStories.IsActive = !InstaServer.IsStoriesLoaded;
+            InstaServer.OnUserStoriesLoaded += () => progressStories.IsActive = false;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
