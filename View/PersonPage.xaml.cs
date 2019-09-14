@@ -30,6 +30,9 @@ namespace MyInsta.View
         public PersonPage()
         {
             this.InitializeComponent();
+
+            progressPosts.IsActive = !InstaServer.IsPostsLoaded;
+            InstaServer.OnUserPostsLoaded += () => { progressPosts.IsActive = false; };
         }
 
         public InstaUserShort SelectUser { get; set; }

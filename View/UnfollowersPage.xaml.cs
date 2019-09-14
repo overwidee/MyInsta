@@ -28,6 +28,9 @@ namespace MyInsta.View
         public UnfollowersPage()
         {
             this.InitializeComponent();
+
+            progressUnfollowers.IsActive = !InstaServer.IsUnfollowersLoaded;
+            InstaServer.OnUserUnfollowersLoaded += () => { progressUnfollowers.IsActive = false; };
         }
         public User InstaUser { get; set; }
         protected override void OnNavigatedTo(NavigationEventArgs e)

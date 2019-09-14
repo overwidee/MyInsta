@@ -32,16 +32,24 @@ namespace MyInsta.Logic
         private static CancellationTokenSource cancellationTokenMedia;
         public delegate void CompleteHandler();
 
+        #region Events
+
         public static event CompleteHandler OnUserFollowersLoaded;
         public static event CompleteHandler OnUserStoriesLoaded;
         public static event CompleteHandler OnUserSavedPostsLoaded;
+        public static event CompleteHandler OnUserUnfollowersLoaded;
+        public static event CompleteHandler OnUserFriendsLoaded;
+        public static event CompleteHandler OnUserPostsLoaded;
 
+        #endregion
         #region Progress
         public static bool IsFollowersLoaded { get; set; }
         public static bool IsStoriesLoaded { get; set; }
         public static bool IsSavedPostsLoaded { get; set; }
+        public static bool IsFriendsLoaded { get; set; }
+        public static bool IsUnfollowersLoaded { get; set; }
+        public static bool IsPostsLoaded { get; set; }
         #endregion  
-
 
         #region Login instagram and API
         public static async Task LoginInstagram(User userObject, LoginPage page)
@@ -171,7 +179,6 @@ namespace MyInsta.Logic
             await GetUserPostItems(userObject);
             await GetBookmarksAsync(userObject);
             await GetUserFollowers(userObject);
-            await GetUserFeed(userObject);
             await GetUserFriendsAndUnfollowers(userObject);
         }
         private static async Task GetUserFollowers(User user)
@@ -210,12 +217,12 @@ namespace MyInsta.Logic
                 if (status.Value.Following && !status.Value.FollowedBy && !user.UserData.UserUnfollowers.Contains(item))
                     user.UserData.UserUnfollowers.Add(item);
             }
+            OnUserUnfollowersLoaded?.Invoke();
+            OnUserFriendsLoaded?.Invoke();
+            IsUnfollowersLoaded = true;
+            IsFriendsLoaded = true;
         }
 
-        private static async Task GetUserFeed(User user)
-        {
-            ///var feed = await user.API.Pro(PaginationParameters.MaxPagesToLoad(5));
-        }
         #endregion
 
         #region UserProcessor
@@ -362,7 +369,10 @@ namespace MyInsta.Logic
                 else
                     media = await GetMediaUserAll(userObject, unfUser);
                 if (media.Count != 0)
+                {
+                    OnUserPostsLoaded?.Invoke();   
                     return GetUrlsMediasUser(media, unfUser);
+                }
                 else
                     return null;
             }

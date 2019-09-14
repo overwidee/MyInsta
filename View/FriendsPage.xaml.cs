@@ -28,6 +28,9 @@ namespace MyInsta.View
         public FriendsPage()
         {
             this.InitializeComponent();
+
+            progressFriends.IsActive = !InstaServer.IsFriendsLoaded;
+            InstaServer.OnUserFriendsLoaded += () => { progressFriends.IsActive = false; };
         }
         public User InstaUser { get; set; }
         protected override void OnNavigatedTo(NavigationEventArgs e)

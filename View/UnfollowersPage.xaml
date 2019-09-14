@@ -19,6 +19,7 @@
             <RowDefinition Height="431*"/>
             <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
+        <ProgressRing x:Name="progressUnfollowers" Height="90" Width="90" Grid.Row="1"/>
         <AutoSuggestBox x:Name="searchBox" x:Uid="SearchBox" Grid.Row="0" QueryIcon="Find" Foreground="{ThemeResource BackButtonPointerOverForegroundThemeBrush}" Background="{ThemeResource BackButtonPointerOverBackgroundThemeBrush}" FontSize="20" Margin="100,10,100,0" KeyUp="SearchBox_KeyDown" VerticalContentAlignment="Center"/>
         <ListView x:Name="listFollowers" ItemsSource="{x:Bind InstaUser.UserData.UserUnfollowers}" Grid.Row="1" Margin="10,10,10,10" SelectionChanged="ListFollowers_SelectionChanged">
             <ListView.ItemTemplate>

@@ -101,6 +101,7 @@
                             <RowDefinition Height="70"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
+                        <ProgressRing x:Name="progressPosts" Height="90" Width="90" Grid.Row="1"/>
                         <AutoSuggestBox x:Name="postBox" QuerySubmitted="PostBox_QuerySubmitted" QueryIcon="Find" TextChanged="PostBox_TextChanged" PlaceholderText="Number of post"  Margin="10" Grid.Row="0"/>
                         <ScrollViewer x:Name="scrollListPosts" Grid.Row="1" ViewChanged="ScrollListPosts_ViewChanged" VerticalScrollBarVisibility="Auto">
                             <ListView x:Name="mediaList" SelectionMode="None" ItemsSource="{x:Bind Posts}" HorizontalContentAlignment="Center"> 
@@ -136,7 +137,7 @@
                                                     <TextBlock Text="{x:Bind Items[0].CountComments}" Margin="5, 5, 10, 5" FontSize="20" FontFamily="Century Gothic"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                    <Button x:Name="buttonSaveInProfile" Tag="{x:Bind Id}" Click="ButtonSaveInProfile_Click" CornerRadius="5" Margin="10">
+                                                    <Button x:Name="buttonSaveInProfile" Tag="{x:Bind Items[0].Pk}" Click="ButtonSaveInProfile_Click" CornerRadius="5" Margin="10">
                                                         <Button.Content>
                                                             <SymbolIcon Symbol="Emoji"/>
                                                         </Button.Content>
