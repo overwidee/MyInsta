@@ -5,8 +5,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -27,6 +30,11 @@ namespace MyInsta.View
         public MenuPage()
         {
             this.InitializeComponent();
+
+            ApplicationViewTitleBar formattableTitleBar = ApplicationView.GetForCurrentView().TitleBar;
+            formattableTitleBar.ButtonBackgroundColor = Colors.Transparent;
+            CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
         }
         User InstaUser { get; set; }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -91,10 +99,5 @@ namespace MyInsta.View
             contentFrame.Navigate(typeof(FollowersPage), InstaUser);
         }
 
-        //private void NavigationViewControl_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
-        //{
-        //    if (contentFrame.Content.GetType() == typeof(PersonPage))
-        //        contentFrame.Navigate(typeof(FollowersPage), InstaUser);
-        //}
     }
 }

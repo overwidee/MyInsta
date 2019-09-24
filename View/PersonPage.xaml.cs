@@ -31,6 +31,7 @@ namespace MyInsta.View
         {
             this.InitializeComponent();
 
+            
             progressPosts.IsActive = !InstaServer.IsPostsLoaded;
             InstaServer.OnUserPostsLoaded += () => { progressPosts.IsActive = false; };
         }
@@ -62,9 +63,7 @@ namespace MyInsta.View
                 InstaServer.GetFriendshipStatus(CurrentUser, InstaUserInfo));
             ButtonFollow = !InstaUserInfo.FriendshipStatus.Following;
             ButtonUnFollow = InstaUserInfo.FriendshipStatus.Following;
-            bookMarksButton.IsEnabled = !InstaServer.IsContrainsAccount(CurrentUser, SelectUser.Pk);
-            d_bookMarksButton.IsEnabled = !bookMarksButton.IsEnabled;
-
+            SetBookmarkStatus();
             UrlStories = await InstaServer.GetStoryUser(CurrentUser, InstaUserInfo);
             storiesList.ItemsSource = UrlStories;
 
@@ -211,20 +210,31 @@ namespace MyInsta.View
                 mediaList.ItemsSource = Posts;
         }
 
-        private async void BookMarksButton_Click(object sender, RoutedEventArgs e)
+        private void SetBookmarkStatus()
         {
-            d_bookMarksButton.IsEnabled = true;
-            CurrentUser.UserData.Bookmarks.Add(SelectUser);
-            await InstaServer.SaveBookmarksAsync(CurrentUser);
-            bookMarksButton.IsEnabled = false;
-        }
+            var button = buttonAction;
+            MenuFlyout menu = button.Flyout as MenuFlyout;
+            var item = new MenuFlyoutItem()
+            {
+                CornerRadius = new CornerRadius(5),
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                Text = !InstaServer.IsContrainsAccount(CurrentUser, SelectUser.Pk) ? "Add in bookmarks" : "Remove from bookmarks",
+            };
 
-        private async void D_bookMarksButton_Click(object sender, RoutedEventArgs e)
-        {
-            bookMarksButton.IsEnabled = true;
-            CurrentUser.UserData.Bookmarks.Remove(SelectUser);
-            await InstaServer.SaveBookmarksAsync(CurrentUser);
-            d_bookMarksButton.IsEnabled = false;
+            item.Click += async (s, e) =>
+            {
+                if (!InstaServer.IsContrainsAccount(CurrentUser, SelectUser.Pk))
+                {
+                    CurrentUser.UserData.Bookmarks.Add(SelectUser);
+                    await InstaServer.SaveBookmarksAsync(CurrentUser);
+                }
+                else
+                {
+                    CurrentUser.UserData.Bookmarks.Remove(SelectUser);
+                    await InstaServer.SaveBookmarksAsync(CurrentUser);
+                }
+            };
+            menu.Items.Add(item);
         }
     }
 }
