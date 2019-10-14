@@ -6,28 +6,35 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    >
 
-    <Grid>
-        <NavigationView x:Name="NavigationViewControl" PaneDisplayMode="Top"
+    <Grid Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="My Insta" VerticalAlignment="Center"  HorizontalAlignment="Center" FontFamily="Century Gothic" FontSize="17" Margin="5"/>
+        <Grid Background="{ThemeResource SystemControlAcrylicElementBrush}" Grid.Row="1">
+            <NavigationView x:Name="NavigationViewControl" PaneDisplayMode="LeftCompact"
                         IsBackButtonVisible="Collapsed" IsBackEnabled="True" Loaded="NavigationViewControl_Loaded" ItemInvoked="NavigationViewControl_ItemInvoked">
-            <NavigationView.MenuItems>
-                <NavigationViewItem Content="Followers" x:Uid="Followers" x:Name="page_followers" Icon="List" Tag="Followers" FontFamily="Century Gothic">
-                </NavigationViewItem>
-                <NavigationViewItem Content="Unfollowers" x:Uid="Unfollowers" x:Name="page_unfollowers" Icon="Cancel" Tag="Unfollowers" FontFamily="Century Gothic"/>
-                <NavigationViewItem Content="Friends" x:Uid="Friends" x:Name="page_friends" Icon="Favorite" Tag="Friends" FontFamily="Century Gothic"/>
-                <NavigationViewItem Content="Search profile" x:Uid="SearchProfile" x:Name="page_search" Icon="Find" Tag="Search" FontFamily="Century Gothic"/>
-                <NavigationViewItemSeparator />
-                <NavigationViewItem Content="Sync" Icon="Sync" x:Uid="Sync" x:Name="button_sync" Tag="Sync" FontFamily="Century Gothic"/>
-                <NavigationViewItemSeparator />
-                <NavigationViewItem Content="Bookmarks" Icon="People" x:Name="button_bookmarks" Tag="Bookmarks" FontFamily="Century Gothic"/>
-                <NavigationViewItem Content="Stories" Icon="View" x:Name="button_stories" Tag="Stories" FontFamily="Century Gothic"/>
-                <NavigationViewItem Content="Saved posts" Icon="Emoji" x:Name="button_savedPosts" Tag="Saved" FontFamily="Century Gothic"/>
-                <NavigationViewItemSeparator />
-                <NavigationViewItem Content="Preview" Icon="Preview" x:Name="button_preview" Tag="Preview" FontFamily="Century Gothic"/>
+                <NavigationView.MenuItems>
+                    <NavigationViewItem Content="Followers" x:Uid="Followers" x:Name="page_followers" Icon="People" Tag="Followers" FontFamily="Century Gothic">
+                    </NavigationViewItem>
+                    <NavigationViewItem Content="Unfollowers" x:Uid="Unfollowers" x:Name="page_unfollowers" Icon="UnFavorite" Tag="Unfollowers" FontFamily="Century Gothic"/>
+                    <NavigationViewItem Content="Friends" x:Uid="Friends" x:Name="page_friends" Icon="Favorite" Tag="Friends" FontFamily="Century Gothic"/>
+                    <NavigationViewItem Content="Search profile" x:Uid="SearchProfile" x:Name="page_search" Icon="Find" Tag="Search" FontFamily="Century Gothic"/>
+                    <NavigationViewItemSeparator />
+                    <NavigationViewItem Content="Sync" Icon="Sync" x:Uid="Sync" x:Name="button_sync" Tag="Sync" FontFamily="Century Gothic"/>
+                    <NavigationViewItemSeparator />
+                    <NavigationViewItem Content="Bookmarks" Icon="Pin" x:Name="button_bookmarks" Tag="Bookmarks" FontFamily="Century Gothic"/>
+                    <NavigationViewItem Content="Stories" Icon="Camera" x:Name="button_stories" Tag="Stories" FontFamily="Century Gothic"/>
+                    <NavigationViewItem Content="Saved posts" Icon="Emoji2" x:Name="button_savedPosts" Tag="Saved" FontFamily="Century Gothic"/>
+                    <NavigationViewItemSeparator />
+                    <NavigationViewItem Content="Preview" Icon="ViewAll" x:Name="button_preview" Tag="Preview" FontFamily="Century Gothic"/>
 
-            </NavigationView.MenuItems>
-            <Frame x:Name="contentFrame"></Frame>
-        </NavigationView>
+                </NavigationView.MenuItems>
+                <Frame x:Name="contentFrame"></Frame>
+            </NavigationView>
+        </Grid>
     </Grid>
 </Page>

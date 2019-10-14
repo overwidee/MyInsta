@@ -53,6 +53,7 @@ namespace MyInsta.View
         {
             Stories = await InstaServer.GetStoryUser(InstaUser, SelectedUserStory.User.Pk);
             storiesList.ItemsSource = Stories;
+            userBox.Text = SelectedUserStory.User.UserName;
         }
 
         private async void StoriesList_SelectionChanged(object sender, SelectionChangedEventArgs e)

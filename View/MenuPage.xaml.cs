@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
@@ -17,6 +16,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.ApplicationModel.Core;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -31,10 +31,10 @@ namespace MyInsta.View
         {
             this.InitializeComponent();
 
-            ApplicationViewTitleBar formattableTitleBar = ApplicationView.GetForCurrentView().TitleBar;
-            formattableTitleBar.ButtonBackgroundColor = Colors.Transparent;
-            CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-            coreTitleBar.ExtendViewIntoTitleBar = true;
+            //ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            //titleBar.BackgroundColor = Colors.Transparent;
+            CoreApplicationViewTitleBar bar = CoreApplication.GetCurrentView().TitleBar;
+            bar.ExtendViewIntoTitleBar = true;
         }
         User InstaUser { get; set; }
         protected async override void OnNavigatedTo(NavigationEventArgs e)

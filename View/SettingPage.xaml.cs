@@ -5,10 +5,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Globalization;
 using Windows.Storage;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -41,7 +43,7 @@ namespace MyInsta.View
             InstaUser = objs;
         }
 
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (((ComboBox)sender).SelectedItem.ToString() == "English")
             {
@@ -55,10 +57,18 @@ namespace MyInsta.View
                 ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
                 localSettings.Values["Language"] = "ru-RU";
             }
-            CustomDialog customDialog = new CustomDialog("Message", "Restart app", "All right");
+            var result = await CoreApplication.RequestRestartAsync("Application Restart Programmatically ");
+
+            if (result == AppRestartFailureReason.NotInForeground ||
+                result == AppRestartFailureReason.RestartPending ||
+                result == AppRestartFailureReason.Other)
+            {
+                var msgBox = new MessageDialog("Restart Failed", result.ToString());
+                await msgBox.ShowAsync();
+            }
         }
 
-        private void ComboBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        private async void ComboBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
             if (((ComboBox)sender).SelectedItem.ToString() == "Light")
             {
@@ -70,7 +80,15 @@ namespace MyInsta.View
                 ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
                 localSettings.Values["Theme"] = ApplicationTheme.Dark.ToString();
             }
-            CustomDialog customDialog = new CustomDialog("Message", "Restart app", "All right"); 
+            var result = await CoreApplication.RequestRestartAsync("Application Restart Programmatically ");
+
+            if (result == AppRestartFailureReason.NotInForeground ||
+                result == AppRestartFailureReason.RestartPending ||
+                result == AppRestartFailureReason.Other)
+            {
+                var msgBox = new MessageDialog("Restart Failed", result.ToString());
+                await msgBox.ShowAsync();
+            }
         }
 
         private async void ButtonLogout_Click(object sender, RoutedEventArgs e)

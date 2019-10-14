@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Loaded="Page_Loaded">
+    Background="{ThemeResource SystemControlAcrylicElementBrush}" Loaded="Page_Loaded">
     <Page.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="FontFamily" Value="Century Gothic"/>
@@ -22,7 +22,7 @@
     C128.094,60.512,108.552,40.97,84.531,40.97z M84.531,113.093c-15.749,0-28.563-12.812-28.563-28.561
     c0-15.75,12.813-28.563,28.563-28.563s28.563,12.813,28.563,28.563C113.094,100.281,100.28,113.093,84.531,113.093z M129.921,28.251c-2.89,0-5.729,1.17-7.77,3.22c-2.051,2.04-3.23,4.88-3.23,7.78c0,2.891,1.18,5.73,3.23,7.78
     c2.04,2.04,4.88,3.22,7.77,3.22c2.9,0,5.73-1.18,7.78-3.22c2.05-2.05,3.22-4.89,3.22-7.78c0-2.9-1.17-5.74-3.22-7.78
-    C135.661,29.421,132.821,28.251,129.921,28.251z" Stroke="{ThemeResource ApplicationPageBackgroundThemeBrush}" StrokeThickness="6" Stretch="Fill" HorizontalAlignment="Center" 
+    C135.661,29.421,132.821,28.251,129.921,28.251z" Stroke="{ThemeResource SystemControlAcrylicElementBrush}" StrokeThickness="6" Stretch="Fill" HorizontalAlignment="Center" 
                   VerticalAlignment="Center" Margin="20" Height="150" Width="150" Fill="{ThemeResource AppBarItemForegroundThemeBrush}"/>
                 <ProgressRing x:Name="modalRing" Visibility="Collapsed" IsActive="True" 
                               Foreground="{ThemeResource AppBarItemForegroundThemeBrush}"

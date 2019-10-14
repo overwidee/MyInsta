@@ -13,7 +13,7 @@
             <Setter Property="FontFamily" Value="Century Gothic"/>
         </Style>
     </Page.Resources>
-    <Grid>
+    <Grid Background="{ThemeResource SystemControlAcrylicElementBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
             <RowDefinition Height="153*"/>
@@ -23,8 +23,8 @@
         <ListView x:Name="listFollowers" ItemsSource="{x:Bind InstaUser.UserData.UserFollowers}" Grid.Row="1" Margin="10" SelectionChanged="ListFollowers_SelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate x:Name="SingleLineDataTemplate" x:DataType="localInsta:InstaUserShort">
-                    <StackPanel Orientation="Horizontal" Height="70" Padding="12" Grid.Column="0">
-                            <Ellipse Height="48" Width="48" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Height="80" Padding="12" Grid.Column="0">
+                            <Ellipse Height="56" Width="56" VerticalAlignment="Center">
                                 <Ellipse.Fill>
                                     <ImageBrush>
                                         <ImageBrush.ImageSource>

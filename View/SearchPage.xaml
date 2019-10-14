@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     xmlns:localInsta="using:InstagramApiSharp.Classes.Models"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource SystemControlAcrylicElementBrush}">
     <Page.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="FontFamily" Value="Century Gothic"/>
@@ -22,8 +22,8 @@
         <ListView x:Name="listSearch" AllowFocusWhenDisabled="True" ItemsSource="{x:Bind SearchUsers}" Grid.Row="1" Margin="10" SelectionChanged="ListFollowers_SelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate x:Name="SingleLineDataTemplate" x:DataType="localInsta:InstaUserShort">
-                    <StackPanel Orientation="Horizontal" Height="70" Padding="12" Grid.Column="0">
-                            <Ellipse Height="48" Width="48" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Height="80" Padding="12" Grid.Column="0">
+                            <Ellipse Height="56" Width="56" VerticalAlignment="Center">
                                 <Ellipse.Fill>
                                     <ImageBrush>
                                         <ImageBrush.ImageSource>

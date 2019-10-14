@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:MyInsta.Model"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource SystemControlAcrylicElementBrush}">
     <Page.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="FontFamily" Value="Century Gothic"/>
@@ -16,7 +16,7 @@
     <Grid>
         <ProgressRing x:Name="progressPosts" Height="100" Width="100" Grid.Row="1"/>
         <ScrollViewer x:Name="scrollListPosts" ViewChanged="ScrollListPosts_ViewChanged" VerticalScrollBarVisibility="Auto">
-            <ListView x:Name="postsList" SelectionMode="None"  HorizontalContentAlignment="Center">
+            <ListView x:Name="postsList" SelectionMode="None" ItemsSource="{x:Bind InstaUser.UserData.SavedPostItems}"  HorizontalContentAlignment="Center">
                 <ListView.Resources>
                     <ResourceDictionary>
                         <ResourceDictionary.MergedDictionaries>
@@ -51,7 +51,6 @@
                                         </ImageBrush>
                                     </Ellipse.Fill>
                                 </Ellipse>
-                                <!--<TextBlock Text="{x:Bind UserNamePost}" Margin="10" Tag="{x:Bind UserPk}" FontSize="17" VerticalAlignment="Center"/>-->
                                 <Button x:Name="buttonProfile" CornerRadius="5" Tag="{x:Bind UserPk}" Click="ButtonProfile_Click" Margin="10" VerticalAlignment="Center" Content="{x:Bind UserNamePost}"/>
                             </StackPanel>
 

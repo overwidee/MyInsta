@@ -44,16 +44,6 @@ namespace MyInsta.View
             typePage = (int)objs[1];
 
             postsList.ItemsSource = InstaUser.UserData.SavedPostItems?.Take(10);
-            //switch (typePage)
-            //{
-            //    case 0: postsList.ItemsSource = InstaUser.UserData.Feed?.Take(10);
-            //        break;
-            //    case 1: postsList.ItemsSource = InstaUser.UserData.SavedPostItems?.Take(10);
-            //        break;
-            //    default:
-            //        break;
-            //}
-
         }
 
         private void ScrollListPosts_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)

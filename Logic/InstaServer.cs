@@ -142,6 +142,32 @@ namespace MyInsta.Logic
                 }
                 return null;
             }
+            else if (challenge.Value.StepData != null && challenge.Value.StepData.Email != null)
+            {
+                var request = await api.RequestVerifyCodeToEmailForChallengeRequireAsync();
+                ContentDialog dialog = new ContentDialog()
+                {
+                    Width = 500,
+                    CloseButtonText = "Cancel",
+                    PrimaryButtonText = "Send"
+                };
+                StackPanel stackPanel = new StackPanel() { Orientation = Orientation.Vertical };
+                TextBlock textBlock = new TextBlock() { Text = "Write code from email", Margin = new Windows.UI.Xaml.Thickness(10) };
+                TextBox inputTextBox = new TextBox() { TextAlignment = Windows.UI.Xaml.TextAlignment.Center, PlaceholderText = "Code", Margin = new Windows.UI.Xaml.Thickness(10) };
+                stackPanel.Children.Add(textBlock);
+                stackPanel.Children.Add(inputTextBox);
+                dialog.Content = stackPanel;
+                if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+                {
+                    var code = await api.VerifyCodeForChallengeRequireAsync(inputTextBox.Text);
+                    if (code.Succeeded)
+                    {
+                        await SaveApiString(api);
+                        return api;
+                    }
+                }
+                return null;
+            }
             return null;
         }
         public static async Task SaveApiString(IInstaApi api)
@@ -179,7 +205,7 @@ namespace MyInsta.Logic
             await GetUserPostItems(userObject);
             await GetBookmarksAsync(userObject);
             await GetUserFollowers(userObject);
-            await GetUserFriendsAndUnfollowers(userObject);
+            await GetUserFriendsAndUnfollowers(userObject, true);
         }
         private static async Task GetUserFollowers(User user)
         {
@@ -205,22 +231,42 @@ namespace MyInsta.Logic
             OnUserSavedPostsLoaded?.Invoke();
             IsSavedPostsLoaded = true;
         }
-        private static async Task GetUserFriendsAndUnfollowers(User user)
+        private static async Task GetUserFriendsAndUnfollowers(User user, bool all = false, int count = 30)
         {
             var fling = await user.API.UserProcessor.GetUserFollowingAsync(user.LoginUser, PaginationParameters.MaxPagesToLoad(5));
-            foreach (var item in fling.Value)
+            if (all)
+                count = fling.Value.Count;
+            ////var statuses = await GetStatuses(user, fling.Value.Select(x => x.Pk).Take(count).ToArray());
+            int i = 0;
+            foreach (var item in fling.Value.Take(count))
             {
-                var status = await user.API.UserProcessor.GetFriendshipStatusAsync(item.Pk);
-                if (status.Value.Following && status.Value.FollowedBy && !user.UserData.UserFriends.Contains(item))
+                var statusR = await user.API.UserProcessor.GetFriendshipStatusAsync(item.Pk);
+                var status = statusR.Value;
+                if (status.Following && status.FollowedBy && user.UserData.UserFriends.IndexOf(item) == -1)
                     user.UserData.UserFriends.Add(item);
                 else
-                if (status.Value.Following && !status.Value.FollowedBy && !user.UserData.UserUnfollowers.Contains(item))
+                if (status.Following && !status.FollowedBy && user.UserData.UserUnfollowers.IndexOf(item) == -1)
                     user.UserData.UserUnfollowers.Add(item);
+                i++;
             }
-            OnUserUnfollowersLoaded?.Invoke();
-            OnUserFriendsLoaded?.Invoke();
-            IsUnfollowersLoaded = true;
-            IsFriendsLoaded = true;
+            if (all)
+            {
+                OnUserUnfollowersLoaded?.Invoke();
+                OnUserFriendsLoaded?.Invoke();
+                IsUnfollowersLoaded = true;
+                IsFriendsLoaded = true;
+            }
+        }
+
+        private static async Task<List<InstaStoryFriendshipStatus>> GetStatuses(User user, params long[] ids)
+        {
+            List<InstaStoryFriendshipStatus> statuses = new List<InstaStoryFriendshipStatus>();
+            for(int i = 0; i < ids.Length; i++)
+            {
+                var status = await user.API.UserProcessor.GetFriendshipStatusAsync(ids[0]);
+                statuses.Add(status.Value);
+            }
+            return statuses;
         }
 
         #endregion
