@@ -31,8 +31,9 @@ namespace MyInsta.View
         {
             this.InitializeComponent();
 
-            //ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-            //titleBar.BackgroundColor = Colors.Transparent;
+            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.BackgroundColor = Colors.Transparent;
+            titleBar.ButtonBackgroundColor = Colors.Transparent;
             CoreApplicationViewTitleBar bar = CoreApplication.GetCurrentView().TitleBar;
             bar.ExtendViewIntoTitleBar = true;
         }

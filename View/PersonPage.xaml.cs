@@ -31,7 +31,7 @@ namespace MyInsta.View
         {
             this.InitializeComponent();
 
-            
+
             progressPosts.IsActive = !InstaServer.IsPostsLoaded;
             InstaServer.OnUserPostsLoaded += () => { progressPosts.IsActive = false; };
         }
@@ -46,6 +46,8 @@ namespace MyInsta.View
 
         public ObservableCollection<PostItem> Posts { get; set; }
         public ObservableCollection<CustomMedia> UrlStories { get; set; }
+        public ObservableCollection<CustomMedia> HighlightsStories { get; set; }
+        public InstaHighlightFeeds InstaHighlightFeeds { get; set; }
 
         int countPosts = 10;
 
@@ -64,6 +66,10 @@ namespace MyInsta.View
             ButtonFollow = !InstaUserInfo.FriendshipStatus.Following;
             ButtonUnFollow = InstaUserInfo.FriendshipStatus.Following;
             SetBookmarkStatus();
+
+            InstaHighlightFeeds = await InstaServer.GetArchiveCollectionStories(CurrentUser, SelectUser.Pk);
+            collectionsBox.ItemsSource = InstaHighlightFeeds.Items;
+
             UrlStories = await InstaServer.GetStoryUser(CurrentUser, InstaUserInfo);
             storiesList.ItemsSource = UrlStories;
 
@@ -112,65 +118,26 @@ namespace MyInsta.View
                 mediaList.ItemsSource = Posts?.Take(countPosts);
             }
         }
-
-        private async void StoriesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            try
-            {
-                var story = e.AddedItems[0] as CustomMedia;
-                if (story != null)
-                {
-                    string urlMedia = "";
-                    if (story.MediaType == MediaType.Image)
-                        urlMedia = story.UrlBigImage;
-                    else if (story.MediaType == MediaType.Video)
-                        urlMedia = story.UrlVideo;
-
-                    MediaDialog mediaDialog = new MediaDialog(CurrentUser, story.Pk, urlMedia, story.MediaType, 0);
-                    await mediaDialog.ShowMediaAsync();
-                }
-            }
-            catch
-            {
-
-            }
-            finally
-            {
-                ((ListView)sender).SelectedItem = null;
-            }
-        }
-
         private void MediaList_SelectionChanged(object sender, TappedRoutedEventArgs e)
         {
-            try
+            var post = ((FlipView)sender).SelectedItem as CustomMedia;
+            if (post != null)
             {
-                var post = ((FlipView)sender).SelectedItem as CustomMedia;
-                if (post != null)
-                {
-                    string urlMedia = "";
-                    if (post.MediaType == MediaType.Image)
-                        urlMedia = post.UrlBigImage;
-                    else if (post.MediaType == MediaType.Video)
-                        urlMedia = post.UrlVideo;
+                string urlMedia = "";
+                if (post.MediaType == MediaType.Image)
+                    urlMedia = post.UrlBigImage;
+                else if (post.MediaType == MediaType.Video)
+                    urlMedia = post.UrlVideo;
 
-                    MediaDialog mediaDialog = new MediaDialog(CurrentUser, post.Pk, urlMedia, post.MediaType, 1);
-                    _ = mediaDialog.ShowMediaAsync();
-                }
-            }
-            catch
-            {
-
+                MediaDialog mediaDialog = new MediaDialog(CurrentUser, post.Pk, urlMedia, post.MediaType, 1);
+                _ = mediaDialog.ShowMediaAsync();
             }
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e) => InstaServer.CancelTasks();
-
         private async void ButtonSaveInProfile_Click(object sender, RoutedEventArgs e) => await InstaServer.SaveMediaInProfile(CurrentUser, ((Button)sender).Tag.ToString());
-
         private async void ButtonShare_Click(object sender, RoutedEventArgs e) => await InstaServer.ShareMedia(CurrentUser, Posts.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().Items);
-
-        private void PostBox_TextChanged(AutoSuggestBox sender,
-                                         AutoSuggestBoxTextChangedEventArgs args)
+        private void PostBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             if (!string.IsNullOrEmpty(sender.Text))
             {
@@ -189,9 +156,7 @@ namespace MyInsta.View
                 mediaList.ItemsSource = Posts;
 
         }
-
-        private void PostBox_QuerySubmitted(AutoSuggestBox sender,
-                                            AutoSuggestBoxQuerySubmittedEventArgs args)
+        private void PostBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             if (!string.IsNullOrEmpty(sender.Text))
             {
@@ -209,7 +174,6 @@ namespace MyInsta.View
             else
                 mediaList.ItemsSource = Posts;
         }
-
         private void SetBookmarkStatus()
         {
             var button = buttonAction;
@@ -235,6 +199,49 @@ namespace MyInsta.View
                 }
             };
             menu.Items.Add(item);
+        }
+
+        private async void collectionsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectHigh = ((ComboBox)(sender)).SelectedItem as InstaHighlightFeed;
+            HighlightsStories = await InstaServer.GetHighlightStories(CurrentUser, selectHigh.HighlightId);
+            archiveList.ItemsSource = HighlightsStories;
+
+            scrollArchive.ChangeView(null, 0, 1, true);
+        }
+        private async void buttonDownloadHigh_Click(object sender, RoutedEventArgs e) =>
+            await InstaServer.DownloadMedia(HighlightsStories.Where(x => x.Name == ((Button)sender).Tag.ToString()).First());
+
+        private async void Image_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var high = HighlightsStories.Where(x => x.Pk == ((Image)sender).Tag.ToString()).FirstOrDefault();
+            if (high != null)
+            {
+                string urlMedia = "";
+                if (high.MediaType == MediaType.Image)
+                    urlMedia = high.UrlBigImage;
+                else if (high.MediaType == MediaType.Video)
+                    urlMedia = high.UrlVideo;
+
+                MediaDialog mediaDialog = new MediaDialog(CurrentUser, high.Pk, urlMedia, high.MediaType, 0);
+                await mediaDialog.ShowMediaAsync();
+            }
+        }
+
+        private async void Image_Tapped_1(object sender, TappedRoutedEventArgs e)
+        {
+            var high = UrlStories.Where(x => x.Pk == ((Image)sender).Tag.ToString()).FirstOrDefault();
+            if (high != null)
+            {
+                string urlMedia = "";
+                if (high.MediaType == MediaType.Image)
+                    urlMedia = high.UrlBigImage;
+                else if (high.MediaType == MediaType.Video)
+                    urlMedia = high.UrlVideo;
+
+                MediaDialog mediaDialog = new MediaDialog(CurrentUser, high.Pk, urlMedia, high.MediaType, 0);
+                await mediaDialog.ShowMediaAsync();
+            }
         }
     }
 }

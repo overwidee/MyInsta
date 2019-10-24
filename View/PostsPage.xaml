@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:MyInsta.Model"
+    xmlns:localInsta="using:InstagramApiSharp.Classes.Models"
     mc:Ignorable="d"
     Background="{ThemeResource SystemControlAcrylicElementBrush}">
     <Page.Resources>
@@ -14,9 +15,39 @@
         </Style>
     </Page.Resources>
     <Grid>
-        <ProgressRing x:Name="progressPosts" Height="100" Width="100" Grid.Row="1"/>
-        <ScrollViewer x:Name="scrollListPosts" ViewChanged="ScrollListPosts_ViewChanged" VerticalScrollBarVisibility="Auto">
-            <ListView x:Name="postsList" SelectionMode="None" ItemsSource="{x:Bind InstaUser.UserData.SavedPostItems}"  HorizontalContentAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ProgressBar x:Name="progressCollection" Visibility="Collapsed" IsIndeterminate="True" Margin="5" VerticalAlignment="Top"/>
+        <ComboBox x:Name="collectionsBox" ItemsSource="{x:Bind InstaCollections.Items}" HorizontalAlignment="Right" 
+                  VerticalAlignment="Center" Header="Your collections" HorizontalContentAlignment="Center"
+                  Width="200" Margin="10"
+                  SelectionChanged="collectionsBox_SelectionChanged">
+            <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="localInsta:InstaCollectionItem">
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Height="20" Width="20">
+                            <Ellipse.Fill>
+                                <ImageBrush>
+                                    <ImageBrush.ImageSource>
+                                        <BitmapImage UriSource="{x:Bind CoverMedia.ImageVersions[0].Uri}"/>
+                                    </ImageBrush.ImageSource>
+                                </ImageBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <TextBlock Margin="20, 0, 0, 0" Text="{x:Bind CollectionName}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <ProgressRing x:Name="progressPosts"
+                      Height="100" Width="100" Grid.Row="1"/>
+        <ScrollViewer x:Name="scrollListPosts" Grid.RowSpan="2" Margin="0, 20, 0, 0"
+                      ViewChanged="ScrollListPosts_ViewChanged" VerticalScrollBarVisibility="Hidden"
+                      Width="750">
+            <ListView x:Name="postsList" SelectionMode="None" ItemsSource="{x:Bind SavedPosts}" 
+                      HorizontalContentAlignment="Stretch" Width="700">
                 <ListView.Resources>
                     <ResourceDictionary>
                         <ResourceDictionary.MergedDictionaries>
@@ -64,8 +95,7 @@
                                     <FlipView.ItemTemplate>
                                         <DataTemplate x:DataType="model:CustomMedia">
                                             <StackPanel>
-                                                <Image Source="{x:Bind UrlSmallImage}" Margin="10" Height="400" />
-                                                
+                                                <Image Source="{x:Bind UrlSmallImage}" Margin="10" Height="500" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </FlipView.ItemTemplate>

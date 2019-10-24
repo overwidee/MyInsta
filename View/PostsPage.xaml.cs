@@ -1,7 +1,9 @@
-﻿using MyInsta.Logic;
+﻿using InstagramApiSharp.Classes.Models;
+using MyInsta.Logic;
 using MyInsta.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -30,12 +32,15 @@ namespace MyInsta.View
 
             progressPosts.IsActive = !InstaServer.IsSavedPostsLoaded;
             InstaServer.OnUserSavedPostsLoaded += () => progressPosts.IsActive = false;
+            InstaServer.OnUserCollectionLoaded += () => progressCollection.Visibility = Visibility.Collapsed;
         }
 
         public User InstaUser { get; set; }
+        public ObservableCollection<PostItem> SavedPosts { get; set; } = new ObservableCollection<PostItem>();
+        public InstaCollections InstaCollections { get; set; }
         int countPosts = 10;
         int typePage;
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
@@ -43,7 +48,11 @@ namespace MyInsta.View
             InstaUser = objs[0] as User;
             typePage = (int)objs[1];
 
-            postsList.ItemsSource = InstaUser.UserData.SavedPostItems?.Take(10);
+            SavedPosts = new ObservableCollection<PostItem>(InstaUser.UserData.SavedPostItems?.Take(countPosts).Select(x => x).ToList());
+            postsList.ItemsSource = SavedPosts;
+            InstaCollections = await InstaServer.GetListCollections(InstaUser);
+            InstaCollections.Items.Add(new InstaCollectionItem() { CollectionId = 1, CollectionName = "All posts" });
+            collectionsBox.ItemsSource = InstaCollections.Items;
         }
 
         private void ScrollListPosts_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
@@ -56,7 +65,7 @@ namespace MyInsta.View
             if (verticalOffset == maxVerticalOffset)
             {
                 countPosts += 3;
-                postsList.ItemsSource = typePage == 1 ? InstaUser.UserData.SavedPostItems?.Take(countPosts) : InstaUser.UserData.Feed?.Take(countPosts);
+                postsList.ItemsSource = new ObservableCollection<PostItem>(InstaUser.UserData.SavedPostItems?.Take(countPosts).Select(x => x).ToList()); ;
             }
         }
 
@@ -87,9 +96,9 @@ namespace MyInsta.View
         {
             await InstaServer.DownloadAnyPost(
                 await InstaServer.GetInstaUserShortById(InstaUser,
-                    typePage == 1 ? InstaUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).UserPk 
+                    typePage == 1 ? SavedPosts.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).UserPk
                     : InstaUser.UserData.Feed.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).UserPk),
-                typePage == 1 ? InstaUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items 
+                typePage == 1 ? SavedPosts.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items
                     : InstaUser.UserData.Feed.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items);
         }
 
@@ -101,9 +110,21 @@ namespace MyInsta.View
 
         private async void ButtonShare_Click(object sender, RoutedEventArgs e)
         {
-            await InstaServer.ShareMedia(InstaUser, 
-                typePage == 1 ? InstaUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items 
+            await InstaServer.ShareMedia(InstaUser,
+                typePage == 1 ? SavedPosts.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items
                 : InstaUser.UserData.Feed.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items);
+        }
+
+        private async void collectionsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            countPosts = 10;
+            var collection = ((ComboBox)sender).SelectedItem as InstaCollectionItem;
+            if (collection.CollectionId != 1) progressCollection.Visibility = Visibility.Visible;
+
+            postsList.ItemsSource = collection.CollectionId == 1
+                ? SavedPosts?.Take(countPosts)
+                : await InstaServer.GetMediasByCollection(InstaUser, collection);
+            scrollListPosts.ChangeView(null, 0, 1, true);
         }
     }
 }

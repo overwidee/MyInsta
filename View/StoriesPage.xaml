@@ -30,7 +30,7 @@
             SelectedIndex="1">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Background="Transparent" Orientation="Horizontal" />
+                    <StackPanel Background="Transparent" Orientation="Horizontal"/>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
             <ListView.ItemTemplate>
@@ -57,8 +57,9 @@
             VerticalAlignment="Center"
             FontFamily="Century Gothic"/>
         <Frame Margin="10" CornerRadius="0" Grid.Row="2">
-            <ScrollViewer>
-                <ListView x:Name="storiesList" SelectionChanged="StoriesList_SelectionChanged" ItemsSource="{x:Bind Stories, Mode=TwoWay}" HorizontalContentAlignment="Center">
+            <ScrollViewer x:Name="scrollList" VerticalScrollBarVisibility="Hidden">
+                <ListView x:Name="storiesList" SelectionMode="None" 
+                          ItemsSource="{x:Bind Stories, Mode=TwoWay}" HorizontalContentAlignment="Center">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <ItemsStackPanel HorizontalAlignment="Center" ItemsUpdatingScrollMode="KeepLastItemInView" />
@@ -67,7 +68,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="localInsta1:CustomMedia">
                             <StackPanel Orientation="Vertical" >
-                                <Image Source="{x:Bind UrlBigImage}" Margin="10" Height="400" Width="500" HorizontalAlignment="Center"/>
+                                <Image Source="{x:Bind UrlBigImage}" Margin="10" Height="400" Width="500" HorizontalAlignment="Center" Tag="{x:Bind Pk}" Tapped="Image_Tapped"/>
                                 <Button x:Name="buttonDownloadStory" CornerRadius="5" HorizontalAlignment="Center" Click="ButtonDownloadStory_Click" Margin="10" x:Uid="DownloadStory" Tag="{x:Bind Name}"/>
                             </StackPanel>
                         </DataTemplate>

@@ -13,7 +13,7 @@
             <Setter Property="FontFamily" Value="Century Gothic"/>
         </Style>
     </Page.Resources>
-    <Grid>
+    <Grid Background="{ThemeResource SystemControlAcrylicElementBrush}">
         <GridView x:Name="mainGrid" ItemsSource="{x:Bind InstaUser.UserData.Bookmarks}" 
                   Grid.Row="1" Grid.ColumnSpan="4" ScrollViewer.VerticalScrollBarVisibility="Hidden"
                   HorizontalAlignment="Center" ItemClick="MainGrid_ItemClick" IsItemClickEnabled="True">

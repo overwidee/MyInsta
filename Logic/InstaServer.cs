@@ -40,6 +40,7 @@ namespace MyInsta.Logic
         public static event CompleteHandler OnUserUnfollowersLoaded;
         public static event CompleteHandler OnUserFriendsLoaded;
         public static event CompleteHandler OnUserPostsLoaded;
+        public static event CompleteHandler OnUserCollectionLoaded;
 
         #endregion
         #region Progress
@@ -63,6 +64,7 @@ namespace MyInsta.Logic
                         .UseLogger(new DebugLogger(LogLevel.Exceptions))
                         .Build();
                 api.LoadStateDataFromString(savedAPI.ToString());
+
                 userObject.API = api;
                 page.Frame.Navigate(typeof(MenuPage), userObject);
             }
@@ -79,6 +81,10 @@ namespace MyInsta.Logic
                     var logResult = await userObject.API.LoginAsync();
                     if (logResult.Succeeded)
                     {
+                        ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+                        localSettings.Values["Login"] = userObject.LoginUser;
+                        localSettings.Values["Password"] = userObject.PasswordUser;
+
                         await SaveApiString(userObject.API);
                         page.Frame.Navigate(typeof(MenuPage), userObject);
                     }
@@ -89,6 +95,10 @@ namespace MyInsta.Logic
                             var resultApi = await AccountVerify(userObject.API);
                             if (resultApi != null)
                             {
+                                ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+                                localSettings.Values["Login"] = userObject.LoginUser;
+                                localSettings.Values["Password"] = userObject.PasswordUser;
+
                                 userObject.API = resultApi;
                                 page.Frame.Navigate(typeof(MenuPage), userObject);
                             }
@@ -224,7 +234,7 @@ namespace MyInsta.Logic
             int i = 1;
             foreach (var itemS in items.Value)
             {
-                var savedPost = GetPostItem(itemS, i);
+                PostItem savedPost = GetPostItem(itemS, i);
                 i++;
                 user.UserData.SavedPostItems.Add(savedPost);
             }
@@ -462,7 +472,7 @@ namespace MyInsta.Logic
         }
         public static PostItem GetPostItem(InstaMedia item, int id)
         {
-            PostItem PostItem = new PostItem()
+            IPost PostItem = new PostItem()
             {
                 Id = id,
                 UserNamePost = item.User.UserName,
@@ -516,7 +526,7 @@ namespace MyInsta.Logic
                     }
                 }
             }
-            return PostItem;
+            return PostItem as PostItem;
         }
 
         public static ObservableCollection<PostItem> GetUrlsMediasUser(InstaMediaList medias, InstaUserInfo instaUserInfo)
@@ -667,7 +677,6 @@ namespace MyInsta.Logic
             else
                 return null;
         }
-
         public static async Task<ObservableCollection<CustomMedia>> GetStoryUser(User userObject, long userPk)
         {
             if (userObject != null)
@@ -704,6 +713,18 @@ namespace MyInsta.Logic
                 i++;
             }
             return storiesList;
+        }
+
+        public static async Task<InstaHighlightFeeds> GetArchiveCollectionStories(User instaUser, long userId)
+        {
+            var collection = await instaUser.API.StoryProcessor.GetHighlightFeedsAsync(userId);
+            return collection.Value;
+        }
+
+        public static async Task<ObservableCollection<CustomMedia>> GetHighlightStories(User instaUser, string highlightId)
+        {
+            var stories = await instaUser.API.StoryProcessor.GetHighlightMediasAsync(highlightId);
+            return GetUrlsStoriesUser(stories.Value.Items);
         }
         #endregion
 
@@ -980,6 +1001,24 @@ namespace MyInsta.Logic
         {
             return user.UserData.Bookmarks.Where(x => x.Pk == id).ToList().Count > 0 ? true : false;
         }
+        #endregion
+
+        #region Saved Posts
+        public async static Task<InstaCollections> GetListCollections(User instaUser)
+        {
+            var collects = await instaUser.API.CollectionProcessor.GetCollectionsAsync(PaginationParameters.Empty);
+            return collects.Value;
+        }
+
+        public async static Task<IEnumerable<PostItem>> GetMediasByCollection(User instaUser, InstaCollectionItem instaCollection)
+        {
+            var mediaC = await instaUser.API.CollectionProcessor.GetSingleCollectionAsync(instaCollection.CollectionId, PaginationParameters.MaxPagesToLoad(1));
+            var mediasIds = mediaC.Value.Media.Select(x => new { x.Pk });
+            OnUserCollectionLoaded?.Invoke();
+            return instaUser.UserData.SavedPostItems.SelectMany(savedItem => mediasIds
+            .SelectMany(mediaId => savedItem.Items.Where(item => item.Pk == mediaId.Pk).Select(item => savedItem)));
+        }
+
         #endregion
     }
 }

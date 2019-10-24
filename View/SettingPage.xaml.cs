@@ -43,7 +43,7 @@ namespace MyInsta.View
             InstaUser = objs;
         }
 
-        private async void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (((ComboBox)sender).SelectedItem.ToString() == "English")
             {
@@ -57,18 +57,10 @@ namespace MyInsta.View
                 ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
                 localSettings.Values["Language"] = "ru-RU";
             }
-            var result = await CoreApplication.RequestRestartAsync("Application Restart Programmatically ");
-
-            if (result == AppRestartFailureReason.NotInForeground ||
-                result == AppRestartFailureReason.RestartPending ||
-                result == AppRestartFailureReason.Other)
-            {
-                var msgBox = new MessageDialog("Restart Failed", result.ToString());
-                await msgBox.ShowAsync();
-            }
+            RestartApp();
         }
 
-        private async void ComboBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        private void ComboBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
             if (((ComboBox)sender).SelectedItem.ToString() == "Light")
             {
@@ -80,6 +72,18 @@ namespace MyInsta.View
                 ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
                 localSettings.Values["Theme"] = ApplicationTheme.Dark.ToString();
             }
+            RestartApp();
+        }
+
+        private async void ButtonLogout_Click(object sender, RoutedEventArgs e)
+        {
+            var log = await InstaServer.RemoveConnection(InstaUser.API);
+            if (log)
+                RestartApp();
+        }
+
+        private async void RestartApp()
+        {
             var result = await CoreApplication.RequestRestartAsync("Application Restart Programmatically ");
 
             if (result == AppRestartFailureReason.NotInForeground ||
@@ -88,16 +92,6 @@ namespace MyInsta.View
             {
                 var msgBox = new MessageDialog("Restart Failed", result.ToString());
                 await msgBox.ShowAsync();
-            }
-        }
-
-        private async void ButtonLogout_Click(object sender, RoutedEventArgs e)
-        {
-            var log = await InstaServer.RemoveConnection(InstaUser.API);
-            if (log)
-            {
-                var frame = Window.Current.Content as Frame;
-                frame.Navigate(typeof(LoginPage));
             }
         }
     }

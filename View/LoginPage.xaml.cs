@@ -6,9 +6,12 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -30,6 +33,11 @@ namespace MyInsta.View
         {
             this.InitializeComponent();
 
+            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.BackgroundColor = Resources["SystemControlAcrylicElementMediumHighBrush"] as Color?;
+            CoreApplicationViewTitleBar bar = CoreApplication.GetCurrentView().TitleBar;
+            bar.ExtendViewIntoTitleBar = true;
+
             ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             UserInsta.LoginUser = localSettings.Values["Login"] != null ? localSettings.Values["Login"].ToString() : null;
             UserInsta.PasswordUser = localSettings.Values["Password"] != null ? localSettings.Values["Password"].ToString() : null;
@@ -46,10 +54,6 @@ namespace MyInsta.View
 
         async Task LoginInsta()
         {
-            ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            localSettings.Values["Login"] = UserInsta.LoginUser;
-            localSettings.Values["Password"] = UserInsta.PasswordUser;
-
             IsEnabled = false;
             modalRing.Visibility = Visibility.Visible;
 

@@ -54,6 +54,8 @@ namespace MyInsta.View
             Stories = await InstaServer.GetStoryUser(InstaUser, SelectedUserStory.User.Pk);
             storiesList.ItemsSource = Stories;
             userBox.Text = SelectedUserStory.User.UserName;
+
+            scrollList.ChangeView(null, 0, 1, true);
         }
 
         private async void StoriesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -80,6 +82,22 @@ namespace MyInsta.View
             finally
             {
                 ((ListView)sender).SelectedItem = null;
+            }
+        }
+
+        private async void Image_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var story = Stories.Where(x => x.Pk == ((Image)sender).Tag.ToString()).FirstOrDefault();
+            if (story != null)
+            {
+                string urlMedia = "";
+                if (story.MediaType == MediaType.Image)
+                    urlMedia = story.UrlBigImage;
+                else if (story.MediaType == MediaType.Video)
+                    urlMedia = story.UrlVideo;
+
+                MediaDialog mediaDialog = new MediaDialog(InstaUser, story.Pk, urlMedia, story.MediaType, 0);
+                await mediaDialog.ShowMediaAsync();
             }
         }
     }
