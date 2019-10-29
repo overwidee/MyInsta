@@ -16,11 +16,40 @@
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="130"/>
+            <RowDefinition Height="20"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <ProgressBar x:Name="progressCollection" Visibility="Collapsed" IsIndeterminate="True" Margin="5" VerticalAlignment="Top"/>
-        <ComboBox x:Name="collectionsBox" ItemsSource="{x:Bind InstaCollections.Items}" HorizontalAlignment="Right" 
+        <ProgressBar x:Name="progressCollection" Visibility="Collapsed" IsIndeterminate="True" Grid.Row="1" Margin="5" VerticalAlignment="Top"/>
+        <ListView x:Name="collectionsBox" HorizontalAlignment="Center"
+            ScrollViewer.VerticalScrollBarVisibility="Disabled" Grid.Row="0" ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+            ScrollViewer.HorizontalScrollMode="Enabled"                  
+            ScrollViewer.VerticalScrollMode="Disabled"
+            ItemsSource="{x:Bind InstaCollections}"
+            SelectionChanged="collectionsBox_SelectionChanged">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Background="Transparent" Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate x:Name="SingleLineDataTemplate" x:DataType="localInsta:InstaCollectionItem">
+                    <StackPanel Orientation="Vertical" Height="130" Width="100" Padding="12" Grid.Column="0">
+                        <Ellipse Height="78" Width="78" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Ellipse.Fill>
+                                <ImageBrush>
+                                    <ImageBrush.ImageSource>
+                                        <BitmapImage UriSource="{x:Bind CoverMedia.ImageVersions[0].Uri}"/>
+                                    </ImageBrush.ImageSource>
+                                </ImageBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <TextBlock Margin="5" HorizontalAlignment="Center" Text="{x:Bind CollectionName}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <!--<ComboBox x:Name="collectionsBox" ItemsSource="{x:Bind InstaCollections.Items}" HorizontalAlignment="Right" 
                   VerticalAlignment="Center" Header="Your collections" HorizontalContentAlignment="Center"
                   Width="200" Margin="10"
                   SelectionChanged="collectionsBox_SelectionChanged">
@@ -40,12 +69,11 @@
                     </StackPanel>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
-        </ComboBox>
+        </ComboBox>-->
         <ProgressRing x:Name="progressPosts"
-                      Height="100" Width="100" Grid.Row="1"/>
-        <ScrollViewer x:Name="scrollListPosts" Grid.RowSpan="2" Margin="0, 20, 0, 0"
-                      ViewChanged="ScrollListPosts_ViewChanged" VerticalScrollBarVisibility="Hidden"
-                      Width="750">
+                      Height="100" Width="100" Grid.Row="2"/>
+        <ScrollViewer x:Name="scrollListPosts" Grid.Row="2" Margin="0, 20, 0, 0"
+                      ViewChanged="ScrollListPosts_ViewChanged" VerticalScrollBarVisibility="Hidden">
             <ListView x:Name="postsList" SelectionMode="None" ItemsSource="{x:Bind SavedPosts}" 
                       HorizontalContentAlignment="Stretch" Width="700">
                 <ListView.Resources>

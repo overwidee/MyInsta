@@ -73,11 +73,18 @@ namespace MyInsta.View
             UrlStories = await InstaServer.GetStoryUser(CurrentUser, InstaUserInfo);
             storiesList.ItemsSource = UrlStories;
 
+            if (InstaHighlightFeeds.Items.Count > 0)
+                highTab.Visibility = Visibility.Visible;
+            if (UrlStories.Count > 0)
+                storyTab.Visibility = Visibility.Visible;
+
             Posts = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo, 0);
             mediaList.ItemsSource = Posts?.Take(countPosts);
 
             Posts = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo, 1);
             mediaList.ItemsSource = Posts?.Take(countPosts);
+
+            
         }
 
         private async void UnfollowButton_Click(object sender, RoutedEventArgs e)

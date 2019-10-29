@@ -44,10 +44,8 @@ namespace MyInsta.View
             SelectedUserStory = InstaUser.UserData.Stories?[0] ?? new UserStory();
         }
 
-        private async void ButtonDownloadStory_Click(object sender, RoutedEventArgs e)
-        {
+        private async void ButtonDownloadStory_Click(object sender, RoutedEventArgs e) => 
             await InstaServer.DownloadMedia(Stories.Where(x => x.Name == ((Button)sender).Tag.ToString()).First());
-        }
 
         private async void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -56,33 +54,6 @@ namespace MyInsta.View
             userBox.Text = SelectedUserStory.User.UserName;
 
             scrollList.ChangeView(null, 0, 1, true);
-        }
-
-        private async void StoriesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            try
-            {
-                var story = e.AddedItems[0] as CustomMedia;
-                if (story != null)
-                {
-                    string urlMedia = "";
-                    if (story.MediaType == MediaType.Image)
-                        urlMedia = story.UrlBigImage;
-                    else if (story.MediaType == MediaType.Video)
-                        urlMedia = story.UrlVideo;
-
-                    MediaDialog mediaDialog = new MediaDialog(InstaUser, story.Pk, urlMedia, story.MediaType, 0);
-                    await mediaDialog.ShowMediaAsync();
-                }
-            }
-            catch
-            {
-
-            }
-            finally
-            {
-                ((ListView)sender).SelectedItem = null;
-            }
         }
 
         private async void Image_Tapped(object sender, TappedRoutedEventArgs e)

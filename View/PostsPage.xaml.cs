@@ -118,7 +118,7 @@ namespace MyInsta.View
         private async void collectionsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             countPosts = 10;
-            var collection = ((ComboBox)sender).SelectedItem as InstaCollectionItem;
+            var collection = ((ListView)sender).SelectedItem as InstaCollectionItem;
             if (collection.CollectionId != 1) progressCollection.Visibility = Visibility.Visible;
 
             postsList.ItemsSource = collection.CollectionId == 1

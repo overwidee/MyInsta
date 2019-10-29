@@ -90,7 +90,7 @@
         </ScrollViewer>
         
         <controls:TabView Grid.Column="1" FontFamily="Century Gothic" Grid.ColumnSpan="4" Grid.Row="0" Grid.RowSpan="4" TabWidthBehavior="Equal" Margin="10">
-            <controls:TabViewItem x:Uid="Posts" 
+            <controls:TabViewItem x:Name="postTab" x:Uid="Posts" 
                                   FontFamily="Century Gothic"
                                   Background="{ThemeResource FlipViewButtonBorderThemeBrush}" Icon="Camera">     
                 <Frame Margin="10" CornerRadius="0">
@@ -156,6 +156,8 @@
                 </Frame>
             </controls:TabViewItem>
             <controls:TabViewItem x:Uid="Stories" 
+                                  x:Name="storyTab"
+                                  Visibility="Collapsed"
                                   FontFamily="Century Gothic"
                                   Background="{ThemeResource FlipViewButtonBorderThemeBrush}" Icon="View">     
                 <Frame Margin="10" CornerRadius="0">
@@ -184,6 +186,8 @@
                 </Frame>
             </controls:TabViewItem>
             <controls:TabViewItem Header="Highlights" 
+                                  x:Name="highTab"
+                                  Visibility="Collapsed"
                                   FontFamily="Century Gothic"
                                   Background="{ThemeResource FlipViewButtonBorderThemeBrush}" Icon="View">
                 <Frame Margin="10" CornerRadius="0">

@@ -92,21 +92,14 @@ namespace MyInsta.Logic
                     {
                         if (logResult.Value == InstaLoginResult.ChallengeRequired)
                         {
-                            var resultApi = await AccountVerify(userObject.API);
-                            if (resultApi != null)
-                            {
-                                ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-                                localSettings.Values["Login"] = userObject.LoginUser;
-                                localSettings.Values["Password"] = userObject.PasswordUser;
-
-                                userObject.API = resultApi;
-                                page.Frame.Navigate(typeof(MenuPage), userObject);
-                            }
+                            page.Frame.Navigate(typeof(VerifyPage), userObject);
                         }
                     }
                 }
             }
         }
+
+        
         private static bool ExistsConnection()
         {
             StorageFolder localFolder = ApplicationData.Current.LocalFolder;
@@ -121,6 +114,48 @@ namespace MyInsta.Logic
             StorageFolder localFolder = ApplicationData.Current.LocalFolder;
             StorageFile sampleFile = await localFolder.GetFileAsync("dataFile.txt");
             return await FileIO.ReadTextAsync(sampleFile);
+        }
+
+
+        public static async Task<bool> SendSMSVerify(IInstaApi api)
+        {
+            var challenge = await api.GetChallengeRequireVerifyMethodAsync();
+            if (challenge.Value.StepData != null && challenge.Value.StepData.PhoneNumber != null)
+            {
+                var result = await api.RequestVerifyCodeToSMSForChallengeRequireAsync();
+                if (result.Succeeded)
+                    _ = new CustomDialog("Message", $"Code sent on email {challenge.Value.StepData.PhoneNumber}", "All right");
+                return result.Succeeded;
+            }
+            return false;
+        }
+
+        public static async Task<bool> SendEmailVerify(IInstaApi api)
+        {
+            var challenge = await api.GetChallengeRequireVerifyMethodAsync();
+            if (challenge.Value.StepData != null && challenge.Value.StepData.Email != null)
+            {
+                var result = await api.RequestVerifyCodeToEmailForChallengeRequireAsync();
+                if (result.Succeeded)
+                    _ = new CustomDialog("Message", $"Code sent on email {challenge.Value.StepData.Email}", "All right");
+                return result.Succeeded;
+            }
+            return false;
+        }
+
+        public static async Task<IInstaApi> LoginByCode(User user, string code)
+        {
+            var result = await user.API.VerifyCodeForChallengeRequireAsync(code);
+            if (result.Succeeded)
+            {
+                ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+                localSettings.Values["Login"] = user.LoginUser;
+                localSettings.Values["Password"] = user.PasswordUser;
+
+                await SaveApiString(user.API);
+                return user.API;
+            }
+            return null;
         }
 
         private static async Task<IInstaApi> AccountVerify(IInstaApi api)
@@ -211,6 +246,7 @@ namespace MyInsta.Logic
             userObject.UserData.UserFollowers = new ObservableCollection<InstaUserShort>();
             userObject.UserData.SavedPostItems = new ObservableCollection<PostItem>();
 
+            //await GetArchiveStories(userObject);
             await GetCurrentUserStories(userObject);
             await GetUserPostItems(userObject);
             await GetBookmarksAsync(userObject);
@@ -472,7 +508,7 @@ namespace MyInsta.Logic
         }
         public static PostItem GetPostItem(InstaMedia item, int id)
         {
-            IPost PostItem = new PostItem()
+            PostItem PostItem = new PostItem()
             {
                 Id = id,
                 UserNamePost = item.User.UserName,
@@ -526,7 +562,7 @@ namespace MyInsta.Logic
                     }
                 }
             }
-            return PostItem as PostItem;
+            return PostItem;
         }
 
         public static ObservableCollection<PostItem> GetUrlsMediasUser(InstaMediaList medias, InstaUserInfo instaUserInfo)
@@ -1013,12 +1049,26 @@ namespace MyInsta.Logic
         public async static Task<IEnumerable<PostItem>> GetMediasByCollection(User instaUser, InstaCollectionItem instaCollection)
         {
             var mediaC = await instaUser.API.CollectionProcessor.GetSingleCollectionAsync(instaCollection.CollectionId, PaginationParameters.MaxPagesToLoad(1));
-            var mediasIds = mediaC.Value.Media.Select(x => new { x.Pk });
+            var mediasIds = mediaC.Value.Media.Select(x => new { x.Pk }).ToList();
             OnUserCollectionLoaded?.Invoke();
-            return instaUser.UserData.SavedPostItems.SelectMany(savedItem => mediasIds
-            .SelectMany(mediaId => savedItem.Items.Where(item => item.Pk == mediaId.Pk).Select(item => savedItem)));
+            return instaUser.UserData.SavedPostItems.Where(sItem => mediasIds.Where(x => x.Pk == sItem.Items[0].Pk).ToList().Count != 0).Select(sItem => sItem);
         }
 
+        #endregion
+
+        #region Feed
+        public static async Task GetArchiveStories(User user)
+        {
+            var feed = await user.API.StoryProcessor.GetHighlightsArchiveAsync();
+            var feed2 = await user.API.StoryProcessor.GetHighlightsArchiveMediasAsync("archiveDay:17900969746380353");
+            int i = 1;
+            //foreach (var itemS in feed.Value)
+            {
+                //PostItem savedPost = GetPostItem(itemS, i);
+                //i++;
+                //user.UserData.SavedPostItems.Add(savedPost);
+            }
+        }
         #endregion
     }
 }
