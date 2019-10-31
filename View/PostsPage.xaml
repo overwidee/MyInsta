@@ -10,11 +10,35 @@
     mc:Ignorable="d"
     Background="{ThemeResource SystemControlAcrylicElementBrush}">
     <Page.Resources>
-        <Style TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="Century Gothic"/>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <AcrylicBrush x:Key="CMapUwpAcrylicBrush"
+                          BackgroundSource="HostBackdrop"
+                          TintColor="Black"
+                          TintOpacity="0.4"
+                          FallbackColor="{StaticResource SystemAccentColor}"/>
+                </ResourceDictionary>
+
+                <ResourceDictionary x:Key="HighContrast">
+                    <SolidColorBrush x:Key="CMapUwpAcrylicBrush"
+                             Color="{ThemeResource SystemColorWindowColor}"/>
+                </ResourceDictionary>
+
+                <ResourceDictionary x:Key="Light">
+                    <AcrylicBrush x:Key="CMapUwpAcrylicBrush"
+                          BackgroundSource="HostBackdrop"
+                          TintColor="Black"
+                          TintOpacity="0.4"
+                          FallbackColor="{StaticResource SystemAccentColor}"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+            <Style TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="Century Gothic"/>
+            </Style>
+        </ResourceDictionary>
     </Page.Resources>
-    <Grid>
+    <Grid Background="{ThemeResource CMapUwpAcrylicBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="130"/>
             <RowDefinition Height="20"/>
@@ -49,33 +73,12 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <!--<ComboBox x:Name="collectionsBox" ItemsSource="{x:Bind InstaCollections.Items}" HorizontalAlignment="Right" 
-                  VerticalAlignment="Center" Header="Your collections" HorizontalContentAlignment="Center"
-                  Width="200" Margin="10"
-                  SelectionChanged="collectionsBox_SelectionChanged">
-            <ComboBox.ItemTemplate>
-                <DataTemplate x:DataType="localInsta:InstaCollectionItem">
-                    <StackPanel Orientation="Horizontal">
-                        <Ellipse Height="20" Width="20">
-                            <Ellipse.Fill>
-                                <ImageBrush>
-                                    <ImageBrush.ImageSource>
-                                        <BitmapImage UriSource="{x:Bind CoverMedia.ImageVersions[0].Uri}"/>
-                                    </ImageBrush.ImageSource>
-                                </ImageBrush>
-                            </Ellipse.Fill>
-                        </Ellipse>
-                        <TextBlock Margin="20, 0, 0, 0" Text="{x:Bind CollectionName}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>-->
         <ProgressRing x:Name="progressPosts"
                       Height="100" Width="100" Grid.Row="2"/>
         <ScrollViewer x:Name="scrollListPosts" Grid.Row="2" Margin="0, 20, 0, 0"
-                      ViewChanged="ScrollListPosts_ViewChanged" VerticalScrollBarVisibility="Hidden">
+                      ViewChanged="ScrollListPosts_ViewChanged" VerticalScrollBarVisibility="Auto">
             <ListView x:Name="postsList" SelectionMode="None" ItemsSource="{x:Bind SavedPosts}" 
-                      HorizontalContentAlignment="Stretch" Width="700">
+                      HorizontalContentAlignment="Stretch" Width="700" >
                 <ListView.Resources>
                     <ResourceDictionary>
                         <ResourceDictionary.MergedDictionaries>

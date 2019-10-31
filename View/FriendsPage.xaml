@@ -9,11 +9,35 @@
     xmlns:localInsta="using:InstagramApiSharp.Classes.Models"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
-        <Style TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="Century Gothic"/>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <AcrylicBrush x:Key="CMapUwpAcrylicBrush"
+                          BackgroundSource="HostBackdrop"
+                          TintColor="Black"
+                          TintOpacity="0.4"
+                          FallbackColor="{StaticResource SystemAccentColor}"/>
+                </ResourceDictionary>
+
+                <ResourceDictionary x:Key="HighContrast">
+                    <SolidColorBrush x:Key="CMapUwpAcrylicBrush"
+                             Color="{ThemeResource SystemColorWindowColor}"/>
+                </ResourceDictionary>
+
+                <ResourceDictionary x:Key="Light">
+                    <AcrylicBrush x:Key="CMapUwpAcrylicBrush"
+                          BackgroundSource="HostBackdrop"
+                          TintColor="Black"
+                          TintOpacity="0.4"
+                          FallbackColor="{StaticResource SystemAccentColor}"/>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+            <Style TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="Century Gothic"/>
+            </Style>
+        </ResourceDictionary>
     </Page.Resources>
-    <Grid Background="{ThemeResource SystemControlAcrylicElementBrush}">
+    <Grid Background="{ThemeResource CMapUwpAcrylicBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
             <RowDefinition Height="153*"/>

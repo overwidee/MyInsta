@@ -1,4 +1,5 @@
 ﻿using InstagramApiSharp;
+using InstagramApiSharp.API;
 using InstagramApiSharp.API.Builder;
 using InstagramApiSharp.Classes;
 using InstagramApiSharp.Classes.Models;
@@ -8,29 +9,23 @@ using MyInsta.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using Windows.Storage.Streams;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Imaging;
-using System.Diagnostics;
-using System.IO;
-using Windows.Web.Http;
-using Windows.Storage;
-using System.Text.RegularExpressions;
-using Windows.Storage.Pickers;
-using Windows.Storage.AccessCache;
-using InstagramApiSharp.API;
 using System.Threading;
+using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.UI.Xaml.Controls;
 
 namespace MyInsta.Logic
 {
     public static class InstaServer
     {
-        public static string LatestMediaMaxId = "";
+        public static string LatestMediaMaxId = string.Empty;
         private static CancellationTokenSource cancellationTokenMedia;
         public delegate void CompleteHandler();
+
 
         #region Events
 
@@ -43,26 +38,31 @@ namespace MyInsta.Logic
         public static event CompleteHandler OnUserCollectionLoaded;
 
         #endregion
+
         #region Progress
+
         public static bool IsFollowersLoaded { get; set; }
         public static bool IsStoriesLoaded { get; set; }
         public static bool IsSavedPostsLoaded { get; set; }
         public static bool IsFriendsLoaded { get; set; }
         public static bool IsUnfollowersLoaded { get; set; }
         public static bool IsPostsLoaded { get; set; }
+
         #endregion  
 
         #region Login instagram and API
+
         public static async Task LoginInstagram(User userObject, LoginPage page)
         {
             if (ExistsConnection())
             {
                 string savedAPI = await GetSavedApi();
 
-                var api = InstaApiBuilder.CreateBuilder()
-                        .SetUser(new UserSessionData() { UserName = userObject.LoginUser, Password = userObject.PasswordUser })
-                        .UseLogger(new DebugLogger(LogLevel.Exceptions))
-                        .Build();
+                var api = InstaApiBuilder.CreateBuilder().SetUser(new UserSessionData()
+                    {
+                        UserName = userObject.LoginUser,
+                        Password = userObject.PasswordUser
+                    }).UseLogger(new DebugLogger(LogLevel.Exceptions)).Build();
                 api.LoadStateDataFromString(savedAPI.ToString());
 
                 userObject.API = api;
@@ -72,10 +72,11 @@ namespace MyInsta.Logic
             {
                 if (userObject != null && userObject.LoginUser != null && userObject.PasswordUser != null)
                 {
-                    var api = InstaApiBuilder.CreateBuilder()
-                        .SetUser(new UserSessionData() { UserName = userObject.LoginUser, Password = userObject.PasswordUser })
-                        .UseLogger(new DebugLogger(LogLevel.Exceptions))
-                        .Build();
+                    var api = InstaApiBuilder.CreateBuilder().SetUser(new UserSessionData()
+                        {
+                            UserName = userObject.LoginUser,
+                            Password = userObject.PasswordUser
+                        }).UseLogger(new DebugLogger(LogLevel.Exceptions)).Build();
                     userObject.API = api;
 
                     var logResult = await userObject.API.LoginAsync();
@@ -99,7 +100,7 @@ namespace MyInsta.Logic
             }
         }
 
-        
+
         private static bool ExistsConnection()
         {
             StorageFolder localFolder = ApplicationData.Current.LocalFolder;
@@ -124,7 +125,8 @@ namespace MyInsta.Logic
             {
                 var result = await api.RequestVerifyCodeToSMSForChallengeRequireAsync();
                 if (result.Succeeded)
-                    _ = new CustomDialog("Message", $"Code sent on email {challenge.Value.StepData.PhoneNumber}", "All right");
+                    _ = new CustomDialog("Message", $"Code sent on email {challenge.Value.StepData.PhoneNumber}",
+                        "All right");
                 return result.Succeeded;
             }
             return false;
@@ -137,7 +139,8 @@ namespace MyInsta.Logic
             {
                 var result = await api.RequestVerifyCodeToEmailForChallengeRequireAsync();
                 if (result.Succeeded)
-                    _ = new CustomDialog("Message", $"Code sent on email {challenge.Value.StepData.Email}", "All right");
+                    _ = new CustomDialog("Message", $"Code sent on email {challenge.Value.StepData.Email}",
+                        "All right");
                 return result.Succeeded;
             }
             return false;
@@ -170,9 +173,21 @@ namespace MyInsta.Logic
                     CloseButtonText = "Cancel",
                     PrimaryButtonText = "Send"
                 };
-                StackPanel stackPanel = new StackPanel() { Orientation = Orientation.Vertical };
-                TextBlock textBlock = new TextBlock() { Text = "Write SMS code from phone", Margin = new Windows.UI.Xaml.Thickness(10) };
-                TextBox inputTextBox = new TextBox() { TextAlignment = Windows.UI.Xaml.TextAlignment.Center, PlaceholderText = "Code", Margin = new Windows.UI.Xaml.Thickness(10) };
+                StackPanel stackPanel = new StackPanel()
+                {
+                    Orientation = Orientation.Vertical
+                };
+                TextBlock textBlock = new TextBlock()
+                {
+                    Text = "Write SMS code from phone",
+                    Margin = new Windows.UI.Xaml.Thickness(10)
+                };
+                TextBox inputTextBox = new TextBox()
+                {
+                    TextAlignment = Windows.UI.Xaml.TextAlignment.Center,
+                    PlaceholderText = "Code",
+                    Margin = new Windows.UI.Xaml.Thickness(10)
+                };
                 stackPanel.Children.Add(textBlock);
                 stackPanel.Children.Add(inputTextBox);
                 dialog.Content = stackPanel;
@@ -196,9 +211,21 @@ namespace MyInsta.Logic
                     CloseButtonText = "Cancel",
                     PrimaryButtonText = "Send"
                 };
-                StackPanel stackPanel = new StackPanel() { Orientation = Orientation.Vertical };
-                TextBlock textBlock = new TextBlock() { Text = "Write code from email", Margin = new Windows.UI.Xaml.Thickness(10) };
-                TextBox inputTextBox = new TextBox() { TextAlignment = Windows.UI.Xaml.TextAlignment.Center, PlaceholderText = "Code", Margin = new Windows.UI.Xaml.Thickness(10) };
+                StackPanel stackPanel = new StackPanel()
+                {
+                    Orientation = Orientation.Vertical
+                };
+                TextBlock textBlock = new TextBlock()
+                {
+                    Text = "Write code from email",
+                    Margin = new Windows.UI.Xaml.Thickness(10)
+                };
+                TextBox inputTextBox = new TextBox()
+                {
+                    TextAlignment = Windows.UI.Xaml.TextAlignment.Center,
+                    PlaceholderText = "Code",
+                    Margin = new Windows.UI.Xaml.Thickness(10)
+                };
                 stackPanel.Children.Add(textBlock);
                 stackPanel.Children.Add(inputTextBox);
                 dialog.Content = stackPanel;
@@ -215,6 +242,7 @@ namespace MyInsta.Logic
             }
             return null;
         }
+
         public static async Task SaveApiString(IInstaApi api)
         {
             StorageFolder localFolder = ApplicationData.Current.LocalFolder;
@@ -222,6 +250,7 @@ namespace MyInsta.Logic
                 CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteTextAsync(sampleFile, api.GetStateDataAsString());
         }
+
         public static async Task<bool> RemoveConnection(IInstaApi api)
         {
             var x = await api.LogoutAsync();
@@ -238,24 +267,27 @@ namespace MyInsta.Logic
             }
             else return false;
         }
+
         #endregion
 
         #region Main data
+
         public static async Task GetUserData(User userObject)
         {
             userObject.UserData.UserFollowers = new ObservableCollection<InstaUserShort>();
             userObject.UserData.SavedPostItems = new ObservableCollection<PostItem>();
 
-            //await GetArchiveStories(userObject);
             await GetCurrentUserStories(userObject);
             await GetUserPostItems(userObject);
             await GetBookmarksAsync(userObject);
             await GetUserFollowers(userObject);
             await GetUserFriendsAndUnfollowers(userObject, true);
         }
+
         private static async Task GetUserFollowers(User user)
         {
-            var f = await user.API.UserProcessor.GetUserFollowersAsync(user.LoginUser, PaginationParameters.MaxPagesToLoad(5));
+            var f = await user.API.UserProcessor.GetUserFollowersAsync(user.LoginUser,
+                PaginationParameters.MaxPagesToLoad(5));
             foreach (var item in f.Value)
             {
                 if (!user.UserData.UserFollowers.Contains(item))
@@ -264,6 +296,7 @@ namespace MyInsta.Logic
             OnUserFollowersLoaded?.Invoke();
             IsFollowersLoaded = true;
         }
+
         private static async Task GetUserPostItems(User user)
         {
             var items = await user.API.FeedProcessor.GetSavedFeedAsync(PaginationParameters.MaxPagesToLoad(5));
@@ -277,9 +310,11 @@ namespace MyInsta.Logic
             OnUserSavedPostsLoaded?.Invoke();
             IsSavedPostsLoaded = true;
         }
+
         private static async Task GetUserFriendsAndUnfollowers(User user, bool all = false, int count = 30)
         {
-            var fling = await user.API.UserProcessor.GetUserFollowingAsync(user.LoginUser, PaginationParameters.MaxPagesToLoad(5));
+            var fling = await user.API.UserProcessor.GetUserFollowingAsync(user.LoginUser,
+                PaginationParameters.MaxPagesToLoad(5));
             if (all)
                 count = fling.Value.Count;
             ////var statuses = await GetStatuses(user, fling.Value.Select(x => x.Pk).Take(count).ToArray());
@@ -307,7 +342,7 @@ namespace MyInsta.Logic
         private static async Task<List<InstaStoryFriendshipStatus>> GetStatuses(User user, params long[] ids)
         {
             List<InstaStoryFriendshipStatus> statuses = new List<InstaStoryFriendshipStatus>();
-            for(int i = 0; i < ids.Length; i++)
+            for (int i = 0; i < ids.Length; i++)
             {
                 var status = await user.API.UserProcessor.GetFriendshipStatusAsync(ids[0]);
                 statuses.Add(status.Value);
@@ -318,6 +353,7 @@ namespace MyInsta.Logic
         #endregion
 
         #region UserProcessor
+
         public static async Task UnFollowFromList(User currentUser, ObservableCollection<InstaUserShort> instaUsers)
         {
             CustomDialog customDialog = new CustomDialog("Message", "Process started", "All right");
@@ -326,8 +362,9 @@ namespace MyInsta.Logic
                 var p = await currentUser.API.UserProcessor.UnFollowUserAsync(item.Pk);
             }
             await GetUserData(currentUser);
-            customDialog = new CustomDialog("Message", "Unfollowed from all unfollowers", "All right");
+            customDialog = new CustomDialog("Message", "Un followed from all unfollowers", "All right");
         }
+
         public static async Task<InstaUserInfo> GetInfoUser(User userObject, string nick)
         {
             if (userObject != null)
@@ -337,6 +374,7 @@ namespace MyInsta.Logic
             }
             else return null;
         }
+
         public static async Task UnfollowUser(User userObject, InstaUserShort unfUser)
         {
             try
@@ -356,9 +394,9 @@ namespace MyInsta.Logic
             }
             catch
             {
-
             }
         }
+
         public static async Task FollowUser(User userObject, InstaUserInfo unfUser)
         {
             if (userObject != null && unfUser != null)
@@ -367,16 +405,17 @@ namespace MyInsta.Logic
                 if (unF.Succeeded)
                 {
                     var person = await GetInstaUserShortById(userObject, unfUser.Pk);
-                    if (unF.Value.Following && unF.Value.FollowedBy && !userObject.UserData.UserFriends
-                        .Contains(person))
+                    if (unF.Value.Following && unF.Value.FollowedBy
+                        && !userObject.UserData.UserFriends.Contains(person))
                         userObject.UserData.UserFriends.Add(person);
                     else
-                        if (unF.Value.Following && !unF.Value.FollowedBy && !userObject.UserData.UserUnfollowers
-                        .Contains(person))
+                    if (unF.Value.Following && !unF.Value.FollowedBy
+                        && !userObject.UserData.UserUnfollowers.Contains(person))
                         userObject.UserData.UserUnfollowers.Add(person);
                 }
             }
         }
+
         public static async Task<InstaStoryFriendshipStatus> GetFriendshipStatus(User userObject, InstaUserInfo unfUser)
         {
             if (userObject != null && unfUser != null)
@@ -390,6 +429,7 @@ namespace MyInsta.Logic
             else
                 return null;
         }
+
         public static async Task<InstaUserShort> GetInstaUserShortById(User user, long id)
         {
             var userInfo = await user.API.UserProcessor.GetUserInfoByIdAsync(id);
@@ -405,7 +445,9 @@ namespace MyInsta.Logic
                 ProfilePicUrl = userInfo.Value.ProfilePicUrl
             };
         }
-        public static IEnumerable<InstaUserShort> SearchByUserName(ObservableCollection<InstaUserShort> collection, string srt)
+
+        public static IEnumerable<InstaUserShort> SearchByUserName(ObservableCollection<InstaUserShort> collection,
+            string srt)
         {
             if (string.IsNullOrEmpty(srt))
                 return collection;
@@ -415,6 +457,7 @@ namespace MyInsta.Logic
                 return items;
             }
         }
+
         public static async Task<InstaUserShort> SearchByUserName(User currentUser, string srt)
         {
             if (string.IsNullOrEmpty(srt))
@@ -428,10 +471,13 @@ namespace MyInsta.Logic
                     return null;
             }
         }
+
         #endregion
 
         #region Media
-        public static async Task UnlikeProfile(User currentUser, InstaUserShort selectUser, ObservableCollection<PostItem> medias)
+
+        public static async Task UnlikeProfile(User currentUser, InstaUserShort selectUser,
+            ObservableCollection<PostItem> medias)
         {
             try
             {
@@ -440,29 +486,31 @@ namespace MyInsta.Logic
                 {
                     var p = await currentUser.API.MediaProcessor.UnLikeMediaAsync(item.Items[0].Pk);
                 }
-                customDialog = new CustomDialog("Message", $"30 posts of {selectUser.UserName} unliked", "All right");
+                customDialog = new CustomDialog("Message", $"30 posts of {selectUser.UserName} unlike", "All right");
             }
             catch (Exception e)
             {
                 CustomDialog dialog = new CustomDialog("Message", e.Message, "Ok");
             }
-
         }
-        public static async Task<ObservableCollection<PostItem>> GetMediaUser(User userObject, InstaUserInfo unfUser, int count)
+
+        public static async Task<ObservableCollection<PostItem>> GetMediaUser(User userObject, InstaUserInfo unfUser,
+            int count)
         {
             if (userObject != null && unfUser != null)
             {
                 InstaMediaList media = new InstaMediaList();
                 if (count == 0)
                 {
-                    var response = await userObject.API.UserProcessor.GetUserMediaAsync(unfUser.Username, PaginationParameters.MaxPagesToLoad(5));
+                    var response = await userObject.API.UserProcessor.GetUserMediaAsync(unfUser.Username,
+                        PaginationParameters.MaxPagesToLoad(5));
                     media = response.Value;
                 }
                 else
                     media = await GetMediaUserAll(userObject, unfUser);
                 if (media.Count != 0)
                 {
-                    OnUserPostsLoaded?.Invoke();   
+                    OnUserPostsLoaded?.Invoke();
                     return GetUrlsMediasUser(media, unfUser);
                 }
                 else
@@ -471,16 +519,20 @@ namespace MyInsta.Logic
             else
                 return null;
         }
+
         private static async Task<InstaMediaList> GetMediaUser(User userObject, InstaUserInfo unfUser)
         {
-            var media = await userObject.API.UserProcessor.GetUserMediaAsync(unfUser.Username, PaginationParameters.MaxPagesToLoad(1).StartFromMaxId(LatestMediaMaxId));
+            var media = await userObject.API.UserProcessor.GetUserMediaAsync(unfUser.Username,
+                PaginationParameters.MaxPagesToLoad(1).StartFromMaxId(LatestMediaMaxId));
             LatestMediaMaxId = media.Value.NextMaxId;
             return media.Value;
         }
+
         public static async Task SaveMediaInProfile(User userObject, string mediaPk)
         {
-            var result = await userObject.API.MediaProcessor.SaveMediaAsync(mediaPk);
+            _ = await userObject.API.MediaProcessor.SaveMediaAsync(mediaPk);
         }
+
         private static async Task<InstaMediaList> GetMediaUserAll(User userObject, InstaUserInfo unfUser)
         {
             cancellationTokenMedia = new CancellationTokenSource();
@@ -488,24 +540,24 @@ namespace MyInsta.Logic
             try
             {
                 InstaMediaList instaMedias = new InstaMediaList();
-                await Task.Run(async () =>
-                {
-                    do
+                await Task.Run(async() =>
                     {
-                        token.ThrowIfCancellationRequested();
-                        var medias = await GetMediaUser(userObject, unfUser);
-                        instaMedias.AddRange(medias);
-                    }
-                    while (LatestMediaMaxId != null);
-                }, token);
+                        do
+                            {
+                                token.ThrowIfCancellationRequested();
+                                var medias = await GetMediaUser(userObject, unfUser);
+                                instaMedias.AddRange(medias);
+                            }
+                            while (LatestMediaMaxId != null);
+                    }, token);
                 return instaMedias;
             }
             catch
             {
                 return new InstaMediaList();
             }
-
         }
+
         public static PostItem GetPostItem(InstaMedia item, int id)
         {
             PostItem PostItem = new PostItem()
@@ -565,7 +617,8 @@ namespace MyInsta.Logic
             return PostItem;
         }
 
-        public static ObservableCollection<PostItem> GetUrlsMediasUser(InstaMediaList medias, InstaUserInfo instaUserInfo)
+        public static ObservableCollection<PostItem> GetUrlsMediasUser(InstaMediaList medias,
+            InstaUserInfo instaUserInfo)
         {
             ObservableCollection<PostItem> mediaList = new ObservableCollection<PostItem>();
             int i = 0;
@@ -632,12 +685,16 @@ namespace MyInsta.Logic
             }
             return mediaList;
         }
+
         #endregion
 
         #region Messaging Porcessor
-        private static async Task<bool> SharedInDirect(User userObject, string id, InstaMediaType mediaType, long idUser)
+
+        private static async Task<bool> SharedInDirect(User userObject, string id, InstaMediaType mediaType,
+            long idUser)
         {
-            var shared = await userObject.API.MessagingProcessor.ShareMediaToUserAsync(id, mediaType, "", idUser);
+            var shared = await userObject.API.MessagingProcessor.ShareMediaToUserAsync(id, mediaType, string.Empty,
+                idUser);
             if (shared.Succeeded)
                 return true;
             else
@@ -659,7 +716,11 @@ namespace MyInsta.Logic
             else if (medias.Count == 1)
                 mediaType = (media.MediaType == MediaType.Image) ? InstaMediaType.Image : InstaMediaType.Video;
 
-            Frame frame = new Frame() { Width = 1000, Height = 400 };
+            Frame frame = new Frame()
+            {
+                Width = 1000,
+                Height = 400
+            };
             frame.Navigate(typeof(SharedPage), new object[] { currentUser, media.MediaType, media.Pk });
             contentShared.Content = frame;
             var dialog = await contentShared.ShowAsync();
@@ -671,13 +732,16 @@ namespace MyInsta.Logic
                     var b = await InstaServer.SharedInDirect(currentUser, media.Pk, mediaType, page.SelectedUser.Pk);
                     if (b)
                         return true;
-                };
+                }
+                ;
             }
             return false;
         }
+
         #endregion
 
         #region Story
+
         public static async Task GetCurrentUserStories(User userObject)
         {
             var currentStories = await userObject.API.StoryProcessor.GetStoryFeedAsync();
@@ -686,6 +750,7 @@ namespace MyInsta.Logic
             OnUserStoriesLoaded?.Invoke();
             IsStoriesLoaded = true;
         }
+
         public static ObservableCollection<UserStory> GetUserStoriesCustom(InstaStoryFeed instaStoryFeed)
         {
             ObservableCollection<UserStory> userStories = new ObservableCollection<UserStory>();
@@ -700,6 +765,7 @@ namespace MyInsta.Logic
             }
             return userStories;
         }
+
         public static async Task<ObservableCollection<CustomMedia>> GetStoryUser(User userObject, InstaUserInfo unfUser)
         {
             if (userObject != null && unfUser != null)
@@ -713,6 +779,7 @@ namespace MyInsta.Logic
             else
                 return null;
         }
+
         public static async Task<ObservableCollection<CustomMedia>> GetStoryUser(User userObject, long userPk)
         {
             if (userObject != null)
@@ -726,6 +793,7 @@ namespace MyInsta.Logic
             else
                 return null;
         }
+
         public static ObservableCollection<CustomMedia> GetUrlsStoriesUser(List<InstaStoryItem> stories)
         {
             ObservableCollection<CustomMedia> storiesList = new ObservableCollection<CustomMedia>();
@@ -757,14 +825,17 @@ namespace MyInsta.Logic
             return collection.Value;
         }
 
-        public static async Task<ObservableCollection<CustomMedia>> GetHighlightStories(User instaUser, string highlightId)
+        public static async Task<ObservableCollection<CustomMedia>> GetHighlightStories(User instaUser,
+            string highlightId)
         {
             var stories = await instaUser.API.StoryProcessor.GetHighlightMediasAsync(highlightId);
             return GetUrlsStoriesUser(stories.Value.Items);
         }
+
         #endregion
 
         #region TaskCancel
+
         public static void CancelTasks()
         {
             try
@@ -773,12 +844,13 @@ namespace MyInsta.Logic
             }
             catch (Exception)
             {
-
             }
         }
+
         #endregion
 
         #region Download medias
+
         public static async Task DownloadCarousel(ObservableCollection<CustomMedia> images, InstaUserShort instaUser)
         {
             try
@@ -790,20 +862,24 @@ namespace MyInsta.Logic
                 Windows.Storage.StorageFolder folder = await folderPicker.PickSingleFolderAsync();
                 if (folder != null)
                 {
-                    var userFolder = await folder.CreateFolderAsync(instaUser.UserName, CreationCollisionOption.ReplaceExisting);
-                    //CustomDialog custom = new CustomDialog("Message", $"Download (Media: {instaUser.UserName}) started", "All right");
+                    var userFolder = await folder.CreateFolderAsync(instaUser.UserName,
+                        CreationCollisionOption.ReplaceExisting);
+
+                    // CustomDialog custom = new CustomDialog("Message", $"Download (Media: {instaUser.UserName}) started", "All right");
                     foreach (var item in images)
                     {
                         StorageFile coverpic_file;
-                        string urlForSave = "";
+                        string urlForSave = string.Empty;
                         if (item.MediaType == MediaType.Image)
                         {
-                            coverpic_file = await userFolder.CreateFileAsync($"{item.Name}.jpg", CreationCollisionOption.FailIfExists);
+                            coverpic_file = await userFolder.CreateFileAsync($"{item.Name}.jpg",
+                                CreationCollisionOption.FailIfExists);
                             urlForSave = item.UrlBigImage;
                         }
                         else
                         {
-                            coverpic_file = await userFolder.CreateFileAsync($"{item.Name}.mp4", CreationCollisionOption.FailIfExists);
+                            coverpic_file = await userFolder.CreateFileAsync($"{item.Name}.mp4",
+                                CreationCollisionOption.FailIfExists);
                             urlForSave = item.UrlVideo;
                         }
                         var httpWebRequest = HttpWebRequest.CreateHttp(urlForSave);
@@ -820,10 +896,11 @@ namespace MyInsta.Logic
             }
             catch (Exception e)
             {
-                CustomDialog customDialog = new CustomDialog("Warning", "Error. Wait while media loaded in profile. \n" +
-                    $"Error - {e}", "All right");
+                CustomDialog customDialog = new CustomDialog("Warning",
+                    "Error. Wait while media loaded in profile. \n" + $"Error - {e}", "All right");
             }
         }
+
         public static async Task DownloadPost(CustomMedia media)
         {
             FileSavePicker savePicker = new FileSavePicker();
@@ -844,19 +921,18 @@ namespace MyInsta.Logic
                 }
                 response.Dispose();
 
-                CustomDialog customDialog = new CustomDialog("Message", "Post downloaded\n" +
-                    $"{file.Path}", "All right");
+                CustomDialog customDialog = new CustomDialog("Message", "Post downloaded\n" + $"{file.Path}",
+                    "All right");
             }
             else
             {
-                CustomDialog customDialog = new CustomDialog("Warning", "Operation cancel."
-                    , "All right");
+                CustomDialog customDialog = new CustomDialog("Warning", "Operation cancel.", "All right");
             }
         }
 
         public static async Task DownloadMedia(CustomMedia media)
         {
-            string url = "";
+            string url = string.Empty;
             if (media.MediaType == MediaType.Image)
                 url = media.UrlBigImage;
             else if (media.MediaType == MediaType.Video)
@@ -885,13 +961,12 @@ namespace MyInsta.Logic
                 }
                 response.Dispose();
 
-                CustomDialog customDialog = new CustomDialog("Message", "Media downloaded\n" +
-                    $"{file.Path}", "All right");
+                CustomDialog customDialog = new CustomDialog("Message", "Media downloaded\n" + $"{file.Path}",
+                    "All right");
             }
             else
             {
-                CustomDialog customDialog = new CustomDialog("Warning", "Operation cancel."
-                    , "All right");
+                CustomDialog customDialog = new CustomDialog("Warning", "Operation cancel.", "All right");
             }
         }
 
@@ -914,21 +989,24 @@ namespace MyInsta.Logic
                 Windows.Storage.StorageFolder folder = await folderPicker.PickSingleFolderAsync();
                 if (folder != null)
                 {
-                    var userFolder = await folder.CreateFolderAsync(selectedUser.UserName, CreationCollisionOption.ReplaceExisting);
+                    var userFolder = await folder.CreateFolderAsync(selectedUser.UserName,
+                        CreationCollisionOption.ReplaceExisting);
                     foreach (var post in medias)
                     {
                         foreach (var item in post.Items)
                         {
                             StorageFile coverpic_file;
-                            string urlForSave = "";
+                            string urlForSave = string.Empty;
                             if (item.MediaType == MediaType.Image)
                             {
-                                coverpic_file = await userFolder.CreateFileAsync($"{item.Name}.jpg", CreationCollisionOption.FailIfExists);
+                                coverpic_file = await userFolder.CreateFileAsync($"{item.Name}.jpg",
+                                    CreationCollisionOption.FailIfExists);
                                 urlForSave = item.UrlBigImage;
                             }
                             else
                             {
-                                coverpic_file = await userFolder.CreateFileAsync($"{item.Name}.mp4", CreationCollisionOption.FailIfExists);
+                                coverpic_file = await userFolder.CreateFileAsync($"{item.Name}.mp4",
+                                    CreationCollisionOption.FailIfExists);
                                 urlForSave = item.UrlVideo;
                             }
                             var httpWebRequest = WebRequest.CreateHttp(urlForSave);
@@ -946,17 +1024,20 @@ namespace MyInsta.Logic
             }
             catch (Exception e)
             {
-                CustomDialog customDialog = new CustomDialog("Warning", "Error. Wait while media loaded in profile. \n" +
-                    $"Error - {e}", "All right");
+                CustomDialog customDialog = new CustomDialog("Warning",
+                    "Error. Wait while media loaded in profile. \n" + $"Error - {e}", "All right");
             }
         }
+
         #endregion
 
         #region Preview Post
+
         public static async Task<ObservableCollection<PreviewPost>> GetPreviewPosts(User instaUser)
         {
             ObservableCollection<PreviewPost> previews = new ObservableCollection<PreviewPost>();
-            var posts = await instaUser.API.UserProcessor.GetUserMediaAsync(instaUser.LoginUser, PaginationParameters.MaxPagesToLoad(1));
+            var posts = await instaUser.API.UserProcessor.GetUserMediaAsync(instaUser.LoginUser,
+                PaginationParameters.MaxPagesToLoad(1));
             if (posts.Succeeded)
             {
                 int i = 1;
@@ -981,8 +1062,7 @@ namespace MyInsta.Logic
                     Url = item.Images[0].Uri
                 };
             }
-            else if (item.Carousel != null && item.Carousel.Count != 0
-                && item.Carousel[0].Images != null
+            else if (item.Carousel != null && item.Carousel.Count != 0 && item.Carousel[0].Images != null
                 && item.Carousel[0].Images.Count != 0)
             {
                 previewPost = new PreviewPost()
@@ -993,19 +1073,24 @@ namespace MyInsta.Logic
             }
             return previewPost;
         }
+
         #endregion
 
         #region Location
+
         public static async Task Location(User currentUser, double latitude, double longitude)
         {
-            var users = await currentUser.API.LocationProcessor.SearchUserByLocationAsync(latitude, longitude, "");
+            var users = await currentUser.API.LocationProcessor.SearchUserByLocationAsync(latitude, longitude,
+                string.Empty);
         }
+
         #endregion
 
         #region Bookmarks
+
         public static async Task SaveBookmarksAsync(User user)
         {
-            string longIds = "";
+            string longIds = string.Empty;
             foreach (var item in user.UserData.Bookmarks)
             {
                 longIds += item.Pk.ToString() + ",";
@@ -1015,6 +1100,7 @@ namespace MyInsta.Logic
                 CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteTextAsync(sampleFile, longIds);
         }
+
         public static async Task GetBookmarksAsync(User user)
         {
             ObservableCollection<InstaUserShort> results = new ObservableCollection<InstaUserShort>();
@@ -1037,38 +1123,239 @@ namespace MyInsta.Logic
         {
             return user.UserData.Bookmarks.Where(x => x.Pk == id).ToList().Count > 0 ? true : false;
         }
+
         #endregion
 
         #region Saved Posts
+
         public async static Task<InstaCollections> GetListCollections(User instaUser)
         {
             var collects = await instaUser.API.CollectionProcessor.GetCollectionsAsync(PaginationParameters.Empty);
             return collects.Value;
         }
 
-        public async static Task<IEnumerable<PostItem>> GetMediasByCollection(User instaUser, InstaCollectionItem instaCollection)
+        public async static Task<IEnumerable<PostItem>> GetMediasByCollection(User instaUser,
+            InstaCollectionItem instaCollection)
         {
-            var mediaC = await instaUser.API.CollectionProcessor.GetSingleCollectionAsync(instaCollection.CollectionId, PaginationParameters.MaxPagesToLoad(1));
-            var mediasIds = mediaC.Value.Media.Select(x => new { x.Pk }).ToList();
+            var mediaC = await instaUser.API.CollectionProcessor.GetSingleCollectionAsync(instaCollection.CollectionId,
+                PaginationParameters.MaxPagesToLoad(1));
+            var mediasIds = mediaC.Value.Media.Select(x => new
+            {
+                x.Pk
+            }).ToList();
             OnUserCollectionLoaded?.Invoke();
-            return instaUser.UserData.SavedPostItems.Where(sItem => mediasIds.Where(x => x.Pk == sItem.Items[0].Pk).ToList().Count != 0).Select(sItem => sItem);
+            return instaUser.UserData.SavedPostItems
+                       .Where(sItem => mediasIds.Where(x => x.Pk == sItem.Items[0].Pk).ToList().Count != 0)
+                       .Select(sItem => sItem);
         }
 
         #endregion
 
         #region Feed
+
         public static async Task GetArchiveStories(User user)
         {
             var feed = await user.API.StoryProcessor.GetHighlightsArchiveAsync();
             var feed2 = await user.API.StoryProcessor.GetHighlightsArchiveMediasAsync("archiveDay:17900969746380353");
             int i = 1;
-            //foreach (var itemS in feed.Value)
+
+            // foreach (var itemS in feed.Value)
             {
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
+                // PostItem savedPost = GetPostItem(itemS, i);
+                // i++;
+                // user.UserData.SavedPostItems.Add(savedPost);
                 //PostItem savedPost = GetPostItem(itemS, i);
                 //i++;
                 //user.UserData.SavedPostItems.Add(savedPost);
             }
         }
+
         #endregion
     }
 }
