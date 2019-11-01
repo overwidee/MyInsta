@@ -60,7 +60,7 @@ namespace MyInsta.View
 
         private async void UnFollowButton_Click(object sender, RoutedEventArgs e)
         {
-            ContentDialog contentDialog = new ContentDialog()
+            var contentDialog = new ContentDialog()
             {
                 PrimaryButtonText = "Yes",
                 SecondaryButtonText = "No",

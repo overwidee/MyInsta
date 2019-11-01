@@ -29,7 +29,7 @@ namespace MyInsta.Logic
 
         public async Task ShowMediaAsync()
         {
-            ContentDialog contentDialog = new ContentDialog()
+            var contentDialog = new ContentDialog()
             {
                 Height = (type == 0) ? 1100 : 800,
                 Width = (type == 0) ? 800 : 1100,

@@ -18,6 +18,7 @@ namespace MyInsta.Model
         public string UrlVideo { get; set; }
     }
 
+
     public enum MediaType
     {
         Image,

@@ -31,7 +31,6 @@ namespace MyInsta.View
         {
             this.InitializeComponent();
 
-
             progressPosts.IsActive = !InstaServer.IsPostsLoaded;
             InstaServer.OnUserPostsLoaded += () => { progressPosts.IsActive = false; };
         }
@@ -59,10 +58,9 @@ namespace MyInsta.View
             SelectUser = objs[0] as InstaUserShort;
             CurrentUser = objs[1] as User;
 
-            InstaUserInfo = AsyncHelpers.RunSync(() =>
-                InstaServer.GetInfoUser(CurrentUser, SelectUser.UserName));
-            InstaUserInfo.FriendshipStatus = AsyncHelpers.RunSync(() =>
-                InstaServer.GetFriendshipStatus(CurrentUser, InstaUserInfo));
+            InstaUserInfo = AsyncHelpers.RunSync(() => InstaServer.GetInfoUser(CurrentUser, SelectUser.UserName));
+            InstaUserInfo.FriendshipStatus = AsyncHelpers.RunSync(()
+                => InstaServer.GetFriendshipStatus(CurrentUser, InstaUserInfo));
             ButtonFollow = !InstaUserInfo.FriendshipStatus.Following;
             ButtonUnFollow = InstaUserInfo.FriendshipStatus.Following;
             SetBookmarkStatus();
@@ -83,8 +81,6 @@ namespace MyInsta.View
 
             Posts = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo, 1);
             mediaList.ItemsSource = Posts?.Take(countPosts);
-
-            
         }
 
         private async void UnfollowButton_Click(object sender, RoutedEventArgs e)
@@ -101,20 +97,24 @@ namespace MyInsta.View
             unfollowButton.IsEnabled = true;
         }
 
-        private async void SaveButton_Click(object sender, RoutedEventArgs e) => await InstaServer.DownloadAnyPosts(SelectUser, Posts);
+        private async void SaveButton_Click(object sender, RoutedEventArgs e)
+            => await InstaServer.DownloadAnyPosts(SelectUser, Posts);
 
-        private async void UnlikeButton_Click(object sender, RoutedEventArgs e) => await InstaServer.UnlikeProfile(CurrentUser, SelectUser, Posts);
+        private async void UnlikeButton_Click(object sender, RoutedEventArgs e)
+            => await InstaServer.UnlikeProfile(CurrentUser, SelectUser, Posts);
 
-        private async void ButtonDownload_Click(object sender, RoutedEventArgs e) => await InstaServer.DownloadAnyPost(
-                await InstaServer.GetInstaUserShortById(CurrentUser,
-                    Posts.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().UserPk),
-                Posts.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().Items);
+        private async void ButtonDownload_Click(object sender, RoutedEventArgs e)
+            => await InstaServer.DownloadAnyPost(await InstaServer.GetInstaUserShortById(CurrentUser,
+                Posts.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().UserPk),
+            Posts.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().Items);
 
-        private async void ButtonDownloadStory_Click(object sender, RoutedEventArgs e) => await InstaServer.DownloadMedia(UrlStories.Where(x => x.Name == ((Button)sender).Tag.ToString()).First());
+        private async void ButtonDownloadStory_Click(object sender, RoutedEventArgs e)
+            => await InstaServer.DownloadMedia(UrlStories.Where(x => x.Name == ((Button)sender).Tag.ToString())
+                                                   .First());
 
         private void ScrollListPosts_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
-            ScrollViewer svPosts = sender as ScrollViewer;
+            var svPosts = sender as ScrollViewer;
 
             var verticalOffset = svPosts.VerticalOffset;
             var maxVerticalOffset = svPosts.ScrollableHeight;
@@ -125,6 +125,7 @@ namespace MyInsta.View
                 mediaList.ItemsSource = Posts?.Take(countPosts);
             }
         }
+
         private void MediaList_SelectionChanged(object sender, TappedRoutedEventArgs e)
         {
             var post = ((FlipView)sender).SelectedItem as CustomMedia;
@@ -136,14 +137,20 @@ namespace MyInsta.View
                 else if (post.MediaType == MediaType.Video)
                     urlMedia = post.UrlVideo;
 
-                MediaDialog mediaDialog = new MediaDialog(CurrentUser, post.Pk, urlMedia, post.MediaType, 1);
+                var mediaDialog = new MediaDialog(CurrentUser, post.Pk, urlMedia, post.MediaType, 1);
                 _ = mediaDialog.ShowMediaAsync();
             }
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e) => InstaServer.CancelTasks();
-        private async void ButtonSaveInProfile_Click(object sender, RoutedEventArgs e) => await InstaServer.SaveMediaInProfile(CurrentUser, ((Button)sender).Tag.ToString());
-        private async void ButtonShare_Click(object sender, RoutedEventArgs e) => await InstaServer.ShareMedia(CurrentUser, Posts.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().Items);
+
+        private async void ButtonSaveInProfile_Click(object sender, RoutedEventArgs e)
+            => await InstaServer.SaveMediaInProfile(CurrentUser, ((Button)sender).Tag.ToString());
+
+        private async void ButtonShare_Click(object sender, RoutedEventArgs e)
+            => await InstaServer.ShareMedia(CurrentUser,
+            Posts.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().Items);
+
         private void PostBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             if (!string.IsNullOrEmpty(sender.Text))
@@ -161,8 +168,8 @@ namespace MyInsta.View
             }
             else
                 mediaList.ItemsSource = Posts;
-
         }
+
         private void PostBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             if (!string.IsNullOrEmpty(sender.Text))
@@ -181,18 +188,22 @@ namespace MyInsta.View
             else
                 mediaList.ItemsSource = Posts;
         }
+
         private void SetBookmarkStatus()
         {
             var button = buttonAction;
-            MenuFlyout menu = button.Flyout as MenuFlyout;
+            var menu = button.Flyout as MenuFlyout;
             var item = new MenuFlyoutItem()
             {
                 CornerRadius = new CornerRadius(5),
                 HorizontalAlignment = HorizontalAlignment.Stretch,
-                Text = !InstaServer.IsContrainsAccount(CurrentUser, SelectUser.Pk) ? "Add in bookmarks" : "Remove from bookmarks",
+                Text
+                = !InstaServer.IsContrainsAccount(CurrentUser, SelectUser.Pk)
+                ? "Add in bookmarks"
+                : "Remove from bookmarks",
             };
 
-            item.Click += async (s, e) =>
+            item.Click += async(s, e) =>
             {
                 if (!InstaServer.IsContrainsAccount(CurrentUser, SelectUser.Pk))
                 {
@@ -208,7 +219,7 @@ namespace MyInsta.View
             menu.Items.Add(item);
         }
 
-        private async void collectionsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void CollectionsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selectHigh = ((ComboBox)(sender)).SelectedItem as InstaHighlightFeed;
             HighlightsStories = await InstaServer.GetHighlightStories(CurrentUser, selectHigh.HighlightId);
@@ -216,8 +227,10 @@ namespace MyInsta.View
 
             scrollArchive.ChangeView(null, 0, 1, true);
         }
-        private async void buttonDownloadHigh_Click(object sender, RoutedEventArgs e) =>
-            await InstaServer.DownloadMedia(HighlightsStories.Where(x => x.Name == ((Button)sender).Tag.ToString()).First());
+
+        private async void ButtonDownloadHigh_Click(object sender, RoutedEventArgs e)
+            => await InstaServer.DownloadMedia(HighlightsStories.Where(x => x.Name == ((Button)sender).Tag.ToString())
+                                                   .First());
 
         private async void Image_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -230,7 +243,7 @@ namespace MyInsta.View
                 else if (high.MediaType == MediaType.Video)
                     urlMedia = high.UrlVideo;
 
-                MediaDialog mediaDialog = new MediaDialog(CurrentUser, high.Pk, urlMedia, high.MediaType, 0);
+                var mediaDialog = new MediaDialog(CurrentUser, high.Pk, urlMedia, high.MediaType, 0);
                 await mediaDialog.ShowMediaAsync();
             }
         }
@@ -246,9 +259,14 @@ namespace MyInsta.View
                 else if (high.MediaType == MediaType.Video)
                     urlMedia = high.UrlVideo;
 
-                MediaDialog mediaDialog = new MediaDialog(CurrentUser, high.Pk, urlMedia, high.MediaType, 0);
+                var mediaDialog = new MediaDialog(CurrentUser, high.Pk, urlMedia, high.MediaType, 0);
                 await mediaDialog.ShowMediaAsync();
             }
+        }
+
+        private void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            InstaServer.ShowComments(CurrentUser, this, ((TextBlock)sender).Tag.ToString());
         }
     }
 }

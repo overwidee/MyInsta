@@ -67,7 +67,7 @@ namespace MyInsta.View
                 else if (story.MediaType == MediaType.Video)
                     urlMedia = story.UrlVideo;
 
-                MediaDialog mediaDialog = new MediaDialog(InstaUser, story.Pk, urlMedia, story.MediaType, 0);
+                var mediaDialog = new MediaDialog(InstaUser, story.Pk, urlMedia, story.MediaType, 0);
                 await mediaDialog.ShowMediaAsync();
             }
         }

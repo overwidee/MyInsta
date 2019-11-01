@@ -57,7 +57,7 @@ namespace MyInsta.View
 
         private void ScrollListPosts_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
-            ScrollViewer svPosts = sender as ScrollViewer;
+            var svPosts = sender as ScrollViewer;
 
             var verticalOffset = svPosts.VerticalOffset;
             var maxVerticalOffset = svPosts.ScrollableHeight;
@@ -71,7 +71,7 @@ namespace MyInsta.View
 
         private void PostsList_SelectionChanged(object sender, TappedRoutedEventArgs e)
         {
-            CustomMedia sav = ((FlipView)sender).SelectedItem as CustomMedia;
+            var sav = ((FlipView)sender).SelectedItem as CustomMedia;
             if (sav != null)
             {
                 string urlMedia = "";
@@ -80,7 +80,7 @@ namespace MyInsta.View
                 else if (sav.MediaType == MediaType.Video)
                     urlMedia = sav.UrlVideo;
 
-                MediaDialog mediaDialog = new MediaDialog(InstUser, sav.Pk, urlMedia, sav.MediaType, 1);
+                var mediaDialog = new MediaDialog(InstUser, sav.Pk, urlMedia, sav.MediaType, 1);
                 _ = mediaDialog.ShowMediaAsync();
             }
         }

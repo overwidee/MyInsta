@@ -270,7 +270,9 @@
                                                     x:Uid="Comments"
                                                     Margin="5, 5, 10, 5"
                                                     FontFamily="Century Gothic"
-                                                    FontSize="20" />
+                                                    FontSize="20" 
+                                                    Tapped="TextBlock_Tapped"
+                                                    Tag="{x:Bind Items[0].Pk}"/>
                                                 <TextBlock
                                                     Margin="5, 5, 10, 5"
                                                     FontFamily="Century Gothic"
@@ -378,7 +380,7 @@
                             HorizontalContentAlignment="Center"
                             Header="Highlights"
                             ItemsSource="{x:Bind InstaHighlightFeeds.Items}"
-                            SelectionChanged="collectionsBox_SelectionChanged">
+                            SelectionChanged="CollectionsBox_SelectionChanged">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate x:DataType="localInsta:InstaHighlightFeed">
                                     <StackPanel Orientation="Horizontal">
@@ -427,7 +429,7 @@
                                                 x:Uid="DownloadStory"
                                                 Margin="10"
                                                 HorizontalAlignment="Center"
-                                                Click="buttonDownloadHigh_Click"
+                                                Click="ButtonDownloadHigh_Click"
                                                 CornerRadius="5"
                                                 Tag="{x:Bind Name}" />
                                         </StackPanel>
