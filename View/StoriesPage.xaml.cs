@@ -28,9 +28,10 @@ namespace MyInsta.View
         public User InstaUser { get; set; }
         public UserStory SelectedUserStory { get; set; }
         public ObservableCollection<CustomMedia> Stories { get; set; }
+
         public StoriesPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             progressStories.IsActive = !InstaServer.IsStoriesLoaded;
             InstaServer.OnUserStoriesLoaded += () => progressStories.IsActive = false;
@@ -44,8 +45,8 @@ namespace MyInsta.View
             SelectedUserStory = InstaUser.UserData.Stories?[0] ?? new UserStory();
         }
 
-        private async void ButtonDownloadStory_Click(object sender, RoutedEventArgs e) => 
-            await InstaServer.DownloadMedia(Stories.Where(x => x.Name == ((Button)sender).Tag.ToString()).First());
+        private async void ButtonDownloadStory_Click(object sender, RoutedEventArgs e)
+            => await InstaServer.DownloadMedia(Stories.Where(x => x.Name == ((Button)sender).Tag.ToString()).First());
 
         private async void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -69,6 +70,23 @@ namespace MyInsta.View
 
                 var mediaDialog = new MediaDialog(InstaUser, story.Pk, urlMedia, story.MediaType, 0);
                 await mediaDialog.ShowMediaAsync();
+            }
+        }
+
+        private async void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender,
+            AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            var result = await InstaServer.AnswerToStory(InstaUser, sender.Text,
+                sender.Tag.ToString(), SelectedUserStory.User.Pk);
+
+            if (result)
+            {
+                _ = new CustomDialog("Message", $"Message send to {SelectedUserStory.User.UserName}", "Ok");
+                sender.Text = "";
+            }
+            else
+            {
+                _ = new CustomDialog("Message", "Error", "Ok");
             }
         }
     }

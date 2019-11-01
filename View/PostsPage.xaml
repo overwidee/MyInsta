@@ -50,7 +50,7 @@
             ScrollViewer.HorizontalScrollMode="Enabled"                  
             ScrollViewer.VerticalScrollMode="Disabled"
             ItemsSource="{x:Bind InstaCollections}"
-            SelectionChanged="collectionsBox_SelectionChanged">
+            SelectionChanged="CollectionsBox_SelectionChanged">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Background="Transparent" Orientation="Horizontal"/>

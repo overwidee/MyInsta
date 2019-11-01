@@ -108,7 +108,7 @@ namespace MyInsta.View
                 : InstUser.UserData.Feed.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items);
         }
 
-        private async void collectionsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void CollectionsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             countPosts = 10;
             var collection = ((ListView)sender).SelectedItem as InstaCollectionItem;
