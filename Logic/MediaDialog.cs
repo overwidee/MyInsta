@@ -16,8 +16,9 @@ namespace MyInsta.Logic
         public string Url { get; set; }
         public MediaType MediaType { get; set; }
         int type;
-        public User InstaUser { get;set; }
+        public User InstaUser { get; set; }
         public string PkMedia { get; set; }
+
         public MediaDialog(User user, string pk, string url, MediaType mediaType, int i)
         {
             Url = url;
@@ -43,9 +44,21 @@ namespace MyInsta.Logic
                     Width = (type == 0) ? 350 : 1000,
                     Height = (type == 0) ? 1100 : 450,
                     AutoPlay = true,
+
                     HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
                     VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center,
                     IsLooping = true
+                };
+                media.Tapped += (s, e) =>
+                {
+                    if (((MediaElement)s).CurrentState == MediaElementState.Playing)
+                    {
+                        ((MediaElement)s).Pause();
+                    }
+                    else
+                    {
+                        ((MediaElement)s).Play();
+                    }
                 };
                 contentDialog.Content = media;
             }
@@ -53,8 +66,7 @@ namespace MyInsta.Logic
             {
                 var imageMedia = new Image()
                 {
-                    Source = new BitmapImage(
-                        new Uri(Url, UriKind.Absolute)),
+                    Source = new BitmapImage(new Uri(Url, UriKind.Absolute)),
                     Width = (type == 0) ? 350 : 1000,
                     Height = (type == 0) ? 1100 : 450,
                     Stretch = Stretch.Uniform,
