@@ -508,13 +508,9 @@ namespace MyInsta.Logic
                 }
                 else
                     media = await GetMediaUserAll(userObject, unfUser);
-                if (media.Count != 0)
-                {
-                    OnUserPostsLoaded?.Invoke();
-                    return GetUrlsMediasUser(media, unfUser);
-                }
-                else
-                    return null;
+
+                OnUserPostsLoaded?.Invoke();
+                return GetUrlsMediasUser(media, unfUser);
             }
             else
                 return null;
@@ -905,12 +901,17 @@ namespace MyInsta.Logic
                             urlForSave = item.UrlVideo;
                         }
                         var httpWebRequest = HttpWebRequest.CreateHttp(urlForSave);
-                        var response = (HttpWebResponse)await httpWebRequest.GetResponseAsync();
+                        AsyncHelpers.RunSync(() => Pause());
+                        var response = (HttpWebResponse)AsyncHelpers.RunSync(() => httpWebRequest.GetResponseAsync());
+                        AsyncHelpers.RunSync(() => Pause());
                         Stream resStream = response.GetResponseStream();
+                        AsyncHelpers.RunSync(() => Pause());
                         using (var stream = await coverpic_file.OpenAsync(FileAccessMode.ReadWrite))
                         {
+                            AsyncHelpers.RunSync(() => Pause());
                             await resStream.CopyToAsync(stream.AsStreamForWrite());
                         }
+                        AsyncHelpers.RunSync(() => Pause());
                         response.Dispose();
                     }
                 }
@@ -974,20 +975,29 @@ namespace MyInsta.Logic
             if (file != null)
             {
                 var httpWebRequest = HttpWebRequest.CreateHttp(url);
-                var response = (HttpWebResponse)await httpWebRequest.GetResponseAsync();
+                AsyncHelpers.RunSync(() => Pause());
+                var response = (HttpWebResponse) AsyncHelpers.RunSync(() => httpWebRequest.GetResponseAsync());
+                AsyncHelpers.RunSync(() => Pause());
                 Stream resStream = response.GetResponseStream();
+                AsyncHelpers.RunSync(() => Pause());
                 using (var stream = await file.OpenAsync(FileAccessMode.ReadWrite))
                 {
+                    AsyncHelpers.RunSync(() => Pause());
                     await resStream.CopyToAsync(stream.AsStreamForWrite());
                 }
+                AsyncHelpers.RunSync(() => Pause());
                 response.Dispose();
-
-                var customDialog = new CustomDialog("Message", "Media downloaded\n" + $"{file.Path}", "All right");
+                _ = new CustomDialog("Message", "Media downloaded\n" + $"{file.Path}", "All right");
             }
             else
             {
-                var customDialog = new CustomDialog("Warning", "Operation cancel.", "All right");
+                _ = new CustomDialog("Warning", "Operation cancel.", "All right");
             }
+        }
+
+        private static async Task Pause()
+        {
+            await Task.Delay(1000);
         }
 
         public static async Task DownloadAnyPost(InstaUserShort selectedUser, ObservableCollection<CustomMedia> medias)
@@ -1172,8 +1182,10 @@ namespace MyInsta.Logic
         #endregion
 
         #region Feed
-
-
+        //private static void GetFeed(User user)
+        //{   
+        //    user.API.FeedProcessor.
+        //}
         #endregion
     }
 }

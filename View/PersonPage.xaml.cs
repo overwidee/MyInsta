@@ -61,9 +61,13 @@ namespace MyInsta.View
             InstaUserInfo = AsyncHelpers.RunSync(() => InstaServer.GetInfoUser(CurrentUser, SelectUser.UserName));
             InstaUserInfo.FriendshipStatus = AsyncHelpers.RunSync(()
                 => InstaServer.GetFriendshipStatus(CurrentUser, InstaUserInfo));
+
             ButtonFollow = !InstaUserInfo.FriendshipStatus.Following;
             ButtonUnFollow = InstaUserInfo.FriendshipStatus.Following;
             SetBookmarkStatus();
+
+            if (InstaUserInfo.IsPrivate && !InstaUserInfo.FriendshipStatus.Following)
+                return;
 
             InstaHighlightFeeds = await InstaServer.GetArchiveCollectionStories(CurrentUser, SelectUser.Pk);
             collectionsBox.ItemsSource = InstaHighlightFeeds.Items;
@@ -267,6 +271,23 @@ namespace MyInsta.View
         private void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)
         {
             InstaServer.ShowComments(CurrentUser, this, ((TextBlock)sender).Tag.ToString());
+        }
+
+        private async void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender,
+            AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            var result = await InstaServer.AnswerToStory(CurrentUser, sender.Text,
+                sender.Tag.ToString(), SelectUser.Pk);
+
+            if (result)
+            {
+                _ = new CustomDialog("Message", $"Message send to {SelectUser.Pk}", "Ok");
+                sender.Text = "";
+            }
+            else
+            {
+                _ = new CustomDialog("Message", "Error", "Ok");
+            }
         }
     }
 }

@@ -270,9 +270,9 @@
                                                     x:Uid="Comments"
                                                     Margin="5, 5, 10, 5"
                                                     FontFamily="Century Gothic"
-                                                    FontSize="20" 
-                                                    Tapped="TextBlock_Tapped"
-                                                    Tag="{x:Bind Items[0].Pk}"/>
+                                                    FontSize="20"
+                                                    Tag="{x:Bind Items[0].Pk}"
+                                                    Tapped="TextBlock_Tapped" />
                                                 <TextBlock
                                                     Margin="5, 5, 10, 5"
                                                     FontFamily="Century Gothic"
@@ -355,6 +355,13 @@
                                             Click="ButtonDownloadStory_Click"
                                             CornerRadius="5"
                                             Tag="{x:Bind Name}" />
+                                        <AutoSuggestBox
+                                            Width="200"
+                                            Margin="5, 5, 5, 10"
+                                            PlaceholderText="Message"
+                                            QueryIcon="Send"
+                                            QuerySubmitted="AutoSuggestBox_QuerySubmitted"
+                                            Tag="{x:Bind Pk}" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>

@@ -89,9 +89,9 @@ namespace MyInsta.View
         {
             await InstaServer.DownloadAnyPost(
                 await InstaServer.GetInstaUserShortById(InstUser,
-                    typePage == 1 ? SavedPosts.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).UserPk
+                    typePage == 1 ? ((IEnumerable<PostItem>) postsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).UserPk
                     : InstUser.UserData.Feed.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).UserPk),
-                typePage == 1 ? SavedPosts.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items
+                typePage == 1 ? ((IEnumerable<PostItem>) postsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items
                     : InstUser.UserData.Feed.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items);
         }
 
