@@ -277,6 +277,7 @@ namespace MyInsta.Logic
             userObject.UserData.UserFollowers = new ObservableCollection<InstaUserShort>();
             userObject.UserData.SavedPostItems = new ObservableCollection<PostItem>();
 
+            //GetFeed(userObject);
             await GetCurrentUserStories(userObject);
             await GetUserPostItems(userObject);
             await GetBookmarksAsync(userObject);
@@ -569,7 +570,7 @@ namespace MyInsta.Logic
                 var post = new CustomMedia()
                 {
                     Pk = item.Pk.ToString(),
-                    Name = $"SavedPost_{id}",
+                    Name = $"{postItem.UserNamePost}_savedPost_{item.Pk}",
                     UrlSmallImage = item.Images[1].Uri,
                     UrlBigImage = item.Images[0].Uri,
                     CountLikes = item.LikesCount,
@@ -594,7 +595,7 @@ namespace MyInsta.Logic
                         var postCar = new CustomMedia()
                         {
                             Pk = item.Pk.ToString(),
-                            Name = $"SavedPost_{id}_Carousel_{x + 1}",
+                            Name = $"{postItem.UserNamePost}_savedPost_{item.Pk}_Carousel_{x + 1}",
                             UrlSmallImage = car.Images[0].Uri,
                             UrlBigImage = car.Images[1].Uri,
                             CountLikes = item.LikesCount,
@@ -633,7 +634,7 @@ namespace MyInsta.Logic
                     var post = new CustomMedia()
                     {
                         Pk = item.Pk,
-                        Name = $"ImagePost_{i + 1}",
+                        Name = $"{postItem.UserNamePost}_imagePost_{item.Pk}",
                         UrlSmallImage = item.Images[1].Uri,
                         UrlBigImage = item.Images[0].Uri,
                         CountLikes = item.LikesCount,
@@ -660,7 +661,7 @@ namespace MyInsta.Logic
                             var postCar = new CustomMedia()
                             {
                                 Pk = item.Pk,
-                                Name = $"ImagePost_{i + 1}_Carousel_{x + 1}",
+                                Name = $"{postItem.UserNamePost}_imagePost_{item.Pk}_carousel_{x + 1}",
                                 UrlSmallImage = car.Images[1].Uri,
                                 UrlBigImage = car.Images[0].Uri,
                                 CountLikes = item.LikesCount,
@@ -815,7 +816,7 @@ namespace MyInsta.Logic
                 var custM = new CustomMedia()
                 {
                     Pk = story.Pk.ToString(),
-                    Name = $"Story_{i + 1}",
+                    Name = $"{story.User.UserName}_story_{story.Pk}",
                     UrlBigImage = story.ImageList[0].Uri,
                     UrlSmallImage = story.ImageList[1].Uri,
                     MediaType = MediaType.Image
@@ -1182,10 +1183,11 @@ namespace MyInsta.Logic
         #endregion
 
         #region Feed
-        //private static void GetFeed(User user)
-        //{   
-        //    user.API.FeedProcessor.
-        //}
+        private static async void GetFeed(User user)
+        {
+            var b = await user.API.FeedProcessor.GetLikedFeedAsync(PaginationParameters.MaxPagesToLoad(10));
+            var a = await user.API.FeedProcessor.GetUserTimelineFeedAsync(PaginationParameters.MaxPagesToLoad(10), new [] { "2171160902940863145" });
+        }
         #endregion
     }
 }

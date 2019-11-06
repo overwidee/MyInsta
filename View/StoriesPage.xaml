@@ -95,7 +95,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             FontFamily="Century Gothic"
-            Text="{x:Bind SelectedUserStory.User.UserName, Mode=OneWay}" />
+            Text="{x:Bind SelectedUserStory.User.UserName, Mode=TwoWay}" />
         <Frame
             Grid.Row="2"
             Margin="10"
