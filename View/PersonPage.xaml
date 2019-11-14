@@ -234,10 +234,13 @@
                                                 x:Name="itemsList"
                                                 Width="500"
                                                 HorizontalContentAlignment="Center"
+                                                Foreground="{x:Null}"
                                                 ItemsSource="{x:Bind Items}"
-                                                Tapped="MediaList_SelectionChanged">
+                                                PointerWheelChanged="ItemsList_PointerWheelChanged"
+                                                Tapped="MediaList_SelectionChanged"
+                                                >
                                                 <FlipView.ItemsPanel>
-                                                    <ItemsPanelTemplate>
+                                                    <ItemsPanelTemplate ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" />
                                                     </ItemsPanelTemplate>
                                                 </FlipView.ItemsPanel>
@@ -378,7 +381,53 @@
                 Visibility="Collapsed">
                 <Frame Margin="10" CornerRadius="0">
                     <Grid>
-                        <ComboBox
+                        <ListView
+                            x:Name="collectionsBox"
+                            Grid.Row="0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Top"
+                            ItemsSource="{x:Bind InstaHighlightFeeds.Items}"
+                            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                            ScrollViewer.HorizontalScrollMode="Enabled"
+                            ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                            ScrollViewer.VerticalScrollMode="Disabled"
+                            SelectionChanged="CollectionsBox_SelectionChanged">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Background="Transparent" Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:Name="SingleLineDataTemplate" x:DataType="localInsta:InstaHighlightFeed">
+                                    <StackPanel
+                                        Grid.Column="0"
+                                        Width="100"
+                                        Height="122"
+                                        Orientation="Vertical"
+                                        Padding="9">
+                                        <Ellipse
+                                            Width="70"
+                                            Height="70"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center">
+                                            <Ellipse.Fill>
+                                                <ImageBrush>
+                                                    <ImageBrush.ImageSource>
+                                                        <BitmapImage UriSource="{x:Bind CoverMedia.CroppedImage.Uri}" />
+                                                    </ImageBrush.ImageSource>
+                                                </ImageBrush>
+                                            </Ellipse.Fill>
+                                        </Ellipse>
+                                        <TextBlock
+                                            Margin="4"
+                                            HorizontalAlignment="Center"
+                                            TextWrapping="Wrap"
+                                            Text="{x:Bind Title}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        <!--<ComboBox
                             x:Name="collectionsBox"
                             Width="200"
                             Margin="5"
@@ -404,11 +453,11 @@
                                     </StackPanel>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
-                        </ComboBox>
+                        </ComboBox>-->
                         <ScrollViewer
                             x:Name="scrollArchive"
                             Width="650"
-                            Margin="0, 70, 0, 0"
+                            Margin="0, 122, 0, 0"
                             VerticalScrollBarVisibility="Hidden">
                             <ListView
                                 x:Name="archiveList"

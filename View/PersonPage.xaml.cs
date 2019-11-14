@@ -225,7 +225,7 @@ namespace MyInsta.View
 
         private async void CollectionsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var selectHigh = ((ComboBox)(sender)).SelectedItem as InstaHighlightFeed;
+            var selectHigh = ((ListView)(sender)).SelectedItem as InstaHighlightFeed;
             HighlightsStories = await InstaServer.GetHighlightStories(CurrentUser, selectHigh.HighlightId);
             archiveList.ItemsSource = HighlightsStories;
 
@@ -288,6 +288,11 @@ namespace MyInsta.View
             {
                 _ = new CustomDialog("Message", "Error", "Ok");
             }
+        }
+
+        private void ItemsList_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }
