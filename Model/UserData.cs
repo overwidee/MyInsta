@@ -18,7 +18,7 @@ namespace MyInsta.Model
         public ObservableCollection<PostItem> SavedPostItems { get; set; }
         public ObservableCollection<UserStory> Stories { get; set; }
         public ObservableCollection<InstaUserShort> Bookmarks { get; set; }
-
+        public ObservableCollection<InstaDirectInboxThread> DirectItems { get; set; }
         public UserData()
         {
             UserFollowers = new ObservableCollection<InstaUserShort>();
@@ -27,6 +27,7 @@ namespace MyInsta.Model
             SavedPostItems = new ObservableCollection<PostItem>();
             Feed = new ObservableCollection<PostItem>();
             Bookmarks = new ObservableCollection<InstaUserShort>();
+            DirectItems = new ObservableCollection<InstaDirectInboxThread>();
         }
     }
 }

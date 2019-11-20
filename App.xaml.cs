@@ -10,6 +10,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Globalization;
 using Windows.Storage;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -86,6 +87,8 @@ namespace MyInsta
                     rootFrame.Navigate(typeof(LoginPage), e.Arguments);
                 }
                 // Обеспечение активности текущего окна
+
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(800, 600));
                 Window.Current.Activate();
             }
         }

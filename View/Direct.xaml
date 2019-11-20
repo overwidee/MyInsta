@@ -1,0 +1,137 @@
+﻿<Page
+    x:Class="MyInsta.View.Direct"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:MyInsta.View"
+    xmlns:localInsta="using:InstagramApiSharp.Classes.Models"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <AcrylicBrush
+                        x:Key="CMapUwpAcrylicBrush"
+                        BackgroundSource="HostBackdrop"
+                        FallbackColor="{StaticResource SystemAccentColor}"
+                        TintColor="Black"
+                        TintOpacity="0.4" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <SolidColorBrush x:Key="CMapUwpAcrylicBrush" Color="{ThemeResource SystemColorWindowColor}" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <AcrylicBrush
+                        x:Key="CMapUwpAcrylicBrush"
+                        BackgroundSource="HostBackdrop"
+                        FallbackColor="{StaticResource SystemAccentColor}"
+                        TintColor="Black"
+                        TintOpacity="0.4" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+            <Style TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="Century Gothic" />
+            </Style>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource CMapUwpAcrylicBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="9*" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+        <ListView
+            x:Name="listItems"
+            Grid.RowSpan="2"
+            Grid.Column="0"
+            Margin="10,10,10,10"
+            ItemsSource="{x:Bind DirectItems}"
+            ScrollViewer.VerticalScrollBarVisibility="Hidden"
+            SelectionChanged="ListItems_SelectionChangedAsync">
+            <ListView.ItemTemplate>
+                <DataTemplate x:Name="SingleLineDataTemplate" x:DataType="localInsta:InstaDirectInboxThread">
+                    <StackPanel
+                        Grid.Column="0"
+                        Height="80"
+                        Orientation="Horizontal"
+                        Padding="12"
+                        Tag="{Binding ThreadId}">
+                        <Ellipse
+                            Width="56"
+                            Height="56"
+                            VerticalAlignment="Center">
+                            <Ellipse.Fill>
+                                <ImageBrush>
+                                    <ImageBrush.ImageSource>
+                                        <BitmapImage UriSource="{Binding Users[0].ProfilePicUrl}" />
+                                    </ImageBrush.ImageSource>
+                                </ImageBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <TextBlock
+                            Margin="12,0,0,0"
+                            VerticalAlignment="Center"
+                            FontFamily="Century Gothic"
+                            Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
+                            Style="{ThemeResource BaseTextBlockStyle}"
+                            Text="{Binding Title}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <ListView
+            x:Name="listDialog"
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="10,10,10,10"
+            ItemsSource="{x:Bind CurrectDialog}"
+            SelectionMode="None">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsStackPanel VerticalAlignment="Bottom" ItemsUpdatingScrollMode="KeepLastItemInView" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="localInsta:InstaDirectInboxItem">
+                    <StackPanel
+                        Grid.Column="0"
+                        Orientation="Horizontal"
+                        Padding="12">
+                        <Ellipse
+                            Width="56"
+                            Height="56"
+                            VerticalAlignment="Center">
+                            <Ellipse.Fill>
+                                <ImageBrush>
+                                    <ImageBrush.ImageSource>
+                                        <BitmapImage UriSource="{Binding ProfileMedia.ProfilePicUrl}" />
+                                    </ImageBrush.ImageSource>
+                                </ImageBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <TextBlock
+                            Margin="12,0,0,0"
+                            VerticalAlignment="Center"
+                            FontFamily="Century Gothic"
+                            Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
+                            Style="{ThemeResource BaseTextBlockStyle}"
+                            Text="{Binding Text}" />
+                        <MediaElement
+                            Width="400"
+                            Height="10"
+                            Source="{Binding VoiceMedia.Media.Audio.AudioSource}" 
+                            AreTransportControlsEnabled="True"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+
+</Page>

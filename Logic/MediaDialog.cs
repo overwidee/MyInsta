@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
@@ -34,8 +35,17 @@ namespace MyInsta.Logic
             {
                 Height = (type == 0) ? 1100 : 800,
                 Width = (type == 0) ? 800 : 1100,
-                SecondaryButtonText = "All right"
+                SecondaryButtonText = "All right",
+                PrimaryButtonText = "Copy link",
+                Tag = Url
             };
+            contentDialog.PrimaryButtonClick += delegate
+            {
+                var dataPackage = new DataPackage();
+                dataPackage.SetText(Url);
+                Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage);
+            };
+
             if (MediaType == MediaType.Video)
             {
                 var media = new MediaElement()

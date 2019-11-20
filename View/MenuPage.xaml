@@ -6,7 +6,9 @@
     xmlns:local="using:MyInsta.View"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
+    Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}"
+    MinHeight="600"
+    MinWidth="800">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -51,9 +53,10 @@
 
     <Grid Background="{ThemeResource CMapUwpAcrylicBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="32" />
+            <RowDefinition Height="32"/>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        <Grid Background="Black"/>
         <TextBlock
             Margin="5"
             HorizontalAlignment="Center"
@@ -63,11 +66,11 @@
             Text="My Insta" />
         <Grid Grid.Row="1">
             <NavigationView
-                x:Name="NavigationViewControl"
-                IsBackButtonVisible="Collapsed"
-                IsBackEnabled="True"
+                x:Name="NavView"
+                IsBackButtonVisible="Visible"
                 ItemInvoked="NavigationViewControl_ItemInvoked"
                 Loaded="NavigationViewControl_Loaded"
+                BackRequested="NavigationViewControl_BackRequested"
                 PaneDisplayMode="LeftCompact">
                 <NavigationView.MenuItems>
                     <NavigationViewItem
@@ -125,6 +128,12 @@
                         FontFamily="Century Gothic"
                         Icon="Emoji2"
                         Tag="Saved" />
+                    <NavigationViewItem
+                        x:Name="button_direct"
+                        Content="Direct"
+                        FontFamily="Century Gothic"
+                        Icon="Message"
+                        Tag="Direct" />
                     <NavigationViewItemSeparator />
                     <NavigationViewItem
                         x:Name="button_preview"
@@ -133,7 +142,7 @@
                         Icon="ViewAll"
                         Tag="Preview" />
                 </NavigationView.MenuItems>
-                <Frame x:Name="contentFrame" />
+                <Frame x:Name="contentFrame"/>
             </NavigationView>
         </Grid>
     </Grid>
