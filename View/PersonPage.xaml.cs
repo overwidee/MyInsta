@@ -48,7 +48,7 @@ namespace MyInsta.View
         public ObservableCollection<CustomMedia> HighlightsStories { get; set; }
         public InstaHighlightFeeds InstaHighlightFeeds { get; set; }
 
-        int countPosts = 10;
+        int countPosts = 9;
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -125,13 +125,17 @@ namespace MyInsta.View
 
             if (verticalOffset == maxVerticalOffset)
             {
-                countPosts += 3;
+                if (countPosts >= Posts.Count)
+                    return;
+                countPosts += 6;
                 mediaList.ItemsSource = Posts?.Take(countPosts);
             }
         }
 
         private void MediaList_SelectionChanged(object sender, TappedRoutedEventArgs e)
         {
+            if (e.OriginalSource.GetType() != typeof(Image))
+                return;
             var post = ((FlipView)sender).SelectedItem as CustomMedia;
             if (post != null)
             {
@@ -292,7 +296,17 @@ namespace MyInsta.View
 
         private void ItemsList_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
-            e.Handled = true;
+            //if (((ObservableCollection<CustomMedia>)(((FlipView)sender).ItemsSource)).Count > 1)
+            //    e.Handled = true;
+            //base.OnPointerWheelChanged(e);
+        }
+
+        private void StackPanel_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            //if (e.Delta.Translation.X != 0)
+            //{
+            //    e.Handled = true;
+            //}
         }
     }
 }

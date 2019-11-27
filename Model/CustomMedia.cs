@@ -16,6 +16,8 @@ namespace MyInsta.Model
         public int CountComments { get; set; }
         public MediaType MediaType { get; set; }
         public string UrlVideo { get; set; }
+        public DateTime Date { get; set; }
+        public string DatePost => $"{Date.ToLongDateString()} {Date.ToLongTimeString()}";
     }
 
 

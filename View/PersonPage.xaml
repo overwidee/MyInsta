@@ -217,17 +217,18 @@
                             Grid.Row="1"
                             VerticalScrollBarVisibility="Auto"
                             ViewChanged="ScrollListPosts_ViewChanged">
-                            <ListView
+                            <GridView
                                 x:Name="mediaList"
+                                HorizontalAlignment="Center"
                                 HorizontalContentAlignment="Center"
                                 ItemsSource="{x:Bind Posts}"
                                 SelectionMode="None">
-                                <ListView.ItemsPanel>
+                                <GridView.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <StackPanel HorizontalAlignment="Center" />
+                                        <VariableSizedWrapGrid Orientation="Horizontal" />
                                     </ItemsPanelTemplate>
-                                </ListView.ItemsPanel>
-                                <ListView.ItemTemplate>
+                                </GridView.ItemsPanel>
+                                <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="model:PostItem">
                                         <StackPanel Orientation="Vertical">
                                             <FlipView
@@ -237,13 +238,15 @@
                                                 Foreground="{x:Null}"
                                                 ItemsSource="{x:Bind Items}"
                                                 PointerWheelChanged="ItemsList_PointerWheelChanged"
-                                                Tapped="MediaList_SelectionChanged"
-                                                >
+                                                
+                                                ScrollViewer.HorizontalScrollMode="Disabled"
+                                                Tapped="MediaList_SelectionChanged">
                                                 <FlipView.ItemsPanel>
-                                                    <ItemsPanelTemplate ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                                    <ItemsPanelTemplate>
                                                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" />
                                                     </ItemsPanelTemplate>
                                                 </FlipView.ItemsPanel>
+                                                
                                                 <FlipView.ItemTemplate>
                                                     <DataTemplate x:DataType="model:CustomMedia">
                                                         <StackPanel>
@@ -255,7 +258,6 @@
                                                     </DataTemplate>
                                                 </FlipView.ItemTemplate>
                                             </FlipView>
-                                            <!--<Image Source="{x:Bind }" Margin="10" Height="400" Width="500" HorizontalAlignment="Center"/>-->
                                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                                 <TextBlock
                                                     x:Uid="Likes"
@@ -314,8 +316,8 @@
                                             </StackPanel>
                                         </StackPanel>
                                     </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
+                                </GridView.ItemTemplate>
+                            </GridView>
                         </ScrollViewer>
                     </Grid>
                 </Frame>
@@ -329,19 +331,24 @@
                 Visibility="Collapsed">
                 <Frame Margin="10" CornerRadius="0">
                     <ScrollViewer VerticalScrollBarVisibility="Hidden">
-                        <ListView
+                        <GridView
                             x:Name="storiesList"
+                            HorizontalAlignment="Center"
                             HorizontalContentAlignment="Center"
                             ItemsSource="{x:Bind UrlStories}"
                             SelectionMode="None">
-                            <ListView.ItemsPanel>
+                            <GridView.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <StackPanel HorizontalAlignment="Center" />
+                                    <VariableSizedWrapGrid Orientation="Horizontal" />
                                 </ItemsPanelTemplate>
-                            </ListView.ItemsPanel>
-                            <ListView.ItemTemplate>
+                            </GridView.ItemsPanel>
+                            <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="model:CustomMedia">
-                                    <StackPanel Orientation="Vertical">
+                                    <StackPanel Margin="20" Orientation="Vertical">
+                                        <TextBlock
+                                            HorizontalAlignment="Center"
+                                            FontFamily="Century Gothic"
+                                            Text="{x:Bind DatePost}" />
                                         <Image
                                             Width="600"
                                             Height="500"
@@ -367,8 +374,8 @@
                                             Tag="{x:Bind Pk}" />
                                     </StackPanel>
                                 </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
+                            </GridView.ItemTemplate>
+                        </GridView>
                     </ScrollViewer>
                 </Frame>
             </controls:TabViewItem>
@@ -421,61 +428,38 @@
                                         <TextBlock
                                             Margin="4"
                                             HorizontalAlignment="Center"
-                                            TextWrapping="Wrap"
-                                            Text="{x:Bind Title}" />
+                                            Text="{x:Bind Title}"
+                                            TextWrapping="Wrap" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                        <!--<ComboBox
-                            x:Name="collectionsBox"
-                            Width="200"
-                            Margin="5"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Top"
-                            HorizontalContentAlignment="Center"
-                            Header="Highlights"
-                            ItemsSource="{x:Bind InstaHighlightFeeds.Items}"
-                            SelectionChanged="CollectionsBox_SelectionChanged">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate x:DataType="localInsta:InstaHighlightFeed">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Ellipse Width="20" Height="20">
-                                            <Ellipse.Fill>
-                                                <ImageBrush>
-                                                    <ImageBrush.ImageSource>
-                                                        <BitmapImage UriSource="{x:Bind CoverMedia.CroppedImage.Uri}" />
-                                                    </ImageBrush.ImageSource>
-                                                </ImageBrush>
-                                            </Ellipse.Fill>
-                                        </Ellipse>
-                                        <TextBlock Margin="20, 0, 0, 0" Text="{x:Bind Title}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>-->
                         <ScrollViewer
                             x:Name="scrollArchive"
-                            Width="650"
                             Margin="0, 122, 0, 0"
                             VerticalScrollBarVisibility="Hidden">
-                            <ListView
+                            <GridView
                                 x:Name="archiveList"
+                                HorizontalAlignment="Center"
                                 HorizontalContentAlignment="Center"
                                 ItemsSource="{x:Bind HighlightsStories}"
                                 SelectionMode="None">
-                                <ListView.ItemsPanel>
+                                <GridView.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <StackPanel HorizontalAlignment="Center" />
+                                        <VariableSizedWrapGrid Orientation="Horizontal" />
                                     </ItemsPanelTemplate>
-                                </ListView.ItemsPanel>
-                                <ListView.ItemTemplate>
+                                </GridView.ItemsPanel>
+                                <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="model:CustomMedia">
-                                        <StackPanel Orientation="Vertical">
+                                        <StackPanel Margin="10" Orientation="Vertical">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                FontFamily="Century Gothic"
+                                                Text="{x:Bind DatePost}" />
                                             <Image
-                                                Width="600"
-                                                Height="500"
-                                                Margin="10"
+                                                Width="500"
+                                                Height="400"
+                                                Margin="5"
                                                 HorizontalAlignment="Center"
                                                 Source="{x:Bind UrlBigImage}"
                                                 Tag="{x:Bind Pk}"
@@ -483,25 +467,20 @@
                                             <Button
                                                 x:Name="buttonDownloadHigh"
                                                 x:Uid="DownloadStory"
-                                                Margin="10"
+                                                Margin="5"
                                                 HorizontalAlignment="Center"
                                                 Click="ButtonDownloadHigh_Click"
                                                 CornerRadius="5"
                                                 Tag="{x:Bind Name}" />
                                         </StackPanel>
                                     </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
+                                </GridView.ItemTemplate>
+                            </GridView>
                         </ScrollViewer>
                     </Grid>
                 </Frame>
             </controls:TabViewItem>
         </controls:TabView>
-        <!--<Button x:Name="followButton" x:Uid="Follow" CornerRadius="5" IsEnabled="{x:Bind ButtonFollow, Mode=TwoWay}" Click="FollowButton_Click" HorizontalAlignment="Stretch" Margin="5" Grid.Column="1" Grid.Row="0"/>
-        <Button x:Name="unfollowButton" CornerRadius="5" IsEnabled="{x:Bind ButtonUnFollow, Mode=TwoWay}" x:Uid="Unfollow" Click="UnfollowButton_Click" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Stretch" Margin="5"/>
-        <Button x:Name="saveButton" CornerRadius="5" Click="SaveButton_Click" x:Uid="DownloadMedia" Margin="5" Grid.Column="3" Grid.Row="0" HorizontalAlignment="Stretch"/>
-        
-        <Button x:Name="unlikeButton" CornerRadius="5"  x:Uid="UnlikeProfile" Click="UnlikeButton_Click"  HorizontalAlignment="Stretch" Margin="5" Grid.Column="4" Grid.Row="0"/>-->
     </Grid>
 
 </Page>

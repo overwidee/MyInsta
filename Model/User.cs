@@ -17,7 +17,7 @@ namespace MyInsta.Model
 
         public User()
         {
-            this.UserData = new UserData();
+            UserData = new UserData();
         }
     }
 }

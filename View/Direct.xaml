@@ -91,7 +91,7 @@
             Grid.Row="0"
             Grid.Column="1"
             Margin="10,10,10,10"
-            ItemsSource="{x:Bind CurrectDialog}"
+            ItemsSource="{x:Bind AudioAttachment}"
             SelectionMode="None">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -104,30 +104,13 @@
                         Grid.Column="0"
                         Orientation="Horizontal"
                         Padding="12">
-                        <Ellipse
-                            Width="56"
-                            Height="56"
-                            VerticalAlignment="Center">
-                            <Ellipse.Fill>
-                                <ImageBrush>
-                                    <ImageBrush.ImageSource>
-                                        <BitmapImage UriSource="{Binding ProfileMedia.ProfilePicUrl}" />
-                                    </ImageBrush.ImageSource>
-                                </ImageBrush>
-                            </Ellipse.Fill>
-                        </Ellipse>
-                        <TextBlock
-                            Margin="12,0,0,0"
-                            VerticalAlignment="Center"
-                            FontFamily="Century Gothic"
-                            Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
-                            Style="{ThemeResource BaseTextBlockStyle}"
-                            Text="{Binding Text}" />
+                        <TextBlock Text="{Binding TimeStamp}"/>
                         <MediaElement
                             Width="400"
-                            Height="10"
+                            Height="100"
                             Source="{Binding VoiceMedia.Media.Audio.AudioSource}" 
-                            AreTransportControlsEnabled="True"/>
+                            AreTransportControlsEnabled="True"
+                            AutoPlay="False"/>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>

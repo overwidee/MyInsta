@@ -76,8 +76,8 @@ namespace MyInsta.View
         private async void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender,
             AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            var result = await InstaServer.AnswerToStory(InstaUser, sender.Text,
-                sender.Tag.ToString(), SelectedUserStory.User.Pk);
+            var result = await InstaServer.AnswerToStory(InstaUser, sender.Text, sender.Tag.ToString(),
+                SelectedUserStory.User.Pk);
 
             if (result)
             {

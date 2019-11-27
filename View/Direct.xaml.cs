@@ -34,7 +34,7 @@ namespace MyInsta.View
         public User InstaUser { get; set; }
 
         public ObservableCollection<InstaDirectInboxThread> DirectItems { get; set; } 
-        public ObservableCollection<InstaDirectInboxItem> CurrectDialog { get; set; } 
+        public ObservableCollection<InstaDirectInboxItem> AudioAttachment { get; set; }
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -47,9 +47,9 @@ namespace MyInsta.View
         private async void ListItems_SelectionChangedAsync(object sender, SelectionChangedEventArgs e)
         {
             var selectD = ((ListView)(sender)).SelectedItem as InstaDirectInboxThread;
-            CurrectDialog = await InstaServer.GetDialogThreadAsync(InstaUser, selectD.ThreadId);
+            AudioAttachment = await InstaServer.GetDialogAudioAsync(InstaUser, selectD.ThreadId);
 
-            listDialog.ItemsSource = CurrectDialog;
+            listDialog.ItemsSource = AudioAttachment;
         }
     }
 }

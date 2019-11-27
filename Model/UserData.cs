@@ -11,6 +11,7 @@ namespace MyInsta.Model
 {
     public class UserData
     {
+        public long Pk { get; set; }
         public ObservableCollection<InstaUserShort> UserFollowers { get; set; }
         public ObservableCollection<InstaUserShort> UserUnfollowers { get; set; }
         public ObservableCollection<InstaUserShort> UserFriends { get; set; }

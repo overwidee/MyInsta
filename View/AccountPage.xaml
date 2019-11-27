@@ -1,0 +1,64 @@
+﻿<Page
+    x:Class="MyInsta.View.AccountPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Charting="using:WinRTXamlToolkit.Controls.DataVisualization.Charting"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:MyInsta.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <AcrylicBrush
+                        x:Key="CMapUwpAcrylicBrush"
+                        BackgroundSource="HostBackdrop"
+                        FallbackColor="{StaticResource SystemAccentColor}"
+                        TintColor="Black"
+                        TintOpacity="0.4" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <SolidColorBrush x:Key="CMapUwpAcrylicBrush" Color="{ThemeResource SystemColorWindowColor}" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <AcrylicBrush
+                        x:Key="CMapUwpAcrylicBrush"
+                        BackgroundSource="HostBackdrop"
+                        FallbackColor="{StaticResource SystemAccentColor}"
+                        TintColor="Black"
+                        TintOpacity="0.4" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+            <Style TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="Century Gothic" />
+            </Style>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource CMapUwpAcrylicBrush}">
+        <!--<Grid.ColumnDefinitions>
+            <ColumnDefinition Width="225" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="225" />
+            <RowDefinition />
+        </Grid.RowDefinitions>-->
+        <!--<Ellipse
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="20">
+            <Ellipse.Fill>
+                <ImageBrush>
+                    <ImageBrush.ImageSource>
+                        <BitmapImage UriSource="{x:Bind InstaFullUser.UserDetail.ProfilePicUrl, Mode=TwoWay}" />
+                    </ImageBrush.ImageSource>
+                </ImageBrush>
+            </Ellipse.Fill>
+        </Ellipse>-->
+    </Grid>
+
+</Page>

@@ -47,10 +47,10 @@ namespace MyInsta.View
             {
                 contentFrame.Navigate(typeof(SettingPage), InstaUser);
             }
-            var ItemContent = args.InvokedItemContainer.Tag;
-            if (ItemContent != null)
+            var itemContent = args.InvokedItemContainer.Tag;
+            if (itemContent != null)
             {
-                switch (ItemContent)
+                switch (itemContent)
                 {
                     case "Followers":
                         contentFrame.Navigate(typeof(FollowersPage), InstaUser);
@@ -103,11 +103,7 @@ namespace MyInsta.View
                 _page = item.Page;
             }
 
-            // Get the page type before navigation so you can prevent duplicate
-            // entries in the backstack.
             var preNavPageType = contentFrame.CurrentSourcePageType;
-
-            // Only navigate if the selected page isn't currently loaded.
             if (!(_page is null) && !Type.Equals(preNavPageType, _page))
             {
                 contentFrame.Navigate(_page, null, transitionInfo);
@@ -143,7 +139,6 @@ namespace MyInsta.View
         private void On_Navigated(object sender, NavigationEventArgs e)
         {
             NavView.IsBackEnabled = contentFrame.CanGoBack;
-
             if (contentFrame.SourcePageType != null)
             {
                 var item = _pages.FirstOrDefault(p => p.Page == e.SourcePageType);
@@ -164,13 +159,15 @@ namespace MyInsta.View
         {
             if (!contentFrame.CanGoBack)
                 return false;
-
-            // Don't go back if the nav pane is overlayed.
             if (NavView.IsPaneOpen)
                 return false;
-
             contentFrame.GoBack();
             return true;
+        }
+
+        private void MainUser_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            contentFrame.Navigate(typeof(AccountPage), InstaUser);
         }
     }
 }

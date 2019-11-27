@@ -107,31 +107,31 @@
             Margin="0, 20, 0, 0"
             VerticalScrollBarVisibility="Auto"
             ViewChanged="ScrollListPosts_ViewChanged">
-            <ListView
+            <GridView
                 x:Name="postsList"
-                Width="700"
                 HorizontalContentAlignment="Stretch"
                 ItemsSource="{x:Bind SavedPosts}"
-                SelectionMode="None">
-                <ListView.Resources>
+                SelectionMode="None"
+                HorizontalAlignment="Center">
+                <GridView.Resources>
                     <ResourceDictionary>
                         <ResourceDictionary.MergedDictionaries>
                             <ResourceDictionary>
-                                <Style TargetType="ListViewItem">
+                                <Style TargetType="GridViewItem">
                                     <Setter Property="HorizontalAlignment" Value="Center" />
                                 </Style>
                             </ResourceDictionary>
                         </ResourceDictionary.MergedDictionaries>
                     </ResourceDictionary>
-                </ListView.Resources>
-                <ListView.ItemsPanel>
+                </GridView.Resources>
+                <GridView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel HorizontalAlignment="Center" />
+                        <VariableSizedWrapGrid Orientation="Horizontal" ></VariableSizedWrapGrid>
                     </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
-                <ListView.ItemTemplate>
+                </GridView.ItemsPanel>
+                <GridView.ItemTemplate>
                     <DataTemplate x:DataType="model:PostItem">
-                        <Grid>
+                        <Grid Margin="10">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="80" />
                                 <RowDefinition Height="*" />
@@ -227,8 +227,8 @@
                             </StackPanel>
                         </Grid>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </GridView.ItemTemplate>
+            </GridView>
         </ScrollViewer>
     </Grid>
 

@@ -38,7 +38,7 @@ namespace MyInsta.View
         public User InstUser { get; set; }
         public ObservableCollection<PostItem> SavedPosts { get; set; } = new ObservableCollection<PostItem>();
         public InstaCollections InstaCollections { get; set; }
-        int countPosts = 10;
+        int countPosts = 9;
         int typePage;
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -64,7 +64,9 @@ namespace MyInsta.View
 
             if (verticalOffset == maxVerticalOffset)
             {
-                countPosts += 3;
+                if (countPosts >= InstUser.UserData.SavedPostItems.Count)
+                    return;
+                countPosts += 6;
                 postsList.ItemsSource = new ObservableCollection<PostItem>(InstUser.UserData.SavedPostItems?.Take(countPosts).Select(x => x).ToList()); ;
             }
         }
