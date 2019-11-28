@@ -554,7 +554,8 @@ namespace MyInsta.Logic
                         CountLikes = item.LikesCount,
                         CountComments = item.CommentsCount != null ? int.Parse(item.CommentsCount) : 0,
                         MediaType = MediaType.Image,
-                        Date = item.TakenAt
+                        Date = item.TakenAt,
+                        Liked = item.HasLiked
                     };
                     if (item.Videos != null && item.Videos.Count != 0)
                     {
@@ -581,7 +582,8 @@ namespace MyInsta.Logic
                                 UrlBigImage = car.Images[0].Uri,
                                 CountLikes = item.LikesCount,
                                 CountComments = item.CommentsCount != null ? int.Parse(item.CommentsCount) : 0,
-                                MediaType = MediaType.Image
+                                MediaType = MediaType.Image,
+                                Liked = item.HasLiked
                             };
                             if (car.Videos != null && car.Videos.Count != 0)
                             {
@@ -612,6 +614,18 @@ namespace MyInsta.Logic
             if (comments.Comments == null || comments.Comments.Count == 0)
                 return;
             await commentDialog.ShowAsync();
+        }
+
+        public static async Task<bool> LikeMedia(User user, CustomMedia media)
+        {
+            var like = await user.API.MediaProcessor.LikeMediaAsync(media.Pk);
+            return like.Succeeded;
+        }
+
+        public static async Task<bool> UnlikeMedia(User user, CustomMedia media)
+        {
+            var like = await user.API.MediaProcessor.UnLikeMediaAsync(media.Pk);
+            return like.Succeeded;
         }
 
         #endregion

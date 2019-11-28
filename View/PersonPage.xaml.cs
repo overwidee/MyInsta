@@ -308,5 +308,22 @@ namespace MyInsta.View
             //    e.Handled = true;
             //}
         }
+
+        private async void buttonLike_Click(object sender, RoutedEventArgs e)
+        {
+            if (((CheckBox)sender).IsChecked.Value)
+            {
+                var like = await InstaServer.LikeMedia(CurrentUser,
+                Posts.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0]);
+                Posts.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0].Liked = true;
+            }
+            else
+            {
+                var like = await InstaServer.UnlikeMedia(CurrentUser,
+                Posts.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0]);
+                Posts.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0].Liked = false;
+            }
+            
+        }
     }
 }

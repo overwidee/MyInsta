@@ -121,5 +121,21 @@ namespace MyInsta.View
                 : await InstaServer.GetMediasByCollection(InstUser, collection);
             scrollListPosts.ChangeView(null, 0, 1, true);
         }
+
+        private async void buttonLike_Click(object sender, RoutedEventArgs e)
+        {
+            if (((CheckBox)sender).IsChecked.Value)
+            {
+                var like = await InstaServer.LikeMedia(InstUser,
+                InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0]);
+                InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0].Liked = true;
+            }
+            else
+            {
+                var like = await InstaServer.UnlikeMedia(InstUser,
+                InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0]);
+                InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0].Liked = false;
+            }
+        }
     }
 }

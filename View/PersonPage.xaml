@@ -36,6 +36,37 @@
                         TintOpacity="0.4" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <Style TargetType="CheckBox">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="CheckBox">
+                                    <Border x:Name="PART_root">
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup x:Name="CheckStates">
+                                                <VisualStateGroup.States>
+                                                    <VisualState x:Name="Checked">
+                                                        <VisualState.Setters>
+                                                            <Setter Value="Red" Target="PART_content.(PART_content.Foreground)" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                    <VisualState x:Name="Unchecked">
+                                                        <VisualState.Setters>
+                                                            <Setter Value="White" Target="PART_content.(PART_content.Foreground)" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                </VisualStateGroup.States>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+                                        <SymbolIcon x:Name="PART_content" Symbol="Like" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -235,7 +266,6 @@
                                                 Foreground="{x:Null}"
                                                 ItemsSource="{x:Bind Items}"
                                                 PointerWheelChanged="ItemsList_PointerWheelChanged"
-                                                
                                                 ScrollViewer.HorizontalScrollMode="Disabled"
                                                 Tapped="MediaList_SelectionChanged">
                                                 <FlipView.ItemsPanel>
@@ -243,7 +273,6 @@
                                                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" />
                                                     </ItemsPanelTemplate>
                                                 </FlipView.ItemsPanel>
-                                                
                                                 <FlipView.ItemTemplate>
                                                     <DataTemplate x:DataType="model:CustomMedia">
                                                         <StackPanel>
@@ -278,6 +307,28 @@
                                                     Text="{x:Bind Items[0].CountComments}" />
                                             </StackPanel>
                                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                                <CheckBox
+                                                    x:Name="buttonLike"
+                                                    Margin="10"
+                                                    CornerRadius="5"
+                                                    IsChecked="{x:Bind Items[0].Liked}"
+                                                    Click="buttonLike_Click"
+                                                    Tag="{x:Bind Id}"
+                                                    MinWidth="20"
+                                                    >
+                                                    <CheckBox.Content>
+                                                        <SymbolIcon Symbol="Like" />
+                                                    </CheckBox.Content>
+                                                </CheckBox>
+                                                <Button
+                                                    x:Name="buttonDownload"
+                                                    Content="Download post"
+                                                    Margin="10"
+                                                    HorizontalAlignment="Center"
+                                                    Click="ButtonDownload_Click"
+                                                    CornerRadius="5"
+                                                    Tag="{x:Bind Id}">
+                                                </Button>
                                                 <Button
                                                     x:Name="buttonSaveInProfile"
                                                     Margin="10"
@@ -289,14 +340,6 @@
                                                     </Button.Content>
                                                 </Button>
                                                 <Button
-                                                    x:Name="buttonDownload"
-                                                    x:Uid="DownloadPost"
-                                                    Margin="10"
-                                                    HorizontalAlignment="Center"
-                                                    Click="ButtonDownload_Click"
-                                                    CornerRadius="5"
-                                                    Tag="{x:Bind Id}" />
-                                                <Button
                                                     x:Name="buttonShare"
                                                     Margin="10"
                                                     Click="ButtonShare_Click"
@@ -306,6 +349,7 @@
                                                         <SymbolIcon Symbol="Share" />
                                                     </Button.Content>
                                                 </Button>
+                                                
                                             </StackPanel>
                                         </StackPanel>
                                     </DataTemplate>
@@ -338,9 +382,7 @@
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="model:CustomMedia">
                                     <StackPanel Margin="20" Orientation="Vertical">
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
-                                            Text="{x:Bind DatePost}" />
+                                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind DatePost}" />
                                         <Image
                                             Width="600"
                                             Height="500"
@@ -444,9 +486,7 @@
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="model:CustomMedia">
                                         <StackPanel Margin="10" Orientation="Vertical">
-                                            <TextBlock
-                                                HorizontalAlignment="Center"
-                                                Text="{x:Bind DatePost}" />
+                                            <TextBlock HorizontalAlignment="Center" Text="{x:Bind DatePost}" />
                                             <Image
                                                 Width="500"
                                                 Height="400"

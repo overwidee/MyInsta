@@ -33,6 +33,37 @@
                         TintOpacity="0.4" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <Style TargetType="CheckBox">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="CheckBox">
+                                    <Border x:Name="PART_root">
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup x:Name="CheckStates">
+                                                <VisualStateGroup.States>
+                                                    <VisualState x:Name="Checked">
+                                                        <VisualState.Setters>
+                                                            <Setter Value="Red" Target="PART_content.(PART_content.Foreground)" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                    <VisualState x:Name="Unchecked">
+                                                        <VisualState.Setters>
+                                                            <Setter Value="White" Target="PART_content.(PART_content.Foreground)" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                </VisualStateGroup.States>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+                                        <SymbolIcon x:Name="PART_content" Symbol="Like" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -106,10 +137,10 @@
             ViewChanged="ScrollListPosts_ViewChanged">
             <GridView
                 x:Name="postsList"
+                HorizontalAlignment="Center"
                 HorizontalContentAlignment="Stretch"
                 ItemsSource="{x:Bind SavedPosts}"
-                SelectionMode="None"
-                HorizontalAlignment="Center">
+                SelectionMode="None">
                 <GridView.Resources>
                     <ResourceDictionary>
                         <ResourceDictionary.MergedDictionaries>
@@ -123,7 +154,7 @@
                 </GridView.Resources>
                 <GridView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <VariableSizedWrapGrid Orientation="Horizontal" ></VariableSizedWrapGrid>
+                        <VariableSizedWrapGrid Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </GridView.ItemsPanel>
                 <GridView.ItemTemplate>
@@ -199,6 +230,18 @@
                                         Text="{x:Bind Items[0].CountComments}" />
                                 </StackPanel>
                                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <CheckBox
+                                        x:Name="buttonLike"
+                                        Margin="10"
+                                        MinWidth="20"
+                                        Click="buttonLike_Click"
+                                        CornerRadius="5"
+                                        IsChecked="{x:Bind Items[0].Liked}"
+                                        Tag="{x:Bind Id}">
+                                        <CheckBox.Content>
+                                            <SymbolIcon Symbol="Like" />
+                                        </CheckBox.Content>
+                                    </CheckBox>
                                     <Button
                                         x:Name="buttonDownload"
                                         Margin="10"
