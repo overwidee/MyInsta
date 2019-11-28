@@ -32,7 +32,7 @@
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
             <Style TargetType="TextBlock">
-                <Setter Property="FontFamily" Value="Century Gothic" />
+                <Setter Property="FontFamily" Value="Myanmar Text" />
             </Style>
         </ResourceDictionary>
     </Page.Resources>

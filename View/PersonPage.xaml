@@ -36,9 +36,6 @@
                         TintOpacity="0.4" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
-            <Style TargetType="TextBlock">
-                <Setter Property="FontFamily" Value="Century Gothic" />
-            </Style>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -118,7 +115,7 @@
                     FontSize="25"
                     Text="{x:Bind InstaUserInfo.FullName}"
                     TextWrapping="Wrap" />
-                <StackPanel Margin="5, 30, 5, 5" Orientation="Horizontal">
+                <StackPanel Margin="2" Orientation="Horizontal">
                     <TextBlock
                         x:Uid="Following"
                         Margin="0, 0, 10, 0"
@@ -129,7 +126,7 @@
                         Text="{x:Bind InstaUserInfo.FollowingCount}"
                         TextWrapping="Wrap" />
                 </StackPanel>
-                <StackPanel Margin="5" Orientation="Horizontal">
+                <StackPanel Margin="2" Orientation="Horizontal">
                     <TextBlock
                         x:Uid="Followers2"
                         Margin="0, 0, 10, 0"
@@ -140,7 +137,7 @@
                         Text="{x:Bind InstaUserInfo.FollowerCount}"
                         TextWrapping="Wrap" />
                 </StackPanel>
-                <StackPanel Margin="5" Orientation="Horizontal">
+                <StackPanel Margin="2" Orientation="Horizontal">
                     <TextBlock
                         x:Uid="Media"
                         Margin="0, 0, 10, 0"
@@ -151,7 +148,7 @@
                         Text="{x:Bind InstaUserInfo.MediaCount}"
                         TextWrapping="Wrap" />
                 </StackPanel>
-                <StackPanel Margin="5" Orientation="Horizontal">
+                <StackPanel Margin="2" Orientation="Horizontal">
                     <TextBlock
                         x:Uid="IsPrivate"
                         Margin="0, 0, 10, 0"
@@ -162,14 +159,14 @@
                         Text="{x:Bind InstaUserInfo.IsPrivate}"
                         TextWrapping="Wrap" />
                 </StackPanel>
-                <StackPanel Margin="5" Orientation="Horizontal">
+                <StackPanel Margin="2" Orientation="Horizontal">
                     <TextBlock
                         x:Uid="FollowingOn"
                         Margin="0, 0, 10, 0"
                         FontSize="20" />
                     <TextBlock FontSize="20" Text="{x:Bind InstaUserInfo.FriendshipStatus.Following}" />
                 </StackPanel>
-                <StackPanel Margin="5" Orientation="Horizontal">
+                <StackPanel Margin="2" Orientation="Horizontal">
                     <TextBlock
                         x:Uid="FollowedBy"
                         Margin="0, 0, 10, 0"
@@ -185,7 +182,7 @@
             Grid.ColumnSpan="4"
             Margin="10"
             Background="{ThemeResource CMapUwpAcrylicBrush}"
-            FontFamily="Century Gothic"
+            FontFamily="Myanmar Text"
             TabWidthBehavior="Equal">
             <controls:TabViewItem
                 x:Name="postTab"
@@ -262,11 +259,9 @@
                                                 <TextBlock
                                                     x:Uid="Likes"
                                                     Margin="5, 5, 10, 5"
-                                                    FontFamily="Century Gothic"
                                                     FontSize="20" />
                                                 <TextBlock
                                                     Margin="5, 5, 10, 5"
-                                                    FontFamily="Century Gothic"
                                                     FontSize="20"
                                                     Text="{x:Bind Items[0].CountLikes}" />
                                             </StackPanel>
@@ -274,13 +269,11 @@
                                                 <TextBlock
                                                     x:Uid="Comments"
                                                     Margin="5, 5, 10, 5"
-                                                    FontFamily="Century Gothic"
                                                     FontSize="20"
                                                     Tag="{x:Bind Items[0].Pk}"
                                                     Tapped="TextBlock_Tapped" />
                                                 <TextBlock
                                                     Margin="5, 5, 10, 5"
-                                                    FontFamily="Century Gothic"
                                                     FontSize="20"
                                                     Text="{x:Bind Items[0].CountComments}" />
                                             </StackPanel>
@@ -326,7 +319,7 @@
                 x:Name="storyTab"
                 x:Uid="Stories"
                 Background="{ThemeResource CMapUwpAcrylicBrush}"
-                FontFamily="Century Gothic"
+                FontFamily="Myanmar Text"
                 Icon="View"
                 Visibility="Collapsed">
                 <Frame Margin="10" CornerRadius="0">
@@ -347,7 +340,6 @@
                                     <StackPanel Margin="20" Orientation="Vertical">
                                         <TextBlock
                                             HorizontalAlignment="Center"
-                                            FontFamily="Century Gothic"
                                             Text="{x:Bind DatePost}" />
                                         <Image
                                             Width="600"
@@ -382,7 +374,7 @@
             <controls:TabViewItem
                 x:Name="highTab"
                 Background="{ThemeResource CMapUwpAcrylicBrush}"
-                FontFamily="Century Gothic"
+                FontFamily="Myanmar Text"
                 Header="Highlights"
                 Icon="View"
                 Visibility="Collapsed">
@@ -454,7 +446,6 @@
                                         <StackPanel Margin="10" Orientation="Vertical">
                                             <TextBlock
                                                 HorizontalAlignment="Center"
-                                                FontFamily="Century Gothic"
                                                 Text="{x:Bind DatePost}" />
                                             <Image
                                                 Width="500"

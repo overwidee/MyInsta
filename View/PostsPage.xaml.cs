@@ -38,7 +38,7 @@ namespace MyInsta.View
         public User InstUser { get; set; }
         public ObservableCollection<PostItem> SavedPosts { get; set; } = new ObservableCollection<PostItem>();
         public InstaCollections InstaCollections { get; set; }
-        int countPosts = 9;
+        int countPosts = 12;
         int typePage;
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {

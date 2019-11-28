@@ -33,9 +33,6 @@
                         TintOpacity="0.4" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
-            <Style TargetType="TextBlock">
-                <Setter Property="FontFamily" Value="Century Gothic" />
-            </Style>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -89,13 +86,16 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <TextBlock
+        <Button
             x:Name="userBox"
             Grid.Row="1"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            FontFamily="Century Gothic"
-            Text="{x:Bind SelectedUserStory.User.UserName, Mode=TwoWay}" />
+            FontWeight="Bold"
+            FontSize="20"
+            CornerRadius="5"
+            Click="userBox_Click"
+            Content="{x:Bind SelectedUserStory.User.UserName, Mode=TwoWay}" />
         <Frame
             Grid.Row="2"
             Margin="10"
@@ -117,7 +117,6 @@
                             <StackPanel Orientation="Vertical" Margin="20">
                                 <TextBlock
                                     HorizontalAlignment="Center"
-                                    FontFamily="Century Gothic"
                                     Text="{x:Bind DatePost}"/>
                                 <Image
                                     Width="500"

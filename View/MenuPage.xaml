@@ -78,28 +78,24 @@
                         x:Name="page_followers"
                         x:Uid="Followers"
                         Content="Followers"
-                        FontFamily="Century Gothic"
                         Icon="People"
                         Tag="Followers" />
                     <NavigationViewItem
                         x:Name="page_unfollowers"
                         x:Uid="Unfollowers"
                         Content="Unfollowers"
-                        FontFamily="Century Gothic"
                         Icon="UnFavorite"
                         Tag="Unfollowers" />
                     <NavigationViewItem
                         x:Name="page_friends"
                         x:Uid="Friends"
                         Content="Friends"
-                        FontFamily="Century Gothic"
                         Icon="Favorite"
                         Tag="Friends" />
                     <NavigationViewItem
                         x:Name="page_search"
                         x:Uid="SearchProfile"
                         Content="Search profile"
-                        FontFamily="Century Gothic"
                         Icon="Find"
                         Tag="Search" />
                     <NavigationViewItemSeparator />
@@ -107,26 +103,22 @@
                         x:Name="button_sync"
                         x:Uid="Sync"
                         Content="Sync"
-                        FontFamily="Century Gothic"
                         Icon="Sync"
                         Tag="Sync" />
                     <NavigationViewItemSeparator />
                     <NavigationViewItem
                         x:Name="button_bookmarks"
                         Content="Bookmarks"
-                        FontFamily="Century Gothic"
                         Icon="Pin"
                         Tag="Bookmarks" />
                     <NavigationViewItem
                         x:Name="button_stories"
                         Content="Stories"
-                        FontFamily="Century Gothic"
                         Icon="Camera"
                         Tag="Stories" />
                     <NavigationViewItem
                         x:Name="button_savedPosts"
                         Content="Saved posts"
-                        FontFamily="Century Gothic"
                         Icon="Emoji2"
                         Tag="Saved" />
                     <!--<NavigationViewItem
@@ -139,7 +131,6 @@
                     <NavigationViewItem
                         x:Name="button_preview"
                         Content="Preview"
-                        FontFamily="Century Gothic"
                         Icon="ViewAll"
                         Tag="Preview" />
                 </NavigationView.MenuItems>

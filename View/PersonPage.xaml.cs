@@ -48,7 +48,7 @@ namespace MyInsta.View
         public ObservableCollection<CustomMedia> HighlightsStories { get; set; }
         public InstaHighlightFeeds InstaHighlightFeeds { get; set; }
 
-        int countPosts = 9;
+        int countPosts = 12;
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {

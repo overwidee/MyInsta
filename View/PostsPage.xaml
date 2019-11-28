@@ -33,9 +33,6 @@
                         TintOpacity="0.4" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
-            <Style TargetType="TextBlock">
-                <Setter Property="FontFamily" Value="Century Gothic" />
-            </Style>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -185,11 +182,9 @@
                                     <TextBlock
                                         x:Uid="Likes"
                                         Margin="5, 5, 10, 5"
-                                        FontFamily="Century Gothic"
                                         FontSize="20" />
                                     <TextBlock
                                         Margin="5, 5, 10, 5"
-                                        FontFamily="Century Gothic"
                                         FontSize="20"
                                         Text="{x:Bind Items[0].CountLikes}" />
                                 </StackPanel>
@@ -197,11 +192,9 @@
                                     <TextBlock
                                         x:Uid="Comments"
                                         Margin="5, 5, 10, 5"
-                                        FontFamily="Century Gothic"
                                         FontSize="20" />
                                     <TextBlock
                                         Margin="5, 5, 10, 5"
-                                        FontFamily="Century Gothic"
                                         FontSize="20"
                                         Text="{x:Bind Items[0].CountComments}" />
                                 </StackPanel>

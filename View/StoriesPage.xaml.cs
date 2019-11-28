@@ -52,7 +52,7 @@ namespace MyInsta.View
         {
             Stories = await InstaServer.GetStoryUser(InstaUser, SelectedUserStory.User.Pk);
             storiesList.ItemsSource = Stories;
-            userBox.Text = SelectedUserStory.User.UserName;
+            userBox.Content = SelectedUserStory.User.UserName;
 
             scrollList.ChangeView(null, 0, 1, true);
         }
@@ -88,6 +88,16 @@ namespace MyInsta.View
             {
                 _ = new CustomDialog("Message", "Error", "Ok");
             }
+        }
+
+        private async void userBox_Click(object sender, RoutedEventArgs e)
+        {
+            var selectUser = await InstaServer.GetInstaUserShortById(InstaUser, SelectedUserStory.User.Pk);
+            Frame.Navigate(typeof(PersonPage), new object[]
+                {
+                    selectUser,
+                    InstaUser
+                });
         }
     }
 }

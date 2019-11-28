@@ -32,9 +32,6 @@
                         TintOpacity="0.4" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
-            <Style TargetType="TextBlock">
-                <Setter Property="FontFamily" Value="Century Gothic" />
-            </Style>
         </ResourceDictionary>
     </Page.Resources>
 

@@ -35,7 +35,7 @@
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
             <Style TargetType="TextBlock">
-                <Setter Property="FontFamily" Value="Century Gothic" />
+                <Setter Property="FontFamily" Value="Myanmar Text" />
             </Style>
         </ResourceDictionary>
     </ContentDialog.Resources>
@@ -74,7 +74,6 @@
                                 Width="260"
                                 Margin="12,0,0,0"
                                 VerticalAlignment="Center"
-                                FontFamily="Century Gothic"
                                 Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
                                 Style="{ThemeResource BaseTextBlockStyle}"
                                 Text="{x:Bind UserName}"
@@ -83,7 +82,6 @@
                                 Width="260"
                                 Margin="12,0,0,0"
                                 VerticalAlignment="Center"
-                                FontFamily="Century Gothic"
                                 Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
                                 Style="{ThemeResource BaseTextBlockStyle}"
                                 Text="{x:Bind CommentText}"
