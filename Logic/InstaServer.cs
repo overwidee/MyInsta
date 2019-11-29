@@ -490,6 +490,7 @@ namespace MyInsta.Logic
                     CountLikes = item.LikesCount,
                     CountComments = item.CommentsCount != null ? int.Parse(item.CommentsCount) : 0,
                     MediaType = MediaType.Image,
+                    Liked = item.HasLiked
                 };
                 if (item.Videos != null && item.Videos.Count != 0)
                 {
@@ -514,7 +515,8 @@ namespace MyInsta.Logic
                             UrlBigImage = car.Images[1].Uri,
                             CountLikes = item.LikesCount,
                             CountComments = int.Parse(item.CommentsCount),
-                            MediaType = MediaType.Image
+                            MediaType = MediaType.Image,
+                            Liked = item.HasLiked
                         };
                         if (car.Videos != null && car.Videos.Count != 0)
                         {

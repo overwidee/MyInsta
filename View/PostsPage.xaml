@@ -154,7 +154,7 @@
                 </GridView.Resources>
                 <GridView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <VariableSizedWrapGrid Orientation="Horizontal" />
+                        <ItemsWrapGrid Orientation="Horizontal" CacheLength="0"/>
                     </ItemsPanelTemplate>
                 </GridView.ItemsPanel>
                 <GridView.ItemTemplate>

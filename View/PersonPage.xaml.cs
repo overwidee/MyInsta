@@ -48,7 +48,7 @@ namespace MyInsta.View
         public ObservableCollection<CustomMedia> HighlightsStories { get; set; }
         public InstaHighlightFeeds InstaHighlightFeeds { get; set; }
 
-        int countPosts = 12;
+        int countPosts = 24;
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -116,6 +116,8 @@ namespace MyInsta.View
             => await InstaServer.DownloadMedia(UrlStories.Where(x => x.Name == ((Button)sender).Tag.ToString())
                                                    .First());
 
+        int skip = 0;
+
         private void ScrollListPosts_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             var svPosts = sender as ScrollViewer;
@@ -123,11 +125,13 @@ namespace MyInsta.View
             var verticalOffset = svPosts.VerticalOffset;
             var maxVerticalOffset = svPosts.ScrollableHeight;
 
+            
             if (verticalOffset == maxVerticalOffset)
             {
                 if (countPosts >= Posts.Count)
                     return;
-                countPosts += 6;
+                
+                countPosts += 18;
                 mediaList.ItemsSource = Posts?.Take(countPosts);
             }
         }
@@ -280,8 +284,8 @@ namespace MyInsta.View
         private async void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender,
             AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            var result = await InstaServer.AnswerToStory(CurrentUser, sender.Text,
-                sender.Tag.ToString(), SelectUser.Pk);
+            var result = await InstaServer.AnswerToStory(CurrentUser, sender.Text, sender.Tag.ToString(),
+                SelectUser.Pk);
 
             if (result)
             {
@@ -296,17 +300,17 @@ namespace MyInsta.View
 
         private void ItemsList_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
-            //if (((ObservableCollection<CustomMedia>)(((FlipView)sender).ItemsSource)).Count > 1)
-            //    e.Handled = true;
-            //base.OnPointerWheelChanged(e);
+            // if (((ObservableCollection<CustomMedia>)(((FlipView)sender).ItemsSource)).Count > 1)
+            // e.Handled = true;
+            // base.OnPointerWheelChanged(e);
         }
 
         private void StackPanel_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
-            //if (e.Delta.Translation.X != 0)
-            //{
-            //    e.Handled = true;
-            //}
+            // if (e.Delta.Translation.X != 0)
+            // {
+            // e.Handled = true;
+            // }
         }
 
         private async void buttonLike_Click(object sender, RoutedEventArgs e)
@@ -314,16 +318,15 @@ namespace MyInsta.View
             if (((CheckBox)sender).IsChecked.Value)
             {
                 var like = await InstaServer.LikeMedia(CurrentUser,
-                Posts.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0]);
+                    Posts.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0]);
                 Posts.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0].Liked = true;
             }
             else
             {
                 var like = await InstaServer.UnlikeMedia(CurrentUser,
-                Posts.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0]);
+                    Posts.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0]);
                 Posts.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0].Liked = false;
             }
-            
         }
     }
 }

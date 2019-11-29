@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 
 namespace MyInsta.Model
 {
@@ -14,5 +15,6 @@ namespace MyInsta.Model
         public long UserPk { get; set; }
         public string UserPicture { get; set; }
         public ObservableCollection<CustomMedia> Items { get; set; }
+        public Visibility IsVisible { get; set; } = Visibility.Visible;
     }
 }
