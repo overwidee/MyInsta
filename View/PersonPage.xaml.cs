@@ -125,12 +125,12 @@ namespace MyInsta.View
             var verticalOffset = svPosts.VerticalOffset;
             var maxVerticalOffset = svPosts.ScrollableHeight;
 
-            
-            if (verticalOffset == maxVerticalOffset)
+
+            if (verticalOffset == maxVerticalOffset && string.IsNullOrEmpty(postBox.Text))
             {
                 if (countPosts >= Posts.Count)
                     return;
-                
+
                 countPosts += 18;
                 mediaList.ItemsSource = Posts?.Take(countPosts);
             }
@@ -163,42 +163,18 @@ namespace MyInsta.View
             => await InstaServer.ShareMedia(CurrentUser,
             Posts.Where(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).First().Items);
 
-        private void PostBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
-        {
-            if (!string.IsNullOrEmpty(sender.Text))
-            {
-                int i;
-                var b = int.TryParse(sender.Text, out i);
-                if (b)
-                {
-                    var items = Posts?.Where(x => x.Id == i);
-                    if (items != null)
-                        mediaList.ItemsSource = items;
-                }
-                else
-                    mediaList.ItemsSource = Posts;
-            }
-            else
-                mediaList.ItemsSource = Posts;
-        }
-
         private void PostBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             if (!string.IsNullOrEmpty(sender.Text))
             {
-                int i;
-                var b = int.TryParse(sender.Text, out i);
-                if (b)
-                {
-                    var items = Posts?.Where(x => x.Id == i);
-                    if (items != null)
-                        mediaList.ItemsSource = items;
-                }
-                else
-                    mediaList.ItemsSource = Posts;
+                var arr = Helper.ReturnNumbers(sender.Text);
+
+                var items = Posts?.Where(x => arr.Contains(x.Id));
+                if (items != null)
+                    mediaList.ItemsSource = items;
             }
             else
-                mediaList.ItemsSource = Posts;
+                mediaList.ItemsSource = Posts?.Take(countPosts);
         }
 
         private void SetBookmarkStatus()
@@ -215,7 +191,7 @@ namespace MyInsta.View
                 : "Remove from bookmarks",
             };
 
-            item.Click += async(s, e) =>
+            item.Click += async (s, e) =>
             {
                 if (!InstaServer.IsContrainsAccount(CurrentUser, SelectUser.Pk))
                 {

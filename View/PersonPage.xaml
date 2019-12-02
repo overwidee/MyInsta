@@ -236,10 +236,10 @@
                             x:Name="postBox"
                             Grid.Row="0"
                             Margin="10"
-                            PlaceholderText="Number of post"
+                            PlaceholderText="1, 3-6"
                             QueryIcon="Find"
                             QuerySubmitted="PostBox_QuerySubmitted"
-                            TextChanged="PostBox_TextChanged" />
+                            RequestedTheme="Dark"/>
                         <ScrollViewer
                             x:Name="scrollListPosts"
                             Grid.Row="1"
