@@ -16,9 +16,12 @@ namespace MyInsta.Logic
                 if (item.Contains("-"))
                 {
                     var m = item.Split('-');
-                    for (int i = int.Parse(m[0]); i <= int.Parse(m[1]); i++)
+                    if (int.TryParse(m[0], out int k) && int.TryParse(m[m.Length - 1], out int j))
                     {
-                        yield return i;
+                        for (int i = k; i <= j; i++)
+                        {
+                            yield return i;
+                        }
                     }
                 }
                 else
