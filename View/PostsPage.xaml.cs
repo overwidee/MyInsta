@@ -17,21 +17,23 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace MyInsta.View
 {
-    /// <summary>
-    /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
-    /// </summary>
     public sealed partial class PostsPage : Page
     {
         public PostsPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             progressPosts.IsActive = !InstaServer.IsSavedPostsLoaded;
+            AllPostsRing.IsActive = !InstaServer.IsSavedPostsAllLoaded;
+
             InstaServer.OnUserSavedPostsLoaded += () => progressPosts.IsActive = false;
+            InstaServer.OnUserSavedPostsAllLoaded += () =>
+            {
+                CountPostsText.Text = InstUser.UserData.SavedPostItems.Count.ToString();
+                AllPostsRing.IsActive = false;
+            };
             InstaServer.OnUserCollectionLoaded += () => progressCollection.Visibility = Visibility.Collapsed;
         }
 
@@ -39,48 +41,64 @@ namespace MyInsta.View
         public ObservableCollection<PostItem> SavedPosts { get; set; } = new ObservableCollection<PostItem>();
         public InstaCollections InstaCollections { get; set; }
         int countPosts = 12;
-        int typePage;
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            var objs = e.Parameter as object[];
-            InstUser = objs[0] as User;
-            typePage = (int)objs[1];
+            if (e.Parameter is object[] obj)
+            {
+                InstUser = obj[0] as User;
+            }
 
-            SavedPosts = new ObservableCollection<PostItem>(InstUser.UserData.SavedPostItems?.Take(countPosts).Select(x => x).ToList());
-            postsList.ItemsSource = SavedPosts;
-            InstaCollections = await InstaServer.GetListCollections(InstUser);
-            InstaCollections.Items.Add(new InstaCollectionItem() { CollectionId = 1, CollectionName = "All posts" });
-            collectionsBox.ItemsSource = InstaCollections.Items;
+            if (InstUser != null)
+            {
+                SavedPosts =
+                    new ObservableCollection<PostItem>(InstUser.UserData.SavedPostItems?.Take(countPosts).Select(x => x)
+                                                           .ToList() ?? throw new InvalidOperationException());
+                postsList.ItemsSource = SavedPosts;
+                InstaCollections = await InstaServer.GetListCollections(InstUser);
+                InstaCollections.Items.Add(new InstaCollectionItem() { CollectionId = 1, CollectionName = "All posts" });
+                collectionsBox.ItemsSource = InstaCollections.Items;
+            }
         }
 
         private void ScrollListPosts_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             var svPosts = sender as ScrollViewer;
 
-            var verticalOffset = svPosts.VerticalOffset;
-            var maxVerticalOffset = svPosts.ScrollableHeight;
+            double verticalOffset = svPosts.VerticalOffset;
+            double maxVerticalOffset = svPosts.ScrollableHeight;
 
             if (verticalOffset == maxVerticalOffset)
             {
-                if (countPosts >= InstUser.UserData.SavedPostItems.Count)
+                if (countPosts >= InstUser.UserData.SavedPostItems.Count 
+                    || (collectionsBox.SelectedItem != null && 
+                        (collectionsBox.SelectedItem as InstaCollectionItem).CollectionId != 1))
+                {
                     return;
-                countPosts += 6;
-                postsList.ItemsSource = new ObservableCollection<PostItem>(InstUser.UserData.SavedPostItems?.Take(countPosts).Select(x => x).ToList()); ;
+                }
+                countPosts += 12;
+                postsList.ItemsSource = new ObservableCollection<PostItem>(InstUser.UserData.SavedPostItems?
+                    .Take(countPosts).Select(x => x).ToList());
             }
         }
 
         private void PostsList_SelectionChanged(object sender, TappedRoutedEventArgs e)
         {
-            var sav = ((FlipView)sender).SelectedItem as CustomMedia;
-            if (sav != null)
+            if (((FlipView)sender).SelectedItem is CustomMedia sav)
             {
-                string urlMedia = "";
-                if (sav.MediaType == MediaType.Image)
-                    urlMedia = sav.UrlBigImage;
-                else if (sav.MediaType == MediaType.Video)
-                    urlMedia = sav.UrlVideo;
+                var urlMedia = "";
+                switch (sav.MediaType)
+                {
+                    case MediaType.Image:
+                        urlMedia = sav.UrlBigImage;
+                        break;
+                    case MediaType.Video:
+                        urlMedia = sav.UrlVideo;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
 
                 var mediaDialog = new MediaDialog(InstUser, sav.Pk, urlMedia, sav.MediaType, 1);
                 _ = mediaDialog.ShowMediaAsync();
@@ -89,52 +107,55 @@ namespace MyInsta.View
 
         private async void ButtonDownload_Click(object sender, RoutedEventArgs e)
         {
-            await InstaServer.DownloadAnyPost(
-                await InstaServer.GetInstaUserShortById(InstUser,
-                    typePage == 1 ? ((IEnumerable<PostItem>) postsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).UserPk
-                    : InstUser.UserData.Feed.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).UserPk),
-                typePage == 1 ? ((IEnumerable<PostItem>) postsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items
-                    : InstUser.UserData.Feed.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items);
+            if (postsList.ItemsSource != null)
+            {
+                await InstaServer.DownloadAnyPost(
+                    await InstaServer.GetInstaUserShortById(InstUser
+                        ,((IEnumerable<PostItem>)postsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).UserPk)
+                        ,((IEnumerable<PostItem>)postsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString()))?.Items);
+            }
         }
 
         private async void ButtonProfile_Click(object sender, RoutedEventArgs e)
         {
-            var user = await InstaServer.GetInstaUserShortById(InstUser, long.Parse(((Button)sender).Tag.ToString()));
-            this.Frame.Navigate(typeof(PersonPage), new object[] { user, InstUser });
+            InstaUserShort user = await InstaServer.GetInstaUserShortById(InstUser, long.Parse(((Button)sender).Tag.ToString()));
+            Frame.Navigate(typeof(PersonPage), new object[] { user, InstUser });
         }
 
         private async void ButtonShare_Click(object sender, RoutedEventArgs e)
         {
             await InstaServer.ShareMedia(InstUser,
-                typePage == 1 ? SavedPosts.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items
-                : InstUser.UserData.Feed.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items);
+                SavedPosts?.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString()))?.Items);
         }
 
         private async void CollectionsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             countPosts = 10;
-            var collection = ((ListView)sender).SelectedItem as InstaCollectionItem;
-            if (collection.CollectionId != 1) progressCollection.Visibility = Visibility.Visible;
+            if (((ListView)sender).SelectedItem is InstaCollectionItem collection && collection.CollectionId != 1)
+            {
+                progressCollection.Visibility = Visibility.Visible;
 
-            postsList.ItemsSource = collection.CollectionId == 1
-                ? SavedPosts?.Take(countPosts)
-                : await InstaServer.GetMediasByCollection(InstUser, collection);
-            scrollListPosts.ChangeView(null, 0, 1, true);
+                postsList.ItemsSource = collection.CollectionId == 1
+                    ? SavedPosts?.Take(countPosts)
+                    : await InstaServer.GetMediasByCollection(InstUser, collection);
+                scrollListPosts.ChangeView(null, 0, 1, true);
+            }
         }
 
         private async void buttonLike_Click(object sender, RoutedEventArgs e)
         {
-            if (((CheckBox)sender).IsChecked.Value)
+            var isChecked = ((CheckBox)sender).IsChecked;
+            if (isChecked != null && isChecked.Value)
             {
-                var like = await InstaServer.LikeMedia(InstUser,
-                InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0]);
-                InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0].Liked = true;
+                bool like = await InstaServer.LikeMedia(InstUser,
+                    InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString()))?.Items[0]);
+                    InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0].Liked = true;
             }
             else
             {
-                var like = await InstaServer.UnlikeMedia(InstUser,
-                InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0]);
-                InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0].Liked = false;
+                bool like = await InstaServer.UnlikeMedia(InstUser,
+                    InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString()))?.Items[0]);
+                    InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0].Liked = false;
             }
         }
     }

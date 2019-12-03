@@ -11,13 +11,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
-// Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace MyInsta.View
 {
-    /// <summary>
-    /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
-    /// </summary>
     public sealed partial class MenuPage : Page
     {
         public MenuPage()
@@ -33,7 +28,7 @@ namespace MyInsta.View
 
         User InstaUser { get; set; }
 
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             InstaUser = e.Parameter as User;
@@ -65,7 +60,7 @@ namespace MyInsta.View
                         contentFrame.Navigate(typeof(SearchPage), InstaUser);
                         break;
                     case "Sync":
-                        await InstaServer.GetUserData(InstaUser);
+                        await InstaServer.GetUserData(InstaUser, true);
                         break;
                     case "Saved":
                         contentFrame.Navigate(typeof(PostsPage), new object[]
@@ -85,6 +80,11 @@ namespace MyInsta.View
                         break;
                     case "Preview":
                         contentFrame.Navigate(typeof(PreviewPostsPage), InstaUser);
+                        break;
+                    case "User":
+                        var curt = await InstaServer.GetInstaUserShortById(InstaUser, InstaUser.UserData.Pk);
+                        contentFrame.Navigate(typeof(PersonPage), 
+                            new object[] { curt, InstaUser });
                         break;
                 }
             }

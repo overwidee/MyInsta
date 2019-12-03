@@ -43,13 +43,12 @@ namespace MyInsta.View
         {
             try
             {
-                var user = e.AddedItems[0] as InstaUserShort;
-                if (user != null)
-                    this.Frame.Navigate(typeof(PersonPage), new object[] { user, InstaUser });
+                if (e.AddedItems[0] is InstaUserShort user)
+                    Frame.Navigate(typeof(PersonPage), new object[] { user, InstaUser });
             }
-            catch
+            catch (Exception ex)
             {
-
+                Console.Write(ex);
             }
         }
 

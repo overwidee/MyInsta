@@ -71,6 +71,7 @@
                 ItemInvoked="NavigationViewControl_ItemInvoked"
                 Loaded="NavigationViewControl_Loaded"
                 OpenPaneLength="250"
+                IsSettingsVisible="False"
                 PaneDisplayMode="LeftCompact">
                 <NavigationView.MenuItems>
                     <NavigationViewItem
@@ -132,10 +133,14 @@
                         Content="Preview"
                         Icon="ViewAll"
                         Tag="Preview" />
+                    <NavigationViewItem 
+                        x:Name="MainUser" 
+                        Icon="Contact" 
+                        Content="Account" 
+                        Tag="User" 
+                        />
+
                 </NavigationView.MenuItems>
-                <!--<NavigationView.PaneFooter>
-                    <NavigationViewItem x:Name="MainUser" Icon="Contact" Content="User" Tag="User" Tapped="MainUser_Tapped"/>
-                </NavigationView.PaneFooter>-->
                 <Frame x:Name="contentFrame" />
             </NavigationView>
         </Grid>

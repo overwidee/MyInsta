@@ -18,6 +18,10 @@ namespace MyInsta.Logic
                     var m = item.Split('-');
                     if (int.TryParse(m[0], out int k) && int.TryParse(m[m.Length - 1], out int j))
                     {
+                        if (Math.Abs(k - j) > 50)
+                        {
+                            yield return 0;
+                        }
                         for (int i = k; i <= j; i++)
                         {
                             yield return i;
