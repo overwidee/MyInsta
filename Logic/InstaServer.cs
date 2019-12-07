@@ -213,13 +213,12 @@ namespace MyInsta.Logic
                 IsSavedPostsLoaded = false;
                 IsSavedPostsAllLoaded = false;
                 await GetCurrentUserStories(userObject);
+                await GetUserPostItems(userObject);
+                await GetAllSavedPosts(userObject);
                 await GetUserFollowers(userObject);
                 await GetUserFriendsAndUnfollowers(userObject, true);
-                await GetAllSavedPosts(userObject);
             }
-            
         }
-
         private static async Task GetUserFollowers(User user)
         {
             var f = await user.API.UserProcessor.GetUserFollowersAsync(user.LoginUser,
@@ -232,7 +231,6 @@ namespace MyInsta.Logic
             OnUserFollowersLoaded?.Invoke();
             IsFollowersLoaded = true;
         }
-
         private static async Task GetUserPostItems(User user)
         {
             var items = await user.API.FeedProcessor.GetSavedFeedAsync(PaginationParameters.MaxPagesToLoad(5));

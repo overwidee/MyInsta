@@ -46,37 +46,49 @@ namespace MyInsta.View
         }
 
         private async void ButtonDownloadStory_Click(object sender, RoutedEventArgs e)
-            => await InstaServer.DownloadMedia(Stories.Where(x => x.Name == ((Button)sender).Tag.ToString()).First());
+        {
+            await InstaServer.DownloadMedia(Stories.First(x => x.Name == ((Button)sender).Tag.ToString()));
+        }
 
         private async void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Stories = await InstaServer.GetStoryUser(InstaUser, SelectedUserStory.User.Pk);
-            storiesList.ItemsSource = Stories;
-            userBox.Content = SelectedUserStory.User.UserName;
+            if (SelectedUserStory.User != null)
+            {
+                Stories = await InstaServer.GetStoryUser(InstaUser, SelectedUserStory.User.Pk);
+                storiesList.ItemsSource = Stories;
+                userBox.Content = SelectedUserStory.User.UserName;
 
-            scrollList.ChangeView(null, 0, 1, true);
+                scrollList.ChangeView(null, 0, 1, true);
+            }
         }
 
         private async void Image_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            var story = Stories.Where(x => x.Pk == ((Image)sender).Tag.ToString()).FirstOrDefault();
-            if (story != null)
+            var story = Stories.FirstOrDefault(x => x.Pk == ((Image)sender).Tag.ToString());
+            if (story == null)
             {
-                string urlMedia = "";
-                if (story.MediaType == MediaType.Image)
-                    urlMedia = story.UrlBigImage;
-                else if (story.MediaType == MediaType.Video)
-                    urlMedia = story.UrlVideo;
-
-                var mediaDialog = new MediaDialog(InstaUser, story.Pk, urlMedia, story.MediaType, 0);
-                await mediaDialog.ShowMediaAsync();
+                return;
             }
+
+            var urlMedia = "";
+            switch (story.MediaType)
+            {
+                case MediaType.Image:
+                    urlMedia = story.UrlBigImage;
+                    break;
+                case MediaType.Video:
+                    urlMedia = story.UrlVideo;
+                    break;
+            }
+
+            var mediaDialog = new MediaDialog(InstaUser, story.Pk, urlMedia, story.MediaType, 0);
+            await mediaDialog.ShowMediaAsync();
         }
 
         private async void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender,
             AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            var result = await InstaServer.AnswerToStory(InstaUser, sender.Text, sender.Tag.ToString(),
+            bool result = await InstaServer.AnswerToStory(InstaUser, sender.Text, sender.Tag.ToString(),
                 SelectedUserStory.User.Pk);
 
             if (result)
@@ -94,10 +106,10 @@ namespace MyInsta.View
         {
             var selectUser = await InstaServer.GetInstaUserShortById(InstaUser, SelectedUserStory.User.Pk);
             Frame.Navigate(typeof(PersonPage), new object[]
-                {
-                    selectUser,
-                    InstaUser
-                });
+            {
+                selectUser,
+                InstaUser
+            });
         }
     }
 }

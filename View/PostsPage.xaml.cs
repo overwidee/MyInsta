@@ -28,7 +28,14 @@ namespace MyInsta.View
             progressPosts.IsActive = !InstaServer.IsSavedPostsLoaded;
             AllPostsRing.IsActive = !InstaServer.IsSavedPostsAllLoaded;
 
-            InstaServer.OnUserSavedPostsLoaded += () => progressPosts.IsActive = false;
+            InstaServer.OnUserSavedPostsLoaded += delegate
+            {
+                progressPosts.IsActive = false;
+                SavedPosts =
+                    new ObservableCollection<PostItem>(InstUser.UserData.SavedPostItems?.Take(countPosts).Select(x => x)
+                                                           .ToList() ?? throw new InvalidOperationException());
+                postsList.ItemsSource = SavedPosts;
+            };
             InstaServer.OnUserSavedPostsAllLoaded += () =>
             {
                 CountPostsText.Text = InstUser.UserData.SavedPostItems.Count.ToString();

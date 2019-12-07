@@ -336,7 +336,7 @@
                                                     CornerRadius="5"
                                                     Tag="{x:Bind Items[0].Pk}">
                                                     <Button.Content>
-                                                        <SymbolIcon Symbol="Emoji" />
+                                                        <SymbolIcon Symbol="Save" />
                                                     </Button.Content>
                                                 </Button>
                                                 <Button
