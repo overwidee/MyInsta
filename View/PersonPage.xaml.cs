@@ -67,6 +67,7 @@ namespace MyInsta.View
 
             if (InstaUserInfo.IsPrivate && !InstaUserInfo.FriendshipStatus.Following)
             {
+                progressPosts.IsActive = false;
                 return;
             }
 
