@@ -875,37 +875,52 @@ namespace MyInsta.Logic
                         task.Wait();
                     }
                 }
-                var customDialog = new CustomDialog("Message", "Post/s downloaded", "All right");
+                _ = new CustomDialog("Message", $"Post/s of {instUser.UserName} downloaded", "All right");
             }
             catch (Exception e)
             {
-                var customDialog = new CustomDialog("Warning",
-                    "Error. Wait while media loaded in profile. \n" + $"Error - {e}", "All right");
+                _ = new CustomDialog("Warning",
+                    $"Error - {e}", "All right");
             }
         }
 
         public static async Task<bool> DownloadMedia(CustomMedia media)
         {
-            string url = string.Empty;
-            if (media.MediaType == MediaType.Image)
-                url = media.UrlBigImage;
-            else if (media.MediaType == MediaType.Video)
-                url = media.UrlVideo;
+            string url;
+            switch (media.MediaType)
+            {
+                case MediaType.Image:
+                    url = media.UrlBigImage;
+                    break;
+                case MediaType.Video:
+                    url = media.UrlVideo;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
-            var savePicker = new FileSavePicker();
-            savePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            var savePicker = new FileSavePicker
+            {
+                SuggestedStartLocation = PickerLocationId.PicturesLibrary
+            };
 
-            if (media.MediaType == MediaType.Image)
-                savePicker.FileTypeChoices.Add("jpeg image", new List<string>()
+            switch (media.MediaType)
+            {
+                case MediaType.Image:
+                    savePicker.FileTypeChoices.Add("jpeg image", new List<string>()
                     {
                         ".jpg"
                     });
-            else if (media.MediaType == MediaType.Video)
-                savePicker.FileTypeChoices.Add("mp4 video", new List<string>()
+                    break;
+                case MediaType.Video:
+                    savePicker.FileTypeChoices.Add("mp4 video", new List<string>()
                     {
                         ".mp4"
                     });
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
             savePicker.SuggestedFileName = media.Name;
             StorageFile file = await savePicker.PickSaveFileAsync();
@@ -929,20 +944,21 @@ namespace MyInsta.Logic
                 });
                 task.Wait();
             }
-            if (result.Value)
-                _ = new CustomDialog("Message", "Media downloaded\n", "All right");
-            else
-                _ = new CustomDialog("Message", "Failed\n", "All right");
+            _ = result != null && result.Value ? new CustomDialog("Message", $"Media downloaded\n", "All right") 
+                : new CustomDialog("Message", "Failed\n", "All right");
+
             return result.Value;
         }
 
         public static async Task DownloadAnyPost(InstaUserShort selectedUser, ObservableCollection<CustomMedia> medias)
         {
             if (medias.Count > 1)
+            {
                 await DownloadCarousel(medias, selectedUser);
+            }
             else if (medias.Count == 1)
             {
-                var b = await DownloadMedia(medias[0]);
+                await DownloadMedia(medias[0]);
             }
         }
 
@@ -950,11 +966,13 @@ namespace MyInsta.Logic
         {
             try
             {
-                var folderPicker = new Windows.Storage.Pickers.FolderPicker();
-                folderPicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop;
+                var folderPicker = new FolderPicker
+                {
+                    SuggestedStartLocation = PickerLocationId.Desktop
+                };
                 folderPicker.FileTypeFilter.Add("*");
 
-                Windows.Storage.StorageFolder folder = await folderPicker.PickSingleFolderAsync();
+                StorageFolder folder = await folderPicker.PickSingleFolderAsync();
                 if (folder != null)
                 {
                     var userFolder = await folder.CreateFolderAsync(selectedUser.UserName,
@@ -963,37 +981,49 @@ namespace MyInsta.Logic
                     {
                         foreach (var item in post.Items)
                         {
-                            StorageFile coverpic_file;
-                            string urlForSave = string.Empty;
+                            string urlForSave;
+                            StorageFile storageFile;
                             if (item.MediaType == MediaType.Image)
                             {
-                                coverpic_file = await userFolder.CreateFileAsync($"{item.Name}.jpg",
+                                storageFile = await userFolder.CreateFileAsync($"{item.Name}.jpg",
                                     CreationCollisionOption.FailIfExists);
                                 urlForSave = item.UrlBigImage;
                             }
                             else
                             {
-                                coverpic_file = await userFolder.CreateFileAsync($"{item.Name}.mp4",
+                                storageFile = await userFolder.CreateFileAsync($"{item.Name}.mp4",
                                     CreationCollisionOption.FailIfExists);
                                 urlForSave = item.UrlVideo;
                             }
-                            var httpWebRequest = WebRequest.CreateHttp(urlForSave);
-                            var response = (HttpWebResponse)await httpWebRequest.GetResponseAsync();
-                            Stream resStream = response.GetResponseStream();
-                            using (var stream = await coverpic_file.OpenAsync(FileAccessMode.ReadWrite))
+
+                            StorageFile file = storageFile;
+                            var task = Task.Run(async () =>
                             {
-                                await resStream.CopyToAsync(stream.AsStreamForWrite());
-                            }
-                            response.Dispose();
+                                var webRequest = WebRequest.CreateHttp(urlForSave);
+                                var webResponse = await Task.Factory.FromAsync(webRequest.BeginGetResponse,
+                                    webRequest.EndGetResponse, null);
+                                using (var responseStream = webResponse.GetResponseStream())
+                                {
+                                    using (var resultFileStream = await file.OpenStreamForWriteAsync())
+                                    {
+                                        if (responseStream != null)
+                                        {
+                                            await responseStream.CopyToAsync(resultFileStream)
+                                                .ContinueWith((e) => { });
+                                        }
+                                    }
+                                }
+                            });
+                            task.Wait();
                         }
                     }
                 }
-                var customDialog = new CustomDialog("Message", "Posts downloaded", "All right");
+                _ = new CustomDialog("Message", $"Posts ({medias.Count}) of {selectedUser.UserName} downloaded", "All right");
             }
             catch (Exception e)
             {
-                var customDialog = new CustomDialog("Warning",
-                    "Error. Wait while media loaded in profile. \n" + $"Error - {e}", "All right");
+                _ = new CustomDialog("Warning",
+                    $"Error - {e}", "All right");
             }
         }
 
