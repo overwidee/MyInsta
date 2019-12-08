@@ -311,34 +311,47 @@
                                                     FontSize="20"
                                                     Text="{x:Bind Items[0].CountComments}" />
                                             </StackPanel>
-                                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                            <Grid >
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="6*"/>
+                                                </Grid.ColumnDefinitions>
+
                                                 <CheckBox
                                                     x:Name="buttonLike"
+                                                    Grid.Column="0"
                                                     Margin="10"
+                                                    HorizontalAlignment="Left"
                                                     CornerRadius="5"
                                                     IsChecked="{x:Bind Items[0].Liked}"
                                                     Click="ButtonLike_Click"
                                                     Tag="{x:Bind Id}"
-                                                    MinWidth="20"
-                                                    >
+                                                    MinWidth="20">
                                                     <CheckBox.Content>
                                                         <SymbolIcon Symbol="Like" />
                                                     </CheckBox.Content>
                                                 </CheckBox>
+                                                
+                                                <StackPanel Orientation="Horizontal" 
+                                                            Grid.Column="1"
+                                                            HorizontalAlignment="Right">
                                                 <Button
                                                     x:Name="buttonDownload"
-                                                    Content="Download post"
                                                     Margin="10"
                                                     HorizontalAlignment="Center"
                                                     Click="ButtonDownload_Click"
                                                     CornerRadius="5"
                                                     Tag="{x:Bind Id}">
+                                                    <Button.Content>
+                                                        <SymbolIcon Symbol="Download" />
+                                                    </Button.Content>
                                                 </Button>
                                                 <Button
                                                     x:Name="buttonSaveInProfile"
                                                     Margin="10"
                                                     Click="ButtonSaveInProfile_Click"
                                                     CornerRadius="5"
+                                                    ToolTipService.ToolTip="Add to saved posts"
                                                     Tag="{x:Bind Items[0].Pk}">
                                                     <Button.Content>
                                                         <SymbolIcon Symbol="Save" />
@@ -349,14 +362,15 @@
                                                     Margin="10"
                                                     Click="ButtonShare_Click"
                                                     CornerRadius="5"
+                                                    ToolTipService.ToolTip="Share in direct"
                                                     Tag="{x:Bind Id}">
                                                     <Button.Content>
                                                         <SymbolIcon Symbol="Share" />
                                                     </Button.Content>
                                                 </Button>
-                                                
+                                                </StackPanel>
+                                            </Grid>
                                             </StackPanel>
-                                        </StackPanel>
                                     </DataTemplate>
                                 </GridView.ItemTemplate>
                             </GridView>

@@ -78,8 +78,8 @@ namespace MyInsta.View
 
             if (verticalOffset == maxVerticalOffset)
             {
-                if (countPosts >= InstUser.UserData.SavedPostItems.Count 
-                    || (collectionsBox.SelectedItem != null && 
+                if (countPosts >= InstUser.UserData.SavedPostItems.Count
+                    || (collectionsBox.SelectedItem != null &&
                         (collectionsBox.SelectedItem as InstaCollectionItem).CollectionId != 1))
                 {
                     return;
@@ -118,8 +118,8 @@ namespace MyInsta.View
             {
                 await InstaServer.DownloadAnyPost(
                     await InstaServer.GetInstaUserShortById(InstUser
-                        ,((IEnumerable<PostItem>)postsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).UserPk)
-                        ,((IEnumerable<PostItem>)postsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString()))?.Items);
+                        , ((IEnumerable<PostItem>)postsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).UserPk)
+                        , ((IEnumerable<PostItem>)postsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString()))?.Items);
             }
         }
 
@@ -138,9 +138,12 @@ namespace MyInsta.View
         private async void CollectionsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             countPosts = 10;
-            if (((ListView)sender).SelectedItem is InstaCollectionItem collection && collection.CollectionId != 1)
+            if (((ListView)sender).SelectedItem is InstaCollectionItem collection)
             {
-                progressCollection.Visibility = Visibility.Visible;
+                if (collection.CollectionId != 1)
+                {
+                    progressCollection.Visibility = Visibility.Visible;
+                }
 
                 postsList.ItemsSource = collection.CollectionId == 1
                     ? SavedPosts?.Take(countPosts)
@@ -156,13 +159,13 @@ namespace MyInsta.View
             {
                 bool like = await InstaServer.LikeMedia(InstUser,
                     InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString()))?.Items[0]);
-                    InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0].Liked = true;
+                InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0].Liked = true;
             }
             else
             {
                 bool like = await InstaServer.UnlikeMedia(InstUser,
                     InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString()))?.Items[0]);
-                    InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0].Liked = false;
+                InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0].Liked = false;
             }
         }
     }

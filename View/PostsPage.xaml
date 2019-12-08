@@ -244,9 +244,14 @@
                                         FontSize="20"
                                         Text="{x:Bind Items[0].CountComments}" />
                                 </StackPanel>
-                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="6*"/>
+                                    </Grid.ColumnDefinitions>
                                     <CheckBox
                                         x:Name="buttonLike"
+                                        Grid.Column="0"
                                         Margin="10"
                                         MinWidth="20"
                                         Click="buttonLike_Click"
@@ -257,24 +262,33 @@
                                             <SymbolIcon Symbol="Like" />
                                         </CheckBox.Content>
                                     </CheckBox>
-                                    <Button
-                                        x:Name="buttonDownload"
-                                        Margin="10"
-                                        Click="ButtonDownload_Click"
-                                        Content="Download saved post"
-                                        CornerRadius="5"
-                                        Tag="{x:Bind Id}" />
-                                    <Button
-                                        x:Name="buttonShare"
-                                        Margin="10"
-                                        Click="ButtonShare_Click"
-                                        CornerRadius="5"
-                                        Tag="{x:Bind Id}">
-                                        <Button.Content>
-                                            <SymbolIcon Symbol="Share" />
-                                        </Button.Content>
-                                    </Button>
-                                </StackPanel>
+                                    <StackPanel HorizontalAlignment="Right"
+                                                Grid.Column="1"
+                                                Orientation="Horizontal">
+                                        <Button
+                                            x:Name="buttonDownload"
+                                            Margin="10"
+                                            Click="ButtonDownload_Click"
+                                            ToolTipService.ToolTip="Download saved post"
+                                            CornerRadius="5"
+                                            Tag="{x:Bind Id}">
+                                            <Button.Content>
+                                                <SymbolIcon Symbol="Download" />
+                                            </Button.Content>
+                                        </Button>
+                                        <Button
+                                            x:Name="buttonShare"
+                                            Margin="10"
+                                            Click="ButtonShare_Click"
+                                            CornerRadius="5"
+                                            ToolTipService.ToolTip="Share in direct"
+                                            Tag="{x:Bind Id}">
+                                            <Button.Content>
+                                                <SymbolIcon Symbol="Share" />
+                                            </Button.Content>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
                             </StackPanel>
                         </Grid>
                     </DataTemplate>

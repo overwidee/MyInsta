@@ -14,10 +14,12 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Networking.Connectivity;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using static Windows.Networking.Connectivity.NetworkInformation;
 
 namespace MyInsta.Logic
 {
@@ -39,6 +41,16 @@ namespace MyInsta.Logic
         public static event CompleteHandler OnUserPostsLoaded;
         public static event CompleteHandler OnUserCollectionLoaded;
         public static event CompleteHandler OnUserAllPostsLoaded;
+
+        #endregion
+
+        #region Internet
+        public static bool IsInternetConnected()
+        {
+            ConnectionProfile internetConnectionProfile = GetInternetConnectionProfile();
+            return internetConnectionProfile?.IsWlanConnectionProfile ?? false;
+        }
+        
 
         #endregion
 

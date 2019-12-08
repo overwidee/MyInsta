@@ -32,7 +32,15 @@ namespace MyInsta.View
         {
             base.OnNavigatedTo(e);
             InstaUser = e.Parameter as User;
-            await InstaServer.GetUserData(InstaUser);
+            
+            if (InstaServer.IsInternetConnected())
+            {
+                await InstaServer.GetUserData(InstaUser);
+            }
+            else
+            {
+                _ = new CustomDialog("Warning!", "Check your internet connection", "All right");
+            }
         }
 
         private async void NavigationViewControl_ItemInvoked(NavigationView sender,
@@ -83,7 +91,7 @@ namespace MyInsta.View
                         break;
                     case "User":
                         var curt = await InstaServer.GetInstaUserShortById(InstaUser, InstaUser.UserData.Pk);
-                        contentFrame.Navigate(typeof(PersonPage), 
+                        contentFrame.Navigate(typeof(PersonPage),
                             new object[] { curt, InstaUser });
                         break;
                 }

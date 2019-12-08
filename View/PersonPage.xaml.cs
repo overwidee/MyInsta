@@ -316,12 +316,12 @@ namespace MyInsta.View
 
             if (result)
             {
-                _ = new CustomDialog("Message", $"Message send to {SelectUser.Pk}", "Ok");
+                _ = new CustomDialog("Message", $"Message send to {SelectUser.UserName}", "All right");
                 sender.Text = "";
             }
             else
             {
-                _ = new CustomDialog("Message", "Error", "Ok");
+                _ = new CustomDialog("Message", "Error", "All right");
             }
         }
 
