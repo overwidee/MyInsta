@@ -38,6 +38,7 @@ namespace MyInsta.Logic
         public static event CompleteHandler OnUserFriendsLoaded;
         public static event CompleteHandler OnUserPostsLoaded;
         public static event CompleteHandler OnUserCollectionLoaded;
+        public static event CompleteHandler OnUserAllPostsLoaded;
 
         #endregion
 
@@ -244,7 +245,6 @@ namespace MyInsta.Logic
             OnUserSavedPostsLoaded?.Invoke();
             IsSavedPostsLoaded = true;
         }
-
         private static async Task GetUserFriendsAndUnfollowers(User user, bool all = false, int count = 30)
         {
             var fling = await user.API.UserProcessor.GetUserFollowingAsync(user.LoginUser,
@@ -277,7 +277,6 @@ namespace MyInsta.Logic
                 IsFriendsLoaded = true;
             }
         }
-
         public static async Task<InstaFullUserInfo> GetCurrentUserInfo(User user)
         {
             var info = await user.API.UserProcessor.GetFullUserInfoAsync(user.UserData.Pk);
@@ -415,8 +414,7 @@ namespace MyInsta.Logic
 
         #region Media
 
-        public static async Task UnlikeProfile(User currentUser, InstaUserShort selectUser,
-            ObservableCollection<PostItem> medias)
+        public static async Task UnlikeProfile(User currentUser, InstaUserShort selectUser, ObservableCollection<PostItem> medias)
         {
             try
             {
@@ -425,7 +423,7 @@ namespace MyInsta.Logic
                 {
                     foreach (var item in medias?.Take(30))
                     {
-                        var p = await currentUser.API.MediaProcessor.UnLikeMediaAsync(item.Items[0].Pk);
+                        await currentUser.API.MediaProcessor.UnLikeMediaAsync(item.Items[0].Pk);
                     }
                 }
                 _ = new CustomDialog("Message", $"30 posts of {selectUser.UserName} unlike", "All right");
@@ -436,8 +434,7 @@ namespace MyInsta.Logic
             }
         }
 
-        public static async Task<ObservableCollection<PostItem>> GetMediaUser(User userObject, InstaUserInfo unfUser,
-            int count)
+        public static async Task<ObservableCollection<PostItem>> GetMediaUser(User userObject, InstaUserInfo unfUser, int count)
         {
             if (userObject == null || unfUser == null)
             {
@@ -454,6 +451,7 @@ namespace MyInsta.Logic
             else
             {
                 media = await GetMediaUserAll(userObject, unfUser);
+                OnUserAllPostsLoaded?.Invoke();
             }
 
             OnUserPostsLoaded?.Invoke();

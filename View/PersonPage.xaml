@@ -178,6 +178,11 @@
                         FontSize="20"
                         Text="{x:Bind InstaUserInfo.MediaCount}"
                         TextWrapping="Wrap" />
+                    <ProgressRing x:Name="ProgressAllPosts" Margin="5, 0, 0, 0"
+                                  Width="5"
+                                  Height="5"
+                                  Foreground="White"
+                                  IsActive="True"/>
                 </StackPanel>
                 <StackPanel Margin="2" Orientation="Horizontal">
                     <TextBlock

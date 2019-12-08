@@ -32,6 +32,10 @@ namespace MyInsta.View
                 progressPosts.IsActive = false;
                 postBox.IsEnabled = true;
             };
+            InstaServer.OnUserAllPostsLoaded += () =>
+            {
+                ProgressAllPosts.IsActive = false;
+            };
         }
 
         public InstaUserShort SelectUser { get; set; }
