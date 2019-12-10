@@ -47,7 +47,7 @@ namespace MyInsta
             {
                 RequestedTheme = ApplicationTheme.Light;
             }
-
+            RequestedTheme = ApplicationTheme.Dark;
         }
 
         /// <summary>

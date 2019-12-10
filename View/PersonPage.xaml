@@ -48,18 +48,21 @@
                                                 <VisualStateGroup.States>
                                                     <VisualState x:Name="Checked">
                                                         <VisualState.Setters>
-                                                            <Setter Value="Red" Target="PART_content.(PART_content.Foreground)" />
+                                                            <Setter Value="&#xEB52;" Target="PART_content.(PART_content.Text)"/>
+                                                            <Setter Value="Red" Target="PART_content.(PART_content.Foreground)"/>
                                                         </VisualState.Setters>
                                                     </VisualState>
                                                     <VisualState x:Name="Unchecked">
                                                         <VisualState.Setters>
+                                                            <Setter Value="&#xEB51;" Target="PART_content.(PART_content.Text)" />
                                                             <Setter Value="White" Target="PART_content.(PART_content.Foreground)" />
                                                         </VisualState.Setters>
                                                     </VisualState>
                                                 </VisualStateGroup.States>
                                             </VisualStateGroup>
                                         </VisualStateManager.VisualStateGroups>
-                                        <SymbolIcon x:Name="PART_content" Symbol="Like" />
+                                        <TextBlock x:Name="PART_content" FontSize="20" Foreground="Red" 
+                                                   FontFamily="Segoe MDL2 Assets" Text="&#xE102;"/>
                                     </Border>
                                 </ControlTemplate>
                             </Setter.Value>

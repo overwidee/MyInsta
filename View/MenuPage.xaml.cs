@@ -32,15 +32,16 @@ namespace MyInsta.View
         {
             base.OnNavigatedTo(e);
             InstaUser = e.Parameter as User;
-            
-            if (InstaServer.IsInternetConnected())
-            {
-                await InstaServer.GetUserData(InstaUser);
-            }
-            else
-            {
-                _ = new CustomDialog("Warning!", "Check your internet connection", "All right");
-            }
+
+            await InstaServer.GetUserData(InstaUser);
+            //if (InstaServer.IsInternetConnected())
+            //{
+            //    await InstaServer.GetUserData(InstaUser);
+            //}
+            //else
+            //{
+            //    _ = new CustomDialog("Warning!", "Check your internet connection", "All right");
+            //}
         }
 
         private async void NavigationViewControl_ItemInvoked(NavigationView sender,

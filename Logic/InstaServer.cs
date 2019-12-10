@@ -214,22 +214,30 @@ namespace MyInsta.Logic
                                                 .GetUserInfoByUsernameAsync(userObject.LoginUser)).Value.Pk;
             if (!isSync)
             {
-                await GetCurrentUserStories(userObject);
-                await GetBookmarksAsync(userObject);
-                await GetUserPostItems(userObject);
-                await GetUserFollowers(userObject);
-                await GetUserFriendsAndUnfollowers(userObject, true);
-                await GetAllSavedPosts(userObject);
+                var listTasks = new List<Task>()
+                {
+                    GetCurrentUserStories(userObject),
+                    GetBookmarksAsync(userObject),
+                    GetUserPostItems(userObject),
+                    GetUserFollowers(userObject),
+                    GetUserFriendsAndUnfollowers(userObject, true),
+                    GetAllSavedPosts(userObject)
+                };
+                await Task.WhenAll(listTasks);
             }
             else
             {
                 IsSavedPostsLoaded = false;
                 IsSavedPostsAllLoaded = false;
-                await GetCurrentUserStories(userObject);
-                await GetUserPostItems(userObject);
-                await GetAllSavedPosts(userObject);
-                await GetUserFollowers(userObject);
-                await GetUserFriendsAndUnfollowers(userObject, true);
+                var listTasks = new List<Task>()
+                {
+                    GetCurrentUserStories(userObject),
+                    GetUserPostItems(userObject),
+                    GetAllSavedPosts(userObject),
+                    GetUserFollowers(userObject),
+                    GetUserFriendsAndUnfollowers(userObject, true)
+                };
+                await Task.WhenAll(listTasks);
             }
         }
         private static async Task GetUserFollowers(User user)
@@ -260,33 +268,39 @@ namespace MyInsta.Logic
         private static async Task GetUserFriendsAndUnfollowers(User user, bool all = false, int count = 30)
         {
             var fling = await user.API.UserProcessor.GetUserFollowingAsync(user.LoginUser,
-                PaginationParameters.MaxPagesToLoad(5));
+                PaginationParameters.MaxPagesToLoad(1));
             if (all)
             {
                 count = fling.Value.Count;
             }
 
-            var i = 0;
+            var tasks = new List<Task>();
             foreach (var item in fling.Value.Take(count))
             {
-                var statusR = await user.API.UserProcessor.GetFriendshipStatusAsync(item.Pk);
-                var status = statusR.Value;
-                if (status.Following && status.FollowedBy && user.UserData.UserFriends.IndexOf(item) == -1)
-                {
-                    user.UserData.UserFriends.Add(item);
-                }
-                else if (status.Following && !status.FollowedBy && user.UserData.UserUnfollowers.IndexOf(item) == -1)
-                {
-                    user.UserData.UserUnfollowers.Add(item);
-                }
-                i++;
+                tasks.Add(AddPerson(user, item));
             }
+            await Task.WhenAll(tasks);
+
             if (all)
             {
                 OnUserUnfollowersLoaded?.Invoke();
                 OnUserFriendsLoaded?.Invoke();
                 IsUnfollowersLoaded = true;
                 IsFriendsLoaded = true;
+            }
+        }
+
+        private static async Task AddPerson(User user, InstaUserShort item)
+        {
+            var statusR = await user.API.UserProcessor.GetFriendshipStatusAsync(item.Pk);
+            var status = statusR.Value;
+            if (status.Following && status.FollowedBy && user.UserData.UserFriends.IndexOf(item) == -1)
+            {
+                user.UserData.UserFriends.Add(item);
+            }
+            else if (status.Following && !status.FollowedBy && user.UserData.UserUnfollowers.IndexOf(item) == -1)
+            {
+                user.UserData.UserUnfollowers.Add(item);
             }
         }
         public static async Task<InstaFullUserInfo> GetCurrentUserInfo(User user)
@@ -957,7 +971,7 @@ namespace MyInsta.Logic
             _ = result != null && result.Value ? new CustomDialog("Message", $"Media downloaded\n", "All right") 
                 : new CustomDialog("Message", "Failed\n", "All right");
 
-            return result.Value;
+            return result ?? false;
         }
 
         public static async Task DownloadAnyPost(InstaUserShort selectedUser, ObservableCollection<CustomMedia> medias)
