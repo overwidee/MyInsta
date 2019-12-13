@@ -27,7 +27,7 @@ namespace MyInsta.View
     {
         public VerifyPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         public User InstaUser { get; set; }
@@ -46,14 +46,15 @@ namespace MyInsta.View
 
         private async void loginButton_Click(object sender, RoutedEventArgs e)
         {
-            this.IsEnabled = false;
+            MainProgressRing.IsActive = true;
+            IsEnabled = false;
             var api = await InstaServer.LoginByCode(InstaUser, textCode.Text);
             if (api != null)
             {
                 InstaUser.API = api;
-                this.Frame.Navigate(typeof(MenuPage), InstaUser);
+                Frame.Navigate(typeof(MenuPage), InstaUser);
             }
-            this.IsEnabled = true;
+            IsEnabled = true;
         }
     }
 }

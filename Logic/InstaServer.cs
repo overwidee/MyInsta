@@ -107,9 +107,30 @@ namespace MyInsta.Logic
                     }
                     else
                     {
-                        if (logResult.Value == InstaLoginResult.ChallengeRequired)
+                        switch (logResult.Value)
                         {
-                            page.Frame.Navigate(typeof(VerifyPage), userObject);
+                            case InstaLoginResult.InvalidUser:
+                                _ = new CustomDialog("Warning", logResult.Info.Message, "Ok");
+                                break;
+                            case InstaLoginResult.Success:
+                                page.Frame.Navigate(typeof(MenuPage), userObject);
+                                break;
+                            case InstaLoginResult.Exception:
+                                _ = new CustomDialog("Warning", logResult.Info.Message, "Ok");
+                                break;
+                            case InstaLoginResult.BadPassword:
+                                _ = new CustomDialog("Warning", "Bad password", "Ok");
+                                break;
+                            case InstaLoginResult.ChallengeRequired:
+                                page.Frame.Navigate(typeof(VerifyPage), userObject);
+                                break;
+                            case InstaLoginResult.TwoFactorRequired:
+                                break;
+                            case InstaLoginResult.CheckpointLoggedOut:
+                                break;
+                            default:
+                                _ = new CustomDialog("Warning", logResult.Info.Message, "Ok");
+                                break;
                         }
                     }
                 }
@@ -163,7 +184,27 @@ namespace MyInsta.Logic
         public static async Task<IInstaApi> LoginByCode(User user, string code)
         {
             var result = await user.API.VerifyCodeForChallengeRequireAsync(code);
-            if (result.Succeeded)
+            if (!result.Succeeded)
+            {
+                if (result.Value == InstaLoginResult.TwoFactorRequired)
+                {
+                    // TwoFactorRequired
+                    var dialog = new InputDialog("Two factor required code:", "Send");
+                    if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+                    {
+                        var res = await user.API.TwoFactorLoginAsync(dialog.ResultText);
+                        if (res.Succeeded)
+                        {
+                            ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+                            localSettings.Values["Login"] = user.LoginUser;
+                            localSettings.Values["Password"] = user.PasswordUser;
+                            await SaveApiString(user.API);
+                            return user.API;
+                        }
+                    }
+                }
+            }
+            else
             {
                 ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
                 localSettings.Values["Login"] = user.LoginUser;
@@ -172,6 +213,7 @@ namespace MyInsta.Logic
                 await SaveApiString(user.API);
                 return user.API;
             }
+
             return null;
         }
 
@@ -268,7 +310,7 @@ namespace MyInsta.Logic
         private static async Task GetUserFriendsAndUnfollowers(User user, bool all = false, int count = 30)
         {
             var fling = await user.API.UserProcessor.GetUserFollowingAsync(user.LoginUser,
-                PaginationParameters.MaxPagesToLoad(1));
+                PaginationParameters.MaxPagesToLoad(5));
             if (all)
             {
                 count = fling.Value.Count;
@@ -583,6 +625,16 @@ namespace MyInsta.Logic
             return postItem;
         }
 
+        public static async IAsyncEnumerable<PostItem> GetMediasPostItems(User user, InstaUserInfo selectInstaUserInfo)
+        {
+            while(LatestMediaMaxId != null)
+            {
+                foreach (var variable in GetUrlsMediasUser(await GetMediaUser(user, selectInstaUserInfo), selectInstaUserInfo))
+                {
+                    yield return variable;
+                }
+            }
+        }
         public static ObservableCollection<PostItem> GetUrlsMediasUser(InstaMediaList medias,
             InstaUserInfo instaUserInfo)
         {

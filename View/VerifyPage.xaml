@@ -33,6 +33,7 @@
         </ResourceDictionary>
     </Page.Resources>
     <Grid Background="{ThemeResource CMapUwpAcrylicBrush}">
+        <ProgressRing x:Name="MainProgressRing"  Height="400" Width="400" IsActive="False"/>
         <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel Orientation="Horizontal">
                 <RadioButton x:Name="radioSMS" GroupName="Code" Content="Code on phone"

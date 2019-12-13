@@ -71,7 +71,7 @@
                 ItemInvoked="NavigationViewControl_ItemInvoked"
                 Loaded="NavigationViewControl_Loaded"
                 OpenPaneLength="250"
-                IsSettingsVisible="False"
+                IsSettingsVisible="True"
                 PaneDisplayMode="LeftCompact">
                 <NavigationView.MenuItems>
                     <NavigationViewItem
