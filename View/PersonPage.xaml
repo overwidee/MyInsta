@@ -68,6 +68,40 @@
                             </Setter.Value>
                         </Setter>
                     </Style>
+                    <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <Style TargetType="CheckBox" x:Key="BoolStyle">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="CheckBox">
+                                    <Border x:Name="PART_root">
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup x:Name="CheckStates">
+                                                <VisualStateGroup.States>
+                                                    <VisualState x:Name="Checked">
+                                                        <VisualState.Setters>
+                                                            <Setter Value="&#xE73E;" Target="PART_content.(PART_content.Text)"/>
+                                                            <Setter Value="Green" Target="PART_content.(PART_content.Foreground)"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                    <VisualState x:Name="Unchecked">
+                                                        <VisualState.Setters>
+                                                            <Setter Value="&#xE711;" Target="PART_content.(PART_content.Text)" />
+                                                            <Setter Value="Red" Target="PART_content.(PART_content.Foreground)" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                </VisualStateGroup.States>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+                                        <TextBlock x:Name="PART_content" FontSize="20" Foreground="Red" 
+                                                   FontFamily="Segoe MDL2 Assets" Text="&#xE102;"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -97,7 +131,7 @@
             <Ellipse.Fill>
                 <ImageBrush>
                     <ImageBrush.ImageSource>
-                        <BitmapImage UriSource="{x:Bind InstaUserInfo.ProfilePicUrl}" />
+                        <BitmapImage UriSource="{x:Bind InstaUserInfo.ProfilePicUrl, Mode=OneWay}" />
                     </ImageBrush.ImageSource>
                 </ImageBrush>
             </Ellipse.Fill>
@@ -119,14 +153,14 @@
                                 HorizontalAlignment="Stretch"
                                 Click="FollowButton_Click"
                                 CornerRadius="5"
-                                IsEnabled="{x:Bind ButtonFollow, Mode=TwoWay}"
+                                IsEnabled="{x:Bind ButtonFollow, Mode=OneWay}"
                                 Text="Follow" />
                             <MenuFlyoutItem
                                 x:Name="unfollowButton"
                                 HorizontalAlignment="Stretch"
                                 Click="UnfollowButton_Click"
                                 CornerRadius="5"
-                                IsEnabled="{x:Bind ButtonUnFollow, Mode=TwoWay}"
+                                IsEnabled="{x:Bind ButtonUnFollow, Mode=OneWay}"
                                 Text="Unfollow" />
                             <MenuFlyoutItem
                                 x:Name="saveButton"
@@ -147,7 +181,7 @@
                     Grid.Column="1"
                     HorizontalAlignment="Center"
                     FontSize="25"
-                    Text="{x:Bind InstaUserInfo.FullName}"
+                    Text="{x:Bind InstaUserInfo.FullName, Mode=OneWay}"
                     TextWrapping="Wrap" />
                 <StackPanel Margin="2" Orientation="Horizontal">
                     <TextBlock
@@ -157,7 +191,7 @@
                     <TextBlock
                         Grid.Column="1"
                         FontSize="20"
-                        Text="{x:Bind InstaUserInfo.FollowingCount}"
+                        Text="{x:Bind InstaUserInfo.FollowingCount, Mode=OneWay}"
                         TextWrapping="Wrap" />
                 </StackPanel>
                 <StackPanel Margin="2" Orientation="Horizontal">
@@ -168,7 +202,7 @@
                     <TextBlock
                         Grid.Column="1"
                         FontSize="20"
-                        Text="{x:Bind InstaUserInfo.FollowerCount}"
+                        Text="{x:Bind InstaUserInfo.FollowerCount, Mode=OneWay}"
                         TextWrapping="Wrap" />
                 </StackPanel>
                 <StackPanel Margin="2" Orientation="Horizontal">
@@ -179,7 +213,7 @@
                     <TextBlock
                         Grid.Column="1"
                         FontSize="20"
-                        Text="{x:Bind InstaUserInfo.MediaCount}"
+                        Text="{x:Bind InstaUserInfo.MediaCount, Mode=OneWay}"
                         TextWrapping="Wrap" />
                     <ProgressRing x:Name="ProgressAllPosts" Margin="5, 0, 0, 0"
                                   Width="5"
@@ -192,25 +226,39 @@
                         x:Uid="IsPrivate"
                         Margin="0, 0, 10, 0"
                         FontSize="20" />
-                    <TextBlock
-                        Grid.Column="1"
-                        FontSize="20"
-                        Text="{x:Bind InstaUserInfo.IsPrivate}"
-                        TextWrapping="Wrap" />
+                    <CheckBox
+                        FontSize="25"
+                        VerticalContentAlignment="Center"
+                        Margin="0, 7, 0, 0"
+                        IsEnabled="False"
+                        IsChecked="{x:Bind InstaUserInfo.IsPrivate, Mode=OneWay}"
+                        Style="{StaticResource BoolStyle}"
+                        />
                 </StackPanel>
                 <StackPanel Margin="2" Orientation="Horizontal">
                     <TextBlock
                         x:Uid="FollowingOn"
                         Margin="0, 0, 10, 0"
                         FontSize="20" />
-                    <TextBlock FontSize="20" Text="{x:Bind InstaUserInfo.FriendshipStatus.Following}" />
+                    <CheckBox FontSize="25"
+                              Margin="0, 7, 0, 0"
+                              VerticalContentAlignment="Center"
+                              HorizontalAlignment="Center"
+                              IsEnabled="False"
+                              IsChecked="{x:Bind InstaUserInfo.FriendshipStatus.Following, Mode=OneWay}" 
+                              Style="{StaticResource BoolStyle}"/>
                 </StackPanel>
                 <StackPanel Margin="2" Orientation="Horizontal">
                     <TextBlock
                         x:Uid="FollowedBy"
                         Margin="0, 0, 10, 0"
                         FontSize="20" />
-                    <TextBlock FontSize="20" Text="{x:Bind InstaUserInfo.FriendshipStatus.FollowedBy}" />
+                    <CheckBox FontSize="25" 
+                              VerticalContentAlignment="Center"
+                              Margin="0, 7, 0, 0"
+                              IsEnabled="False"
+                              IsChecked="{x:Bind InstaUserInfo.FriendshipStatus.FollowedBy, Mode=OneWay}" 
+                              Style="{StaticResource BoolStyle}"/>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
