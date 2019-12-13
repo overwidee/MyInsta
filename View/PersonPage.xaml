@@ -94,7 +94,7 @@
                                             </VisualStateGroup>
                                         </VisualStateManager.VisualStateGroups>
                                         <TextBlock x:Name="PART_content" FontSize="20" Foreground="Red" 
-                                                   FontFamily="Segoe MDL2 Assets" Text="&#xE102;"/>
+                                                   FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center"/>
                                     </Border>
                                 </ControlTemplate>
                             </Setter.Value>
@@ -229,7 +229,6 @@
                     <CheckBox
                         FontSize="25"
                         VerticalContentAlignment="Center"
-                        Margin="0, 7, 0, 0"
                         IsEnabled="False"
                         IsChecked="{x:Bind InstaUserInfo.IsPrivate, Mode=OneWay}"
                         Style="{StaticResource BoolStyle}"
@@ -241,7 +240,6 @@
                         Margin="0, 0, 10, 0"
                         FontSize="20" />
                     <CheckBox FontSize="25"
-                              Margin="0, 7, 0, 0"
                               VerticalContentAlignment="Center"
                               HorizontalAlignment="Center"
                               IsEnabled="False"
@@ -255,7 +253,6 @@
                         FontSize="20" />
                     <CheckBox FontSize="25" 
                               VerticalContentAlignment="Center"
-                              Margin="0, 7, 0, 0"
                               IsEnabled="False"
                               IsChecked="{x:Bind InstaUserInfo.FriendshipStatus.FollowedBy, Mode=OneWay}" 
                               Style="{StaticResource BoolStyle}"/>
