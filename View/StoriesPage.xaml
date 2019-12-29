@@ -41,7 +41,7 @@
     <Grid Background="{ThemeResource CMapUwpAcrylicBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="110" />
-            <RowDefinition Height="40" />
+            <RowDefinition Height="60" />
             <RowDefinition Height="107*" />
         </Grid.RowDefinitions>
         <Image x:Name="imageBack" Grid.RowSpan="3" Stretch="Fill" Source="{x:Bind SelectedUserStory.User.ProfilePicUrl, Mode=OneWay}">
@@ -101,6 +101,7 @@
             FontWeight="Bold"
             FontSize="20"
             CornerRadius="5"
+            Margin="10"
             Click="userBox_Click"
             Content="{x:Bind SelectedUserStory.User.UserName, Mode=TwoWay}" />
         <Frame
