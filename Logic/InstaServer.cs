@@ -50,7 +50,7 @@ namespace MyInsta.Logic
             ConnectionProfile internetConnectionProfile = GetInternetConnectionProfile();
             return internetConnectionProfile?.IsWlanConnectionProfile ?? false;
         }
-        
+
 
         #endregion
 
@@ -125,6 +125,11 @@ namespace MyInsta.Logic
                                 page.Frame.Navigate(typeof(VerifyPage), userObject);
                                 break;
                             case InstaLoginResult.TwoFactorRequired:
+                                userObject.API = await LoginByTwoFactor(userObject);
+                                if (userObject.API != null)
+                                {
+                                    page.Frame.Navigate(typeof(MenuPage), userObject);
+                                }
                                 break;
                             case InstaLoginResult.CheckpointLoggedOut:
                                 break;
@@ -189,6 +194,7 @@ namespace MyInsta.Logic
                 if (result.Value == InstaLoginResult.TwoFactorRequired)
                 {
                     // TwoFactorRequired
+                    await user.API.SendTwoFactorLoginSMSAsync();
                     var dialog = new InputDialog("Two factor required code:", "Send");
                     if (await dialog.ShowAsync() == ContentDialogResult.Primary)
                     {
@@ -212,6 +218,26 @@ namespace MyInsta.Logic
 
                 await SaveApiString(user.API);
                 return user.API;
+            }
+
+            return null;
+        }
+
+        public static async Task<IInstaApi> LoginByTwoFactor(User user)
+        {
+            await user.API.SendTwoFactorLoginSMSAsync();
+            var dialog = new InputDialog("Two factor required code:", "Send");
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            {
+                var res = await user.API.TwoFactorLoginAsync(dialog.ResultText);
+                if (res.Succeeded)
+                {
+                    ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+                    localSettings.Values["Login"] = user.LoginUser;
+                    localSettings.Values["Password"] = user.PasswordUser;
+                    await SaveApiString(user.API);
+                    return user.API;
+                }
             }
 
             return null;
@@ -627,7 +653,7 @@ namespace MyInsta.Logic
 
         public static async IAsyncEnumerable<PostItem> GetMediasPostItems(User user, InstaUserInfo selectInstaUserInfo)
         {
-            while(LatestMediaMaxId != null)
+            while (LatestMediaMaxId != null)
             {
                 foreach (var variable in GetUrlsMediasUser(await GetMediaUser(user, selectInstaUserInfo), selectInstaUserInfo))
                 {
@@ -1020,7 +1046,7 @@ namespace MyInsta.Logic
                 });
                 task.Wait();
             }
-            _ = result != null && result.Value ? new CustomDialog("Message", $"Media downloaded\n", "All right") 
+            _ = result != null && result.Value ? new CustomDialog("Message", $"Media downloaded\n", "All right")
                 : new CustomDialog("Message", "Failed\n", "All right");
 
             return result ?? false;

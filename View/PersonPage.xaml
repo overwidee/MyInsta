@@ -5,8 +5,10 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:MyInsta.View"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
     xmlns:localInsta="using:InstagramApiSharp.Classes.Models"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
     xmlns:model="using:MyInsta.Model"
     mc:Ignorable="d"
     Background="{ThemeResource SystemControlAcrylicElementBrush}"
@@ -19,7 +21,7 @@
                 <ResourceDictionary x:Key="Default">
                     <AcrylicBrush
                         x:Key="CMapUwpAcrylicBrush"
-                        BackgroundSource="HostBackdrop"
+                        BackgroundSource="Backdrop"
                         FallbackColor="{StaticResource SystemAccentColor}"
                         TintColor="Black"
                         TintOpacity="0.4" />
@@ -30,7 +32,7 @@
                 <ResourceDictionary x:Key="Light">
                     <AcrylicBrush
                         x:Key="CMapUwpAcrylicBrush"
-                        BackgroundSource="HostBackdrop"
+                        BackgroundSource="Backdrop"
                         FallbackColor="{StaticResource SystemAccentColor}"
                         TintColor="Black"
                         TintOpacity="0.4" />
@@ -106,8 +108,9 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
-
-    <Grid Background="{ThemeResource CMapUwpAcrylicBrush}">
+    
+    <Frame Background="{ThemeResource CMapUwpAcrylicBrush}">
+        <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="34" />
             <RowDefinition Height="166" />
@@ -121,6 +124,11 @@
             <ColumnDefinition Width="131*" />
             <ColumnDefinition Width="131*" />
         </Grid.ColumnDefinitions>
+            <Image Grid.Column="1" Grid.ColumnSpan="4" Stretch="Fill" Grid.RowSpan="4" Source="{x:Bind InstaUserInfo.ProfilePicUrl, Mode=OneWay}">
+            <interactivity:Interaction.Behaviors>
+                <behaviors:Blur Value="100"></behaviors:Blur>
+            </interactivity:Interaction.Behaviors> 
+        </Image>
         <Ellipse
             Grid.Row="0"
             Grid.RowSpan="3"
@@ -136,7 +144,7 @@
                 </ImageBrush>
             </Ellipse.Fill>
         </Ellipse>
-        <ScrollViewer Grid.Row="3">
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Hidden">
             <StackPanel Margin="10, 0, 10, 0">
                 <Button
                     x:Name="buttonAction"
@@ -264,7 +272,6 @@
             Grid.RowSpan="4"
             Grid.Column="1"
             Grid.ColumnSpan="4"
-            Margin="10"
             Background="{ThemeResource CMapUwpAcrylicBrush}"
             FontFamily="Myanmar Text"
             TabWidthBehavior="Equal">
@@ -580,5 +587,5 @@
             </controls:TabViewItem>
         </controls:TabView>
     </Grid>
-
+    </Frame>
 </Page>

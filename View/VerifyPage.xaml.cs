@@ -46,7 +46,7 @@ namespace MyInsta.View
 
         private async void loginButton_Click(object sender, RoutedEventArgs e)
         {
-            MainProgressRing.IsActive = true;
+            MainProgressRing.Visibility = Visibility.Visible;
             IsEnabled = false;
             var api = await InstaServer.LoginByCode(InstaUser, textCode.Text);
             if (api != null)

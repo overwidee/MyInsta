@@ -7,6 +7,8 @@
     xmlns:localInsta="using:InstagramApiSharp.Classes.Models"
     xmlns:localInsta1="using:MyInsta.Model"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
     mc:Ignorable="d"
     Background="{ThemeResource SystemControlAcrylicElementBrush}">
 
@@ -42,6 +44,11 @@
             <RowDefinition Height="40" />
             <RowDefinition Height="107*" />
         </Grid.RowDefinitions>
+        <Image x:Name="imageBack" Grid.RowSpan="3" Stretch="Fill" Source="{x:Bind SelectedUserStory.User.ProfilePicUrl, Mode=OneWay}">
+            <interactivity:Interaction.Behaviors>
+                <behaviors:Blur Value="100"></behaviors:Blur>
+            </interactivity:Interaction.Behaviors>
+        </Image>
         <ProgressRing
             x:Name="progressStories"
             Grid.Row="2"

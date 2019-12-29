@@ -67,7 +67,9 @@ namespace MyInsta.View
         private void Grid_KeyUp(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Enter)
+            {
                 _ = LoginInsta();
+            }
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
