@@ -324,10 +324,11 @@
                                                 x:Name="itemsList"
                                                 Width="500"
                                                 HorizontalContentAlignment="Center"
-                                                Foreground="{x:Null}"
+                                                Background="{x:Null}"
+                                                CanBeScrollAnchor="True"
                                                 ItemsSource="{x:Bind Items}"
-                                                ScrollViewer.HorizontalScrollMode="Disabled"
-                                                Tapped="MediaList_SelectionChanged">
+
+                                                Tapped="MediaList_SelectionChanged" PointerWheelChanged="itemsList_PointerWheelChanged">
                                                 <FlipView.ItemsPanel>
                                                     <ItemsPanelTemplate>
                                                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" />
@@ -335,11 +336,11 @@
                                                 </FlipView.ItemsPanel>
                                                 <FlipView.ItemTemplate>
                                                     <DataTemplate x:DataType="model:CustomMedia">
-                                                        <StackPanel>
+                                                        <StackPanel PointerWheelChanged="Image_PointerWheelChanged" >
                                                             <Image
                                                                 Height="400"
                                                                 Margin="10"
-                                                                Source="{x:Bind UrlSmallImage}" />
+                                                                Source="{x:Bind UrlSmallImage}"/>
                                                         </StackPanel>
                                                     </DataTemplate>
                                                 </FlipView.ItemTemplate>

@@ -285,18 +285,12 @@ namespace MyInsta.View
             var high = UrlStories.FirstOrDefault(x => x.Pk == ((Image)sender).Tag.ToString());
             if (high != null)
             {
-                var urlMedia = "";
-                switch (high.MediaType)
+                string urlMedia = high.MediaType switch
                 {
-                    case MediaType.Image:
-                        urlMedia = high.UrlBigImage;
-                        break;
-                    case MediaType.Video:
-                        urlMedia = high.UrlVideo;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                    MediaType.Image => high.UrlBigImage,
+                    MediaType.Video => high.UrlVideo,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
 
                 var mediaDialog = new MediaDialog(CurrentUser, high.Pk, urlMedia, high.MediaType, 0);
                 await mediaDialog.ShowMediaAsync();
@@ -349,6 +343,18 @@ namespace MyInsta.View
                     first.Items[0].Liked = false;
                 }
             }
+        }
+
+
+        private void Image_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            //base.OnPointerWheelChanged(e);
+            //e.Handled = true;
+        }
+
+        private void itemsList_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            
         }
     }
 }

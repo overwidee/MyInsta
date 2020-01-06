@@ -2,13 +2,20 @@
 using MyInsta.View;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.Devices.Input;
+using Windows.UI.Popups;
+using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using Point = Windows.Foundation.Point;
 
 namespace MyInsta.Logic
 {
@@ -33,57 +40,107 @@ namespace MyInsta.Logic
         {
             var contentDialog = new ContentDialog()
             {
-                Height = (type == 0) ? 1100 : 800,
-                Width = (type == 0) ? 800 : 1100,
+                //Height = (type == 0) ? 1100 : 1000,
+                //Width = (type == 0) ? 1000 : 1100,
                 SecondaryButtonText = "All right",
                 PrimaryButtonText = "Copy link",
-                Tag = Url
+                Tag = Url,
+                FullSizeDesired = true
             };
             contentDialog.PrimaryButtonClick += delegate
             {
                 var dataPackage = new DataPackage();
                 dataPackage.SetText(Url);
-                Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(dataPackage);
+                Clipboard.SetContent(dataPackage);
             };
 
-            if (MediaType == MediaType.Video)
+            switch (MediaType)
             {
-                var media = new MediaElement()
+                case MediaType.Video:
                 {
-                    Source = new Uri(Url),
-                    Width = (type == 0) ? 350 : 1000,
-                    Height = (type == 0) ? 1100 : 450,
-                    AutoPlay = true,
+                    var media = new MediaElement()
+                    {
+                        Source = new Uri(Url),
+                        AutoPlay = true,
+                        HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
+                        VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center,
+                        IsLooping = true
+                    };
+                    media.Tapped += async (s, e) =>
+                    {
+                        var popup = new PopupMenu();
+                        popup.Commands.Add(new UICommand()
+                        {
+                            Label = "Full screen",
+                            Invoked = async (args) =>
+                            {
+                                contentDialog.Hide();
+                                var newCoreAppView = CoreApplication.CreateNewView();
+                                var appView = ApplicationView.GetForCurrentView();
+                                await newCoreAppView.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+                                {
+                                    var window = Window.Current;
+                                    var newAppView = ApplicationView.GetForCurrentView();
 
-                    HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
-                    VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center,
-                    IsLooping = true
-                };
-                media.Tapped += (s, e) =>
+                                    var frame = new Frame();
+                                    window.Content = frame;
+
+                                    frame.Navigate(typeof(BlankPage), Url);
+                                    window.Activate();
+                                    await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newAppView.Id, ViewSizePreference.UseMinimum, appView.Id, ViewSizePreference.UseMinimum);
+                                });
+                            }
+                        });
+                        await popup.ShowAsync(new Point(e.GetPosition(contentDialog).X, e.GetPosition(contentDialog).Y));
+                    };
+                    contentDialog.Content = media;
+                    break;
+                }
+                case MediaType.Image:
                 {
-                    if (((MediaElement)s).CurrentState == MediaElementState.Playing)
+                    var imageMedia = new Image()
                     {
-                        ((MediaElement)s).Pause();
-                    }
-                    else
+                        Source = new BitmapImage(new Uri(Url, UriKind.Absolute)),
+                        //Width = (type == 0) ? 350 : 1000,
+                        //Height = (type == 0) ? 1100 : 450,
+                        Stretch = Stretch.Uniform,
+                        HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
+                        VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center
+                    };
+                    imageMedia.Tapped += async (s, e) =>
                     {
-                        ((MediaElement)s).Play();
-                    }
-                };
-                contentDialog.Content = media;
-            }
-            else if (MediaType == MediaType.Image)
-            {
-                var imageMedia = new Image()
-                {
-                    Source = new BitmapImage(new Uri(Url, UriKind.Absolute)),
-                    Width = (type == 0) ? 350 : 1000,
-                    Height = (type == 0) ? 1100 : 450,
-                    Stretch = Stretch.Uniform,
-                    HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
-                    VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center
-                };
-                contentDialog.Content = imageMedia;
+                        var popup = new PopupMenu();
+                        popup.Commands.Add(new UICommand()
+                        {
+                            Label = "Full screen",
+                            Invoked = async (args) =>
+                            {
+                                contentDialog.Hide();
+                                var newCoreAppView = CoreApplication.CreateNewView();
+                                var appView = ApplicationView.GetForCurrentView();
+                                await newCoreAppView.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                                    async () =>
+                                    {
+                                        var window = Window.Current;
+                                        var newAppView = ApplicationView.GetForCurrentView();
+
+                                        var frame = new Frame();
+                                        window.Content = frame;
+
+                                        frame.Navigate(typeof(ImagePage), Url);
+                                        window.Activate();
+                                        await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newAppView.Id,
+                                            ViewSizePreference.UseMinimum, appView.Id, ViewSizePreference.UseMinimum);
+                                    });
+                            }
+                        });
+                        await popup.ShowAsync(new Point(e.GetPosition(contentDialog).X, e.GetPosition(contentDialog).Y));
+                    };
+                    contentDialog.Content = imageMedia;
+                    break;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
             _ = await contentDialog.ShowAsync();
         }
