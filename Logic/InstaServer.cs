@@ -41,6 +41,7 @@ namespace MyInsta.Logic
         public static event CompleteHandler OnUserPostsLoaded;
         public static event CompleteHandler OnUserCollectionLoaded;
         public static event CompleteHandler OnUserAllPostsLoaded;
+        public static event CompleteHandler OnUserExploreFeedLoaded;
 
         #endregion
 
@@ -780,7 +781,7 @@ namespace MyInsta.Logic
             {
                 PrimaryButtonText = "Send",
                 SecondaryButtonText = "Cancel",
-                Width = 1200
+                FullSizeDesired = true
             };
             InstaMediaType mediaType = InstaMediaType.Image;
             CustomMedia media = medias[0];
@@ -795,8 +796,8 @@ namespace MyInsta.Logic
 
             var frame = new Frame()
             {
-                Width = 1000,
-                Height = 400
+                //Width = 1000,
+                //Height = 400
             };
             frame.Navigate(typeof(SharedPage), new object[]
                 {
@@ -1309,6 +1310,39 @@ namespace MyInsta.Logic
                                                                       .ToList());
         }
 
+        #endregion
+
+        #region Explore
+        public static async Task<ObservableCollection<PostItem>> GetExploreFeed(User user)
+        {
+            var feed = await user.API.FeedProcessor.GetExploreFeedAsync(PaginationParameters.MaxPagesToLoad(1));
+            var i = 0;
+            var result = new ObservableCollection<PostItem>();
+            foreach (var item in feed.Value.Medias)
+            {
+                result.Add(GetPostItem(item, i));
+                i++;
+            }
+
+            OnUserExploreFeedLoaded?.Invoke();
+            return result;
+        }
+
+        public static async Task<ObservableCollection<PostItem>> GetFeedByTag(User user, string tag)
+        {
+            var feed = await user.API.FeedProcessor.GetTagFeedAsync(tag, PaginationParameters.MaxPagesToLoad(1));
+
+            var i = 0;
+            var result = new ObservableCollection<PostItem>();
+            foreach (var item in feed.Value.Medias)
+            {
+                result.Add(GetPostItem(item, i));
+                i++;
+            }
+
+            OnUserExploreFeedLoaded?.Invoke();
+            return result;
+        }
         #endregion
     }
 }

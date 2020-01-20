@@ -19,7 +19,7 @@
                     <AcrylicBrush
                         x:Key="CMapUwpAcrylicBrush"
                         BackgroundSource="HostBackdrop"
-                        FallbackColor="{StaticResource SystemAccentColor}"
+                        FallbackColor="{StaticResource SystemListMediumColor}"
                         TintColor="Black"
                         TintOpacity="0.4" />
                 </ResourceDictionary>
@@ -30,7 +30,7 @@
                     <AcrylicBrush
                         x:Key="CMapUwpAcrylicBrush"
                         BackgroundSource="HostBackdrop"
-                        FallbackColor="{StaticResource SystemAccentColor}"
+                        FallbackColor="{StaticResource SystemListMediumColor}"
                         TintColor="Black"
                         TintOpacity="0.4" />
                 </ResourceDictionary>
@@ -125,10 +125,10 @@
                             <StackPanel Orientation="Vertical" Margin="20">
                                 <TextBlock
                                     HorizontalAlignment="Center"
-                                    Text="{x:Bind DatePost}"/>
+                                    Text="{x:Bind DatePost}" FontWeight="Bold"/>
                                 <Image
                                     Width="500"
-                                    Height="400"
+                                    Height="500"
                                     Margin="5"
                                     HorizontalAlignment="Center"
                                     Source="{x:Bind UrlBigImage}"

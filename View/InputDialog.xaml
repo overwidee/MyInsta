@@ -9,7 +9,7 @@
     Title="TITLE"
     PrimaryButtonText="Ok"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    Background="{ThemeResource SystemControlHighlightAccentBrush}">
+    Background="{StaticResource ListBoxBorderThemeBrush}">
     <Grid>
         <TextBox MinWidth="300" Text="{x:Bind ResultText, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>

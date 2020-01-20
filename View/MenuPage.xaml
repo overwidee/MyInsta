@@ -5,8 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:MyInsta.View"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    MinWidth="800"
-    MinHeight="600"
     mc:Ignorable="d"
     Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
 
@@ -17,7 +15,7 @@
                     <AcrylicBrush
                         x:Key="CMapUwpAcrylicBrush"
                         BackgroundSource="HostBackdrop"
-                        FallbackColor="{StaticResource SystemAccentColor}"
+                        FallbackColor="{StaticResource SystemListMediumColor}"
                         TintColor="Black"
                         TintOpacity="0.4" />
                 </ResourceDictionary>
@@ -28,7 +26,7 @@
                     <AcrylicBrush
                         x:Key="CMapUwpAcrylicBrush"
                         BackgroundSource="HostBackdrop"
-                        FallbackColor="{StaticResource SystemAccentColor}"
+                        FallbackColor="{StaticResource SystemListMediumColor}"
                         TintColor="Black"
                         TintOpacity="0.4" />
                 </ResourceDictionary>
@@ -53,16 +51,21 @@
 
     <Grid Background="{ThemeResource CMapUwpAcrylicBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="32" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Background="{ThemeResource CMapUwpAcrylicBrush}" />
-        <TextBlock
-            Grid.Row="0" Margin="5"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            FontSize="17"
-            Text="My Insta" />
+        <Grid Grid.Row="0" x:Name="TitleBar">
+            <Rectangle x:Name="BackgroundElement" Fill="Transparent" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Image Height="32" Margin="5,5" Source="/Assets/instagram-logo.png" />
+                <TextBlock Margin="10, 5" FontWeight="Bold" Grid.Column="1" VerticalAlignment="Center" Text="MyInsta" />
+            </Grid>
+        </Grid>
         <Grid Grid.Row="1">
             <NavigationView
                 x:Name="NavView"
@@ -70,7 +73,6 @@
                 IsBackButtonVisible="Visible"
                 ItemInvoked="NavigationViewControl_ItemInvoked"
                 Loaded="NavigationViewControl_Loaded"
-                OpenPaneLength="250"
                 IsSettingsVisible="True"
                 PaneDisplayMode="LeftCompact">
                 <NavigationView.MenuItems>
@@ -116,6 +118,11 @@
                         Content="Stories"
                         Icon="Camera"
                         Tag="Stories" />
+                    <NavigationViewItem
+                        x:Name="button_explore"
+                        Content="Explore"
+                        Icon="World"
+                        Tag="Explore" />
                     <NavigationViewItem
                         x:Name="button_savedPosts"
                         Content="Saved posts"

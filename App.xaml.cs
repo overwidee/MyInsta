@@ -88,7 +88,7 @@ namespace MyInsta
                 }
                 // Обеспечение активности текущего окна
 
-                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(800, 600));
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(){ Height = 600, Width = 800});
                 Window.Current.Activate();
             }
         }

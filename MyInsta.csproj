@@ -166,6 +166,9 @@
     <Compile Include="View\Direct.xaml.cs">
       <DependentUpon>Direct.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ExplorePage.xaml.cs">
+      <DependentUpon>ExplorePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ImagePage.xaml.cs">
       <DependentUpon>ImagePage.xaml</DependentUpon>
     </Compile>
@@ -317,6 +320,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Direct.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ExplorePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

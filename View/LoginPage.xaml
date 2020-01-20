@@ -15,7 +15,7 @@
                           BackgroundSource="HostBackdrop"
                           TintColor="Black"
                           TintOpacity="0.4"
-                          FallbackColor="{StaticResource SystemAccentColor}"/>
+                          FallbackColor="{StaticResource SystemListMediumColor}"/>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="HighContrast">
                     <SolidColorBrush x:Key="CMapUwpAcrylicBrush"
@@ -26,7 +26,7 @@
                           BackgroundSource="HostBackdrop"
                           TintColor="Black"
                           TintOpacity="0.4"
-                          FallbackColor="{StaticResource SystemAccentColor}"/>
+                          FallbackColor="{StaticResource SystemListMediumColor}"/>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>

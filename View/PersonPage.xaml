@@ -22,7 +22,7 @@
                     <AcrylicBrush
                         x:Key="CMapUwpAcrylicBrush"
                         BackgroundSource="Backdrop"
-                        FallbackColor="{StaticResource SystemAccentColor}"
+                        FallbackColor="{StaticResource SystemListMediumColor}"
                         TintColor="Black"
                         TintOpacity="0.4" />
                 </ResourceDictionary>
@@ -33,7 +33,7 @@
                     <AcrylicBrush
                         x:Key="CMapUwpAcrylicBrush"
                         BackgroundSource="Backdrop"
-                        FallbackColor="{StaticResource SystemAccentColor}"
+                        FallbackColor="{StaticResource SystemListMediumColor}"
                         TintColor="Black"
                         TintOpacity="0.4" />
                 </ResourceDictionary>
@@ -189,7 +189,8 @@
                     Grid.Column="1"
                     HorizontalAlignment="Center"
                     FontSize="25"
-                    Text="{x:Bind InstaUserInfo.FullName, Mode=OneWay}"
+                    FontWeight="Light"
+                    Text="{x:Bind InstaUserInfo.Username, Mode=OneWay}"
                     TextWrapping="Wrap" />
                 <StackPanel Margin="2" Orientation="Horizontal">
                     <TextBlock
@@ -322,7 +323,7 @@
                                         <StackPanel Orientation="Vertical">
                                             <FlipView
                                                 x:Name="itemsList"
-                                                Width="500"
+                                                Width="400"
                                                 HorizontalContentAlignment="Center"
                                                 Background="{x:Null}"
                                                 CanBeScrollAnchor="True"
@@ -378,7 +379,7 @@
                                                     Grid.Column="0"
                                                     Margin="10"
                                                     HorizontalAlignment="Left"
-                                                    CornerRadius="5"
+                                                    CornerRadius="10"
                                                     IsChecked="{x:Bind Items[0].Liked}"
                                                     Click="ButtonLike_Click"
                                                     Tag="{x:Bind Id}"
@@ -393,10 +394,11 @@
                                                             HorizontalAlignment="Right">
                                                 <Button
                                                     x:Name="buttonDownload"
-                                                    Margin="10"
+                                                    Margin="5"
                                                     HorizontalAlignment="Center"
                                                     Click="ButtonDownload_Click"
-                                                    CornerRadius="5"
+                                                    ToolTipService.ToolTip="Download on PC"
+                                                    CornerRadius="10"
                                                     Tag="{x:Bind Id}">
                                                     <Button.Content>
                                                         <SymbolIcon Symbol="Download" />
@@ -404,9 +406,9 @@
                                                 </Button>
                                                 <Button
                                                     x:Name="buttonSaveInProfile"
-                                                    Margin="10"
+                                                    Margin="5"
                                                     Click="ButtonSaveInProfile_Click"
-                                                    CornerRadius="5"
+                                                    CornerRadius="10"
                                                     ToolTipService.ToolTip="Add to saved posts"
                                                     Tag="{x:Bind Items[0].Pk}">
                                                     <Button.Content>
@@ -415,9 +417,9 @@
                                                 </Button>
                                                 <Button
                                                     x:Name="buttonShare"
-                                                    Margin="10"
+                                                    Margin="5"
                                                     Click="ButtonShare_Click"
-                                                    CornerRadius="5"
+                                                    CornerRadius="10"
                                                     ToolTipService.ToolTip="Share in direct"
                                                     Tag="{x:Bind Id}">
                                                     <Button.Content>

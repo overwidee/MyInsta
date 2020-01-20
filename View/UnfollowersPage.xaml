@@ -16,7 +16,7 @@
                     <AcrylicBrush
                         x:Key="CMapUwpAcrylicBrush"
                         BackgroundSource="HostBackdrop"
-                        FallbackColor="{StaticResource SystemAccentColor}"
+                        FallbackColor="{StaticResource SystemListMediumColor}"
                         TintColor="Black"
                         TintOpacity="0.4" />
                 </ResourceDictionary>
@@ -27,7 +27,7 @@
                     <AcrylicBrush
                         x:Key="CMapUwpAcrylicBrush"
                         BackgroundSource="HostBackdrop"
-                        FallbackColor="{StaticResource SystemAccentColor}"
+                        FallbackColor="{StaticResource SystemListMediumColor}"
                         TintColor="Black"
                         TintOpacity="0.4" />
                 </ResourceDictionary>

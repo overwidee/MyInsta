@@ -4,6 +4,7 @@ using System.Linq;
 using MyInsta.Logic;
 using MyInsta.Model;
 using Windows.ApplicationModel.Core;
+using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -24,6 +25,8 @@ namespace MyInsta.View
             titleBar.ButtonBackgroundColor = Colors.Transparent;
             CoreApplicationViewTitleBar bar = CoreApplication.GetCurrentView().TitleBar;
             bar.ExtendViewIntoTitleBar = true;
+            Window.Current.SetTitleBar(BackgroundElement);
+
         }
 
         User InstaUser { get; set; }
@@ -89,6 +92,9 @@ namespace MyInsta.View
                         break;
                     case "Preview":
                         contentFrame.Navigate(typeof(PreviewPostsPage), InstaUser);
+                        break;
+                    case "Explore":
+                        contentFrame.Navigate(typeof(ExplorePage), InstaUser);
                         break;
                     case "User":
                         var curt = await InstaServer.GetInstaUserShortById(InstaUser, InstaUser.UserData.Pk);
