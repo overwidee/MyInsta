@@ -46,6 +46,13 @@
                 BackgroundSource="HostBackdrop"
                 TintColor="{ThemeResource SystemChromeMediumColor}"
                 TintOpacity=".7" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <Style TargetType="NavigationViewItem" x:Key="TextStyle">
+                        <Setter Property="FontWeight" Value="Light"/>
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -81,29 +88,34 @@
                         x:Uid="Followers"
                         Content="Followers"
                         Icon="People"
+                        Style="{StaticResource TextStyle}"
                         Tag="Followers" />
                     <NavigationViewItem
                         x:Name="page_unfollowers"
                         x:Uid="Unfollowers"
                         Content="Unfollowers"
+                        Style="{StaticResource TextStyle}"
                         Icon="UnFavorite"
                         Tag="Unfollowers" />
                     <NavigationViewItem
                         x:Name="page_friends"
                         x:Uid="Friends"
                         Content="Friends"
+                        Style="{StaticResource TextStyle}"
                         Icon="Favorite"
                         Tag="Friends" />
                     <NavigationViewItem
                         x:Name="page_search"
                         x:Uid="SearchProfile"
                         Content="Search profile"
+                        Style="{StaticResource TextStyle}"
                         Icon="Find"
                         Tag="Search" />
                     <NavigationViewItemSeparator />
                     <NavigationViewItem
                         x:Name="button_sync"
                         x:Uid="Sync"
+                        Style="{StaticResource TextStyle}"
                         Content="Sync"
                         Icon="Sync"
                         Tag="Sync" />
@@ -112,21 +124,25 @@
                         x:Name="button_bookmarks"
                         Content="Bookmarks"
                         Icon="Pin"
+                        Style="{StaticResource TextStyle}"
                         Tag="Bookmarks" />
                     <NavigationViewItem
                         x:Name="button_stories"
                         Content="Stories"
                         Icon="Camera"
+                        Style="{StaticResource TextStyle}"
                         Tag="Stories" />
                     <NavigationViewItem
                         x:Name="button_explore"
                         Content="Explore"
                         Icon="World"
+                        Style="{StaticResource TextStyle}"
                         Tag="Explore" />
                     <NavigationViewItem
                         x:Name="button_savedPosts"
                         Content="Saved posts"
                         Icon="SlideShow"
+                        Style="{StaticResource TextStyle}"
                         Tag="Saved" />
                     <!--<NavigationViewItem
                         x:Name="button_direct"
@@ -139,11 +155,13 @@
                         x:Name="button_preview"
                         Content="Preview"
                         Icon="ViewAll"
+                        Style="{StaticResource TextStyle}"
                         Tag="Preview" />
                     <NavigationViewItem 
                         x:Name="MainUser" 
                         Icon="Contact" 
                         Content="Account" 
+                        Style="{StaticResource TextStyle}"
                         Tag="User" 
                         />
 

@@ -10,6 +10,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -355,6 +356,33 @@ namespace MyInsta.View
         private void itemsList_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
             
+        }
+
+        CoreCursor cursorBeforePointerEntered = null;
+        private void UIElement_OnPointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            cursorBeforePointerEntered = Window.Current.CoreWindow.PointerCursor;
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Hand, 0);
+        }
+
+        private void UIElement_OnPointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = cursorBeforePointerEntered;
+        }
+
+        private async void UIElement_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            await InstaServer.ShowFollowers(CurrentUser, SelectUser.UserName, Frame);
+        }
+
+        private async void FollowingBlock_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            await InstaServer.ShowFollowing(CurrentUser, SelectUser.UserName, Frame);
+        }
+
+        private async void LikesBlock_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            await InstaServer.ShowLikers(CurrentUser, ((TextBlock)sender).Tag.ToString(), Frame);
         }
     }
 }

@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Networking.Connectivity;
@@ -23,12 +24,17 @@ using static Windows.Networking.Connectivity.NetworkInformation;
 
 namespace MyInsta.Logic
 {
+    public enum DataType
+    {
+        Followers,
+        Following,
+        Likers
+    }
     public static class InstaServer
     {
         public static string LatestMediaMaxId = string.Empty;
         private static CancellationTokenSource cancellationTokenMedia;
         public delegate void CompleteHandler();
-
 
         #region Events
 
@@ -42,14 +48,14 @@ namespace MyInsta.Logic
         public static event CompleteHandler OnUserCollectionLoaded;
         public static event CompleteHandler OnUserAllPostsLoaded;
         public static event CompleteHandler OnUserExploreFeedLoaded;
+        public static event CompleteHandler OnCommonDataLoaded;
 
         #endregion
 
         #region Internet
         public static bool IsInternetConnected()
         {
-            ConnectionProfile internetConnectionProfile = GetInternetConnectionProfile();
-            return internetConnectionProfile?.IsWlanConnectionProfile ?? false;
+            return NetworkInterface.GetIsNetworkAvailable();
         }
 
 
@@ -276,6 +282,13 @@ namespace MyInsta.Logic
 
         public static async Task GetUserData(User userObject, bool isSync = false)
         {
+            if (!IsInternetConnected())
+            {
+                userObject.UserData = new UserData();
+                _ = new CustomDialog("Warning", "Chech your internet connection", "Ok");
+                return;
+            }
+
             userObject.UserData.UserFollowers = new ObservableCollection<InstaUserShort>();
             userObject.UserData.SavedPostItems = new ObservableCollection<PostItem>();
 
@@ -765,7 +778,7 @@ namespace MyInsta.Logic
 
         #endregion
 
-        #region Messaging Porcessor
+        #region Messaging Processor
 
         private static async Task<bool> SharedInDirect(User userObject, string id, InstaMediaType mediaType,
             long idUser)
@@ -1342,6 +1355,71 @@ namespace MyInsta.Logic
 
             OnUserExploreFeedLoaded?.Invoke();
             return result;
+        }
+        #endregion
+
+        #region  Show
+        public static async Task ShowFollowers(User instaUser, string userName, Frame parentFrame)
+        {
+            await ShowData(instaUser, userName, parentFrame, DataType.Followers);
+        }
+
+        public static async Task ShowFollowing(User instaUser, string userName, Frame parentFrame)
+        {
+            await ShowData(instaUser, userName, parentFrame, DataType.Following);
+        }
+
+        public static async Task ShowLikers(User instaUser, string mediaPk, Frame parentFrame)
+        {
+            await ShowData(instaUser, mediaPk, parentFrame, DataType.Likers);
+        }
+
+        public static async Task ShowData(User instaUser, string userName, Frame parentFrame, DataType type)
+        {
+            var contentDialog = new ContentDialog()
+            {
+                FullSizeDesired = true,
+                PrimaryButtonText = "Close"
+            };
+
+            var frame = new Frame();
+            frame.Navigate(typeof(ListPersonsPage), new object[]
+            {
+                instaUser,
+                userName,
+                type,
+                parentFrame
+            });
+            contentDialog.Content = frame;
+            await contentDialog.ShowAsync();
+        }
+        #endregion
+
+        #region Common data
+        public static async Task<ObservableCollection<InstaUserShort>> GetFollowers(User instaUser, string userName, bool all = false)
+        {
+            var followers =
+                await instaUser.API.UserProcessor.GetUserFollowersAsync(userName,
+                    all ? PaginationParameters.Empty : PaginationParameters.MaxPagesToLoad(1));
+            OnCommonDataLoaded?.Invoke();
+            return new ObservableCollection<InstaUserShort>(followers.Value.ToArray());
+        }
+
+        public static async Task<ObservableCollection<InstaUserShort>> GetFollowing(User instaUser, string userName, bool all = false)
+        {
+            var following =
+                await instaUser.API.UserProcessor.GetUserFollowingAsync(userName,
+                    all ? PaginationParameters.Empty : PaginationParameters.MaxPagesToLoad(1));
+            OnCommonDataLoaded?.Invoke();
+            return new ObservableCollection<InstaUserShort>(following.Value.ToArray());
+        }
+
+        public static async Task<ObservableCollection<InstaUserShort>> GetLikers(User instaUser, string mediaPk)
+        {
+            var likes =
+                await instaUser.API.MediaProcessor.GetMediaLikersAsync(mediaPk);
+            OnCommonDataLoaded?.Invoke();
+            return new ObservableCollection<InstaUserShort>(likes.Value.ToArray());
         }
         #endregion
     }

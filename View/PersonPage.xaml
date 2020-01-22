@@ -196,21 +196,32 @@
                     <TextBlock
                         x:Uid="Following"
                         Margin="0, 0, 10, 0"
+                        FontWeight="Light"
                         FontSize="20" />
                     <TextBlock
+                        x:Name="FollowingBlock"
                         Grid.Column="1"
                         FontSize="20"
+                        FontWeight="Light"
+                        PointerEntered="UIElement_OnPointerEntered"
+                        PointerExited="UIElement_OnPointerExited"
+                        Tapped="FollowingBlock_OnTapped"
                         Text="{x:Bind InstaUserInfo.FollowingCount, Mode=OneWay}"
                         TextWrapping="Wrap" />
                 </StackPanel>
                 <StackPanel Margin="2" Orientation="Horizontal">
                     <TextBlock
                         x:Uid="Followers2"
+                        FontWeight="Light"
                         Margin="0, 0, 10, 0"
                         FontSize="20" />
                     <TextBlock
                         Grid.Column="1"
                         FontSize="20"
+                        FontWeight="Light"
+                        PointerEntered="UIElement_OnPointerEntered"
+                        PointerExited="UIElement_OnPointerExited"
+                        Tapped="UIElement_OnTapped"
                         Text="{x:Bind InstaUserInfo.FollowerCount, Mode=OneWay}"
                         TextWrapping="Wrap" />
                 </StackPanel>
@@ -218,10 +229,12 @@
                     <TextBlock
                         x:Uid="Media"
                         Margin="0, 0, 10, 0"
+                        FontWeight="Light"
                         FontSize="20" />
                     <TextBlock
                         Grid.Column="1"
                         FontSize="20"
+                        FontWeight="Light"
                         Text="{x:Bind InstaUserInfo.MediaCount, Mode=OneWay}"
                         TextWrapping="Wrap" />
                     <ProgressRing x:Name="ProgressAllPosts" Margin="5, 0, 0, 0"
@@ -234,6 +247,7 @@
                     <TextBlock
                         x:Uid="IsPrivate"
                         Margin="0, 0, 10, 0"
+                        FontWeight="Light"
                         FontSize="20" />
                     <CheckBox
                         FontSize="25"
@@ -247,6 +261,7 @@
                     <TextBlock
                         x:Uid="FollowingOn"
                         Margin="0, 0, 10, 0"
+                        FontWeight="Light"
                         FontSize="20" />
                     <CheckBox FontSize="25"
                               VerticalContentAlignment="Center"
@@ -259,6 +274,7 @@
                     <TextBlock
                         x:Uid="FollowedBy"
                         Margin="0, 0, 10, 0"
+                        FontWeight="Light"
                         FontSize="20" />
                     <CheckBox FontSize="25" 
                               VerticalContentAlignment="Center"
@@ -349,23 +365,30 @@
                                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                                 <TextBlock
                                                     x:Uid="Likes"
-                                                    Margin="5, 5, 10, 5"
+                                                    Margin="0, 0, 10, 0"
                                                     FontSize="20" />
                                                 <TextBlock
-                                                    Margin="5, 5, 10, 5"
+                                                    Margin="0, 0, 10, 0"
                                                     FontSize="20"
+                                                    x:Name="LikesBlock"
+                                                    PointerEntered="UIElement_OnPointerEntered"
+                                                    PointerExited="UIElement_OnPointerExited"
+                                                    Tapped="LikesBlock_OnTapped"
+                                                    Tag="{x:Bind Items[0].Pk}"
                                                     Text="{x:Bind Items[0].CountLikes}" />
                                             </StackPanel>
                                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                                 <TextBlock
                                                     x:Uid="Comments"
-                                                    Margin="5, 5, 10, 5"
+                                                    Margin="0, 0, 10, 0"
                                                     FontSize="20"
                                                     Tag="{x:Bind Items[0].Pk}"
                                                     Tapped="TextBlock_Tapped" />
                                                 <TextBlock
-                                                    Margin="5, 5, 10, 5"
+                                                    Margin="0, 0, 10, 0"
                                                     FontSize="20"
+                                                    Tag="{x:Bind Items[0].Pk}"
+                                                    Tapped="TextBlock_Tapped"
                                                     Text="{x:Bind Items[0].CountComments}" />
                                             </StackPanel>
                                             <Grid >
@@ -377,7 +400,7 @@
                                                 <CheckBox
                                                     x:Name="buttonLike"
                                                     Grid.Column="0"
-                                                    Margin="10"
+                                                    Margin="20, 10, 10, 10"
                                                     HorizontalAlignment="Left"
                                                     CornerRadius="10"
                                                     IsChecked="{x:Bind Items[0].Liked}"

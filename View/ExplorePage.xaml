@@ -145,6 +145,7 @@
                                     x:Name="itemsList"
                                     Width="380"
                                     HorizontalContentAlignment="Center"
+                                    Background="{x:Null}"
                                     ItemsSource="{x:Bind Items}"
                                     Tapped="ItemsList_OnTapped ">
                                     <FlipView.ItemsPanel>

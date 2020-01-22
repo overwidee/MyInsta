@@ -256,7 +256,7 @@
                                     <CheckBox
                                         x:Name="buttonLike"
                                         Grid.Column="0"
-                                        Margin="10"
+                                        Margin="20, 10, 10, 10"
                                         MinWidth="20"
                                         Click="buttonLike_Click"
                                         CornerRadius="0"
