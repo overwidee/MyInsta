@@ -38,7 +38,6 @@ namespace MyInsta.View
             InstaServer.OnUserStoriesLoaded += () =>
             {
                 progressStories.IsActive = false;
-                ListViewStories.ItemsSource = InstaUser.UserData.Stories;
                 SelectedUserStory = InstaUser.UserData.Stories?[0] ?? new UserStory();
             };
         }
