@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using MyInsta.Logic;
 using MyInsta.Model;
@@ -86,6 +87,9 @@ namespace MyInsta.View
                         break;
                     case "Stories":
                         contentFrame.Navigate(typeof(StoriesPage), InstaUser);
+                        break;
+                    case "Feed":
+                        contentFrame.Navigate(typeof(FeedPage), InstaUser );
                         break;
                     case "Direct":
                         contentFrame.Navigate(typeof(Direct), InstaUser);

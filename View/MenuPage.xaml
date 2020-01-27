@@ -133,6 +133,12 @@
                         Style="{StaticResource TextStyle}"
                         Tag="Stories" />
                     <NavigationViewItem
+                        x:Name="button_feed"
+                        Content="Your feed"
+                        Icon="ContactInfo"
+                        Style="{StaticResource TextStyle}"
+                        Tag="Feed" />
+                    <NavigationViewItem
                         x:Name="button_explore"
                         Content="Explore"
                         Icon="World"

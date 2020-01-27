@@ -169,6 +169,9 @@
     <Compile Include="View\ExplorePage.xaml.cs">
       <DependentUpon>ExplorePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\FeedPage.xaml.cs">
+      <DependentUpon>FeedPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ImagePage.xaml.cs">
       <DependentUpon>ImagePage.xaml</DependentUpon>
     </Compile>
@@ -189,6 +192,9 @@
     </Compile>
     <Compile Include="View\PostsPage.xaml.cs">
       <DependentUpon>PostsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ReturnPersonPage.xaml.cs">
+      <DependentUpon>ReturnPersonPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SearchPage.xaml.cs">
       <DependentUpon>SearchPage.xaml</DependentUpon>
@@ -330,6 +336,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\FeedPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\ImagePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -355,6 +365,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\PostsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ReturnPersonPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
