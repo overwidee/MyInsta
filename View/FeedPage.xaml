@@ -190,7 +190,7 @@
                                         <Ellipse
                                                 Width="40"
                                                 Height="40"
-                                                Margin="10">
+                                                Margin="5">
                                             <Ellipse.Fill>
                                                 <ImageBrush>
                                                     <ImageBrush.ImageSource>
@@ -201,7 +201,7 @@
                                         </Ellipse>
                                         <Button
                                                 x:Name="buttonProfile"
-                                                Margin="10"
+                                                Margin="5"
                                                 VerticalAlignment="Center"
                                                 Click="ButtonProfile_OnClick"
                                                 Content="{x:Bind UserNamePost}"
@@ -225,32 +225,46 @@
                                                 <DataTemplate x:DataType="model:CustomMedia">
                                                     <StackPanel HorizontalAlignment="Center">
                                                         <Image
-                                                    Height="520"
-                                                    Margin="0"
-                                                    Source="{x:Bind UrlSmallImage}" />
+                                                            Height="520"
+                                                            Margin="0"
+                                                            ToolTipService.ToolTip="{x:Bind DatePost}"
+                                                            Source="{x:Bind UrlSmallImage}" />
                                                     </StackPanel>
                                                 </DataTemplate>
                                             </FlipView.ItemTemplate>
                                         </FlipView>
-                                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                        <StackPanel HorizontalAlignment="Center" Margin="0, 5, 0, 0" Orientation="Horizontal">
                                             <TextBlock
-                                        x:Uid="Likes"
-                                        Margin="0,0,10, 0"
-                                        FontSize="20" />
+                                                x:Uid="Likes"
+                                                Margin="0,0,10, 0"
+                                                FontWeight="Light"
+                                                FontSize="20" />
                                             <TextBlock
-                                        Margin="0,0,10, 0"
-                                        FontSize="20"
-                                        Text="{x:Bind Items[0].CountLikes}" />
+                                                Margin="0,0,10, 0"
+                                                FontSize="20"
+                                                FontWeight="Light"
+                                                PointerEntered="UIElement_OnPointerEntered"
+                                                PointerExited="UIElement_OnPointerExited"
+                                                Tag="{x:Bind Items[0].Pk}"
+                                                Tapped="UIElement_OnTapped"
+                                                Text="{x:Bind Items[0].CountLikes}" />
                                         </StackPanel>
                                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                             <TextBlock
-                                        x:Uid="Comments"
-                                        Margin="0, 0, 10, 0"
-                                        FontSize="20" />
+                                                x:Uid="Comments"
+                                                FontWeight="Light"
+                                                Margin="0, 0, 10, 0"
+                                                FontSize="20" />
                                             <TextBlock
-                                        Margin="0, 0, 10, 0"
-                                        FontSize="20"
-                                        Text="{x:Bind Items[0].CountComments}" />
+                                                x:Name="BlockComments"
+                                                Margin="0, 0, 10, 0"
+                                                FontSize="20"
+                                                FontWeight="Light"
+                                                PointerEntered="UIElement_OnPointerEntered"
+                                                PointerExited="UIElement_OnPointerExited"
+                                                Tag="{x:Bind Items[0].Pk}"
+                                                Tapped="BlockComments_OnTapped"
+                                                Text="{x:Bind Items[0].CountComments}" />
                                         </StackPanel>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
@@ -258,14 +272,14 @@
                                                 <ColumnDefinition Width="6*"/>
                                             </Grid.ColumnDefinitions>
                                             <CheckBox
-                                        x:Name="buttonLike"
-                                        Grid.Column="0"
-                                        Margin="20, 10, 10, 10"
-                                        MinWidth="20"
-                                        Click="ButtonLike_OnClick"
-                                        CornerRadius="0"
-                                        IsChecked="{x:Bind Items[0].Liked}"
-                                        Tag="{x:Bind Id}">
+                                                x:Name="buttonLike"
+                                                Grid.Column="0"
+                                                Margin="20, 10, 10, 10"
+                                                MinWidth="20"
+                                                Click="ButtonLike_OnClick"
+                                                CornerRadius="0"
+                                                IsChecked="{x:Bind Items[0].Liked}"
+                                                Tag="{x:Bind Id}">
                                                 <CheckBox.Content>
                                                     <SymbolIcon Symbol="Like" />
                                                 </CheckBox.Content>
@@ -274,23 +288,23 @@
                                                 Grid.Column="1"
                                                 Orientation="Horizontal">
                                                 <Button
-                                            x:Name="buttonDownload"
-                                            Margin="5"
-                                            Click="ButtonDownload_OnClick"
-                                            ToolTipService.ToolTip="Download saved post"
-                                            CornerRadius="10"
-                                            Tag="{x:Bind Id}">
+                                                    x:Name="buttonDownload"
+                                                    Margin="5"
+                                                    Click="ButtonDownload_OnClick"
+                                                    ToolTipService.ToolTip="Download saved post"
+                                                    CornerRadius="10"
+                                                    Tag="{x:Bind Id}">
                                                     <Button.Content>
                                                         <SymbolIcon Symbol="Download" />
                                                     </Button.Content>
                                                 </Button>
                                                 <Button
-                                            x:Name="buttonShare"
-                                            Margin="5"
-                                            Click="ButtonShare_OnClick"
-                                            CornerRadius="10"
-                                            ToolTipService.ToolTip="Share in direct"
-                                            Tag="{x:Bind Id}">
+                                                        x:Name="buttonShare"
+                                                        Margin="5"
+                                                        Click="ButtonShare_OnClick"
+                                                        CornerRadius="10"
+                                                        ToolTipService.ToolTip="Share in direct"
+                                                        Tag="{x:Bind Id}">
                                                     <Button.Content>
                                                         <SymbolIcon Symbol="Share" />
                                                     </Button.Content>

@@ -66,32 +66,23 @@ namespace MyInsta.Logic
                         VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center,
                         IsLooping = true
                     };
-                    media.Tapped += async (s, e) =>
+                    media.DoubleTapped += async (s, e) =>
                     {
-                        var popup = new PopupMenu();
-                        popup.Commands.Add(new UICommand()
+                        contentDialog.Hide();
+                        var newCoreAppView = CoreApplication.CreateNewView();
+                        var appView = ApplicationView.GetForCurrentView();
+                        await newCoreAppView.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
                         {
-                            Label = "Full screen",
-                            Invoked = async (args) =>
-                            {
-                                contentDialog.Hide();
-                                var newCoreAppView = CoreApplication.CreateNewView();
-                                var appView = ApplicationView.GetForCurrentView();
-                                await newCoreAppView.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
-                                {
-                                    var window = Window.Current;
-                                    var newAppView = ApplicationView.GetForCurrentView();
+                            var window = Window.Current;
+                            var newAppView = ApplicationView.GetForCurrentView();
 
-                                    var frame = new Frame();
-                                    window.Content = frame;
+                            var frame = new Frame();
+                            window.Content = frame;
 
-                                    frame.Navigate(typeof(BlankPage), Url);
-                                    window.Activate();
-                                    await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newAppView.Id, ViewSizePreference.UseMinimum, appView.Id, ViewSizePreference.UseMinimum);
-                                });
-                            }
+                            frame.Navigate(typeof(BlankPage), Url);
+                            window.Activate();
+                            await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newAppView.Id, ViewSizePreference.UseMinimum, appView.Id, ViewSizePreference.UseMinimum);
                         });
-                        await popup.ShowAsync(new Point(e.GetPosition(contentDialog).X, e.GetPosition(contentDialog).Y));
                     };
                     contentDialog.Content = media;
                     break;
@@ -107,34 +98,25 @@ namespace MyInsta.Logic
                         HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
                         VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center
                     };
-                    imageMedia.Tapped += async (s, e) =>
+                    imageMedia.DoubleTapped += async (s, e) =>
                     {
-                        var popup = new PopupMenu();
-                        popup.Commands.Add(new UICommand()
-                        {
-                            Label = "Full screen",
-                            Invoked = async (args) =>
+                        contentDialog.Hide();
+                        var newCoreAppView = CoreApplication.CreateNewView();
+                        var appView = ApplicationView.GetForCurrentView();
+                        await newCoreAppView.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                            async () =>
                             {
-                                contentDialog.Hide();
-                                var newCoreAppView = CoreApplication.CreateNewView();
-                                var appView = ApplicationView.GetForCurrentView();
-                                await newCoreAppView.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
-                                    async () =>
-                                    {
-                                        var window = Window.Current;
-                                        var newAppView = ApplicationView.GetForCurrentView();
+                                var window = Window.Current;
+                                var newAppView = ApplicationView.GetForCurrentView();
 
-                                        var frame = new Frame();
-                                        window.Content = frame;
+                                var frame = new Frame();
+                                window.Content = frame;
 
-                                        frame.Navigate(typeof(ImagePage), Url);
-                                        window.Activate();
-                                        await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newAppView.Id,
-                                            ViewSizePreference.UseMinimum, appView.Id, ViewSizePreference.UseMinimum);
-                                    });
-                            }
-                        });
-                        await popup.ShowAsync(new Point(e.GetPosition(contentDialog).X, e.GetPosition(contentDialog).Y));
+                                frame.Navigate(typeof(ImagePage), Url);
+                                window.Activate();
+                                await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newAppView.Id,
+                                    ViewSizePreference.UseMinimum, appView.Id, ViewSizePreference.UseMinimum);
+                            });
                     };
                     contentDialog.Content = imageMedia;
                     break;

@@ -53,15 +53,17 @@ namespace MyInsta.View
                 ListFollowers.ItemsSource = ListInstaUserShorts;
                 LoadButton.IsEnabled = true;
 
-                if (InstaUser.UserData.Feed.Count != 0)
+                if (InstaUser.UserData.Feed != null)
                 {
                     Feed = InstaUser.UserData.Feed;
                     PostsList.ItemsSource = Feed;
 
                     ProgressStack.Visibility = Visibility.Collapsed;
                 }
-                else
+                else if (!InstaServer.IsFeedLoading)
                 {
+                    InstaUser.UserData.Feed = new ObservableCollection<PostItem>();
+
                     Feed = await InstaServer.GetCustomFeed(InstaUser, ListInstaUserShorts, 3);
                     PostsList.ItemsSource = Feed;
                     InstaUser.UserData.Feed = Feed;
@@ -146,9 +148,7 @@ namespace MyInsta.View
 
         private async void AddButton_OnClick(object sender, RoutedEventArgs e)
         {
-            ProgressStack.Visibility = Visibility.Visible;
-
-            var res = await InstaServer.AddFeedUsers(InstaUser);
+            var res = await InstaServer.AddFeedUsers(InstaUser, 15);
             foreach (var user in res)
             {
                 ListInstaUserShorts.Add(user);
@@ -161,6 +161,28 @@ namespace MyInsta.View
             await InstaServer.RemoveFeedUser(InstaUser, ((MenuFlyoutItem)sender).Tag.ToString());
             var remove = ListInstaUserShorts.FirstOrDefault(x => x.UserName == ((MenuFlyoutItem)sender).Tag.ToString());
             ListInstaUserShorts.Remove(remove);
+        }
+
+        CoreCursor cursorBeforePointerEntered = null;
+        private void UIElement_OnPointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            cursorBeforePointerEntered = Window.Current.CoreWindow.PointerCursor;
+            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Hand, 0);
+        }
+
+        private void UIElement_OnPointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            Window.Current.CoreWindow.PointerCursor = cursorBeforePointerEntered;
+        }
+
+        private async void UIElement_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            await InstaServer.ShowLikers(InstaUser, ((TextBlock)sender).Tag.ToString(), Frame);
+        }
+
+        private void BlockComments_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            InstaServer.ShowComments(InstaUser, this, ((TextBlock)sender).Tag.ToString());
         }
     }
 }

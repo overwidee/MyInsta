@@ -30,7 +30,6 @@ namespace MyInsta.Model
             SavedPostItems = new ObservableCollection<PostItem>();
             FeedUsers = new ObservableCollection<string>();
             Bookmarks = new ObservableCollection<InstaUserShort>();
-            Feed = new ObservableCollection<PostItem>();
         }
     }
 }

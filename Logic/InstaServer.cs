@@ -73,6 +73,7 @@ namespace MyInsta.Logic
         public static bool IsFriendsLoaded { get; set; }
         public static bool IsUnfollowersLoaded { get; set; }
         public static bool IsPostsLoaded { get; set; }
+        public static bool IsFeedLoading { get; set; }
 
         #endregion  
 
@@ -778,7 +779,7 @@ namespace MyInsta.Logic
             return comments.Value;
         }
 
-        public static async void ShowComments(User user, PersonPage page, string mediaPk)
+        public static async void ShowComments(User user, Page page, string mediaPk)
         {
             InstaCommentList comments = await GetCommentsByMediaId(user, mediaPk);
             var commentDialog = new CommentsPage(user, page, comments);
@@ -1451,6 +1452,7 @@ namespace MyInsta.Logic
 
         public static async Task<ObservableCollection<PostItem>> GetCustomFeed(User user, IEnumerable<InstaUserShort> userNames, int days = 3)
         {
+            IsFeedLoading = true;
             var medias = new ObservableCollection<PostItem>();
             var id = 1;
             foreach (var username in userNames)
@@ -1464,6 +1466,25 @@ namespace MyInsta.Logic
                         medias.Add(media);
                         id++;
                     }
+                }
+            }
+            OnFeedLoaded?.Invoke();
+            IsFeedLoading = false;
+            return new ObservableCollection<PostItem>(medias.OrderByDescending(x => x.Items[0].Date).ToList());
+        }
+
+        public static async Task<ObservableCollection<PostItem>> GetCustomFeedA(User user, InstaUserShort username, int days = 3)
+        {
+            var medias = new ObservableCollection<PostItem>();
+            var id = 1;
+            var m = await user.API.UserProcessor.GetUserMediaAsync(username.UserName, PaginationParameters.MaxPagesToLoad(1));
+            foreach (var media in GetUrlsMediasUser(m.Value, userShort: username))
+            {
+                if (media.Items[0].Date >= DateTime.Now.AddDays(-days))
+                {
+                    media.Id = id;
+                    medias.Add(media);
+                    id++;
                 }
             }
             OnFeedLoaded?.Invoke();
@@ -1524,7 +1545,7 @@ namespace MyInsta.Logic
             await SaveFeedUsers(instaUser);
         }
 
-        public static async Task<ObservableCollection<InstaUserShort>> AddFeedUsers(User instaUser)
+        public static async Task<ObservableCollection<InstaUserShort>> AddFeedUsers(User instaUser, int countPersons)
         {
             var contentDialog = new ReturnPersonPage(instaUser, DataType.Following);
             await contentDialog.ShowAsync();
@@ -1533,7 +1554,7 @@ namespace MyInsta.Logic
             {
                 foreach (var user in contentDialog.SelectedUserShorts)
                 {
-                    if (instaUser.UserData.FeedUsers.Count < 10)
+                    if (instaUser.UserData.FeedUsers.Count < countPersons)
                     {
                         instaUser.UserData.FeedUsers.Add(user.UserName);
                         resultCollection.Add(user);

@@ -362,15 +362,17 @@
                                                     </DataTemplate>
                                                 </FlipView.ItemTemplate>
                                             </FlipView>
-                                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                            <StackPanel HorizontalAlignment="Center" Margin="0, 5, 0, 0" Orientation="Horizontal">
                                                 <TextBlock
                                                     x:Uid="Likes"
                                                     Margin="0, 0, 10, 0"
+                                                    FontWeight="Light"
                                                     FontSize="20" />
                                                 <TextBlock
                                                     Margin="0, 0, 10, 0"
                                                     FontSize="20"
                                                     x:Name="LikesBlock"
+                                                    FontWeight="Light"
                                                     PointerEntered="UIElement_OnPointerEntered"
                                                     PointerExited="UIElement_OnPointerExited"
                                                     Tapped="LikesBlock_OnTapped"
@@ -382,13 +384,17 @@
                                                     x:Uid="Comments"
                                                     Margin="0, 0, 10, 0"
                                                     FontSize="20"
+                                                    FontWeight="Light"
                                                     Tag="{x:Bind Items[0].Pk}"
                                                     Tapped="TextBlock_Tapped" />
                                                 <TextBlock
                                                     Margin="0, 0, 10, 0"
                                                     FontSize="20"
+                                                    FontWeight="Light"
                                                     Tag="{x:Bind Items[0].Pk}"
                                                     Tapped="TextBlock_Tapped"
+                                                    PointerEntered="UIElement_OnPointerEntered"
+                                                    PointerExited="UIElement_OnPointerExited"
                                                     Text="{x:Bind Items[0].CountComments}" />
                                             </StackPanel>
                                             <Grid >

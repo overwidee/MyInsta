@@ -15,7 +15,7 @@ namespace MyInsta.View
     /// </summary>
     public sealed partial class CommentsPage : ContentDialog
     {
-        public CommentsPage(User user, PersonPage personPage, InstaCommentList commentList)
+        public CommentsPage(User user, Page personPage, InstaCommentList commentList)
         {
             this.InitializeComponent();
 
@@ -26,7 +26,7 @@ namespace MyInsta.View
 
         public ObservableCollection<Comment> CommentList { get; set; } = new ObservableCollection<Comment>();
         public User InstaUser { get; set; }
-        public PersonPage PersonPage { get; set; }
+        public Page PersonPage { get; set; }
 
         public new async Task ShowAsync()
         {
