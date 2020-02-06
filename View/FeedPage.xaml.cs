@@ -34,7 +34,14 @@ namespace MyInsta.View
             InitializeComponent();
 
             InstaServer.OnUsersFeedLoaded += () => MainProgressRing.IsActive = false;
-            InstaServer.OnFeedLoaded += () => ProgressStack.Visibility = Visibility.Collapsed;
+            InstaServer.OnFeedLoaded += () =>
+            {
+                ProgressStack.Visibility = Visibility.Collapsed;
+                Feed = InstaUser.UserData.Feed;
+                PostsList.ItemsSource = Feed;
+                InstaUser.UserData.Feed = Feed;
+            };
+            InstaServer.UpdateCountFeed += () => LoadBlock.Text = $"Feed loading time depends on the number of accounts ({InstaServer.CountFeed}/{ListInstaUserShorts.Count})...";
             PostsList.ItemsSource = Feed;
         }
 
@@ -48,12 +55,20 @@ namespace MyInsta.View
             InstaUser = e.Parameter as User;
             if (InstaUser != null)
             {
-                ListInstaUserShorts =
-                    await InstaServer.GetUserInstaShortsByNames(InstaUser, InstaUser.UserData.FeedUsers);
+                if (InstaUser.UserData.FeedObjUsers?.Count == 0)
+                {
+                    InstaUser.UserData.FeedObjUsers = await InstaServer.GetUserInstaShortsByNames(InstaUser, InstaUser.UserData.FeedUsers);
+                }
+                else
+                {
+                    MainProgressRing.IsActive = false;
+                }
+
+                ListInstaUserShorts = InstaUser.UserData.FeedObjUsers;
                 ListFollowers.ItemsSource = ListInstaUserShorts;
                 LoadButton.IsEnabled = true;
 
-                if (InstaUser.UserData.Feed != null)
+                if (InstaUser.UserData.Feed.Count != 0)
                 {
                     Feed = InstaUser.UserData.Feed;
                     PostsList.ItemsSource = Feed;
@@ -64,9 +79,7 @@ namespace MyInsta.View
                 {
                     InstaUser.UserData.Feed = new ObservableCollection<PostItem>();
 
-                    Feed = await InstaServer.GetCustomFeed(InstaUser, ListInstaUserShorts, 3);
-                    PostsList.ItemsSource = Feed;
-                    InstaUser.UserData.Feed = Feed;
+                    await InstaServer.GetCustomFeed(InstaUser, ListInstaUserShorts, 3);
                 }
             }
         }
@@ -140,10 +153,7 @@ namespace MyInsta.View
             ProgressStack.Visibility = Visibility.Visible;
 
             PostsList.ItemsSource = null;
-            Feed = await InstaServer.GetCustomFeed(InstaUser, ListInstaUserShorts, 3);
-
-            PostsList.ItemsSource = Feed;
-            InstaUser.UserData.Feed = Feed;
+            await InstaServer.GetCustomFeed(InstaUser, ListInstaUserShorts, 3);
         }
 
         private async void AddButton_OnClick(object sender, RoutedEventArgs e)

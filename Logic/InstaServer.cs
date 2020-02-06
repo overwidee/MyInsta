@@ -52,6 +52,9 @@ namespace MyInsta.Logic
         public static event CompleteHandler OnCommonDataLoaded;
         public static event CompleteHandler OnUsersFeedLoaded;
         public static event CompleteHandler OnFeedLoaded;
+        public static event CompleteHandler UpdateCountFeed;
+
+        public static int CountFeed { get; set; } = 0;
 
         #endregion
 
@@ -1450,14 +1453,16 @@ namespace MyInsta.Logic
 
         #region  Custom feed
 
-        public static async Task<ObservableCollection<PostItem>> GetCustomFeed(User user, IEnumerable<InstaUserShort> userNames, int days = 3)
+        public static async Task GetCustomFeed(User user, IEnumerable<InstaUserShort> userNames, int days = 3)
         {
             IsFeedLoading = true;
+            CountFeed = 0;
+
             var medias = new ObservableCollection<PostItem>();
             var id = 1;
             foreach (var username in userNames)
             {
-                var m = await user.API.UserProcessor.GetUserMediaAsync(username.UserName, PaginationParameters.MaxPagesToLoad(1));
+                var m = await user.API.UserProcessor.GetUserMediaAsync(username.UserName, PaginationParameters.MaxPagesToLoad(0));
                 foreach (var media in GetUrlsMediasUser(m.Value, userShort: username))
                 {
                     if (media.Items[0].Date >= DateTime.Now.AddDays(-days))
@@ -1467,10 +1472,15 @@ namespace MyInsta.Logic
                         id++;
                     }
                 }
+
+                CountFeed++;
+                UpdateCountFeed?.Invoke();
             }
-            OnFeedLoaded?.Invoke();
+            
             IsFeedLoading = false;
-            return new ObservableCollection<PostItem>(medias.OrderByDescending(x => x.Items[0].Date).ToList());
+            user.UserData.Feed =
+                new ObservableCollection<PostItem>(medias.OrderByDescending(x => x.Items[0].Date).ToList());
+            OnFeedLoaded?.Invoke();
         }
 
         public static async Task<ObservableCollection<PostItem>> GetCustomFeedA(User user, InstaUserShort username, int days = 3)

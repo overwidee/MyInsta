@@ -132,7 +132,7 @@
                     <ColumnDefinition Width="60"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel x:Name="ProgressStack" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock Text="Feed loading time depends on the number of accounts..." FontSize="15"
+                    <TextBlock x:Name="LoadBlock" Text="Feed loading time depends on the number of accounts..." FontSize="15"
                                FontWeight="Light" Margin="10"/>
                     <ProgressRing x:Name="FeedProgressRing" 
                                   Margin="10" 
