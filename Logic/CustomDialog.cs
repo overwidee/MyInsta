@@ -13,7 +13,7 @@ namespace MyInsta.Logic
     public class CustomDialog : ContentDialog
     {
         ContentDialog ContentDialog { get; }
-        public CustomDialog(string title, string content, string okButton, string mediaPk = null)
+        public CustomDialog(string title, string content, string okButton, string mediaPk = "")
         {
             var visual = new ToastVisual()
             {
