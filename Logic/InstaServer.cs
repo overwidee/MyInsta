@@ -1487,7 +1487,7 @@ namespace MyInsta.Logic
         {
             var medias = new ObservableCollection<PostItem>();
             var id = 1;
-            var m = await user.API.UserProcessor.GetUserMediaAsync(username.UserName, PaginationParameters.MaxPagesToLoad(1));
+            var m = await user.API.UserProcessor.GetUserMediaAsync(username.UserName, PaginationParameters.MaxPagesToLoad(0));
             foreach (var media in GetUrlsMediasUser(m.Value, userShort: username))
             {
                 if (media.Items[0].Date >= DateTime.Now.AddDays(-days))

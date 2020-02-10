@@ -33,17 +33,31 @@ namespace MyInsta.View
         {
             InitializeComponent();
 
-            InstaServer.OnUsersFeedLoaded += () => MainProgressRing.IsActive = false;
-            InstaServer.OnFeedLoaded += () =>
-            {
-                ProgressStack.Visibility = Visibility.Collapsed;
-                Feed = InstaUser.UserData.Feed;
-                PostsList.ItemsSource = Feed;
-                InstaUser.UserData.Feed = Feed;
-            };
-            InstaServer.UpdateCountFeed += () => LoadBlock.Text = $"Feed loading time depends on the number of accounts ({InstaServer.CountFeed}/{ListInstaUserShorts.Count})...";
+            InstaServer.OnUsersFeedLoaded += UsersFeedLoaded;
+            InstaServer.OnFeedLoaded += FeedLoaded;
+            InstaServer.UpdateCountFeed += UpdateCountFeed;
             PostsList.ItemsSource = Feed;
         }
+
+        #region CompleteEvent
+        private void FeedLoaded()
+        {
+            ProgressStack.Visibility = Visibility.Collapsed;
+            Feed = InstaUser.UserData.Feed;
+            PostsList.ItemsSource = Feed;
+            InstaUser.UserData.Feed = Feed;
+        }
+
+        private void UsersFeedLoaded()
+        {
+            MainProgressRing.IsActive = false;
+        }
+
+        private void UpdateCountFeed()
+        {
+            LoadBlock.Text = $"Feed loading time depends on the number of accounts ({InstaServer.CountFeed}/{ListInstaUserShorts.Count})...";
+        }
+        #endregion
 
         public ObservableCollection<PostItem> Feed { get; set; } = new ObservableCollection<PostItem>();
         public ObservableCollection<InstaUserShort> ListInstaUserShorts { get; set; }
@@ -193,6 +207,13 @@ namespace MyInsta.View
         private void BlockComments_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             InstaServer.ShowComments(InstaUser, this, ((TextBlock)sender).Tag.ToString());
+        }
+
+        private void FeedPage_OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            InstaServer.OnUsersFeedLoaded -= UsersFeedLoaded;
+            InstaServer.OnFeedLoaded -= FeedLoaded;
+            InstaServer.UpdateCountFeed -= UpdateCountFeed;
         }
     }
 }

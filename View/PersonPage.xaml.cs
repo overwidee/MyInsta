@@ -28,17 +28,22 @@ namespace MyInsta.View
             InitializeComponent();
 
             progressPosts.IsActive = !InstaServer.IsPostsLoaded;
-            InstaServer.OnUserPostsLoaded += () =>
-            {
-                progressPosts.IsActive = false;
-                postBox.IsEnabled = true;
-            };
-            InstaServer.OnUserAllPostsLoaded += () =>
-            {
-                ProgressAllPosts.IsActive = false;
-            };
+            InstaServer.OnUserPostsLoaded += UsersPostsLoaded;
+            InstaServer.OnUserAllPostsLoaded += UserAllPostsLoaded;
         }
 
+        #region CompleteEvent
+        private void UsersPostsLoaded()
+        {
+            progressPosts.IsActive = false;
+            postBox.IsEnabled = true;
+        }
+
+        private void UserAllPostsLoaded()
+        {
+            ProgressAllPosts.IsActive = false;
+        }
+        #endregion
         public InstaUserShort SelectUser { get; set; }
         public InstaUserInfo InstaUserInfo { get; set; }
         public User CurrentUser { get; set; }
@@ -185,6 +190,8 @@ namespace MyInsta.View
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
             InstaServer.CancelTasks();
+            InstaServer.OnUserPostsLoaded -= UsersPostsLoaded;
+            InstaServer.OnUserAllPostsLoaded -= UserAllPostsLoaded;
         }
 
         private async void ButtonSaveInProfile_Click(object sender, RoutedEventArgs e)
@@ -261,20 +268,15 @@ namespace MyInsta.View
         private async void Image_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var high = HighlightsStories.FirstOrDefault(x => x.Pk == ((Image)sender).Tag.ToString());
+            
             if (high != null)
             {
-                var urlMedia = "";
-                switch (high.MediaType)
+                string urlMedia = high.MediaType switch
                 {
-                    case MediaType.Image:
-                        urlMedia = high.UrlBigImage;
-                        break;
-                    case MediaType.Video:
-                        urlMedia = high.UrlVideo;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                    MediaType.Image => high.UrlBigImage,
+                    MediaType.Video => high.UrlVideo,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
 
                 var mediaDialog = new MediaDialog(CurrentUser, high.Pk, urlMedia, high.MediaType, 0);
                 await mediaDialog.ShowMediaAsync();
@@ -355,7 +357,6 @@ namespace MyInsta.View
 
         private void itemsList_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
-            
         }
 
         CoreCursor cursorBeforePointerEntered = null;

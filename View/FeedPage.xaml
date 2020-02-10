@@ -8,6 +8,7 @@
     xmlns:model="using:MyInsta.Model"
     xmlns:models="using:InstagramApiSharp.Classes.Models"
     mc:Ignorable="d"
+    Unloaded="FeedPage_OnUnloaded"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
         <ResourceDictionary>
