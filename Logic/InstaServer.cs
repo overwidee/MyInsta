@@ -1088,7 +1088,7 @@ namespace MyInsta.Logic
                 });
                 task.Wait();
             }
-            _ = result != null && result.Value ? new CustomDialog("Message", $"Media downloaded\n", "All right")
+            _ = result != null && result.Value ? new CustomDialog("Message", $"Media downloaded\n", "All right", url)
                 : new CustomDialog("Message", "Failed\n", "All right");
 
             return result ?? false;
