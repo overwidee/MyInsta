@@ -66,6 +66,38 @@
                         </Setter>
                     </Style>
                 </ResourceDictionary>
+                <ResourceDictionary>
+                    <Style TargetType="CheckBox" x:Key="BoolStyle">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="CheckBox">
+                                    <Border x:Name="PART_root">
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup x:Name="CheckStates">
+                                                <VisualStateGroup.States>
+                                                    <VisualState x:Name="Checked">
+                                                        <VisualState.Setters>
+                                                            <Setter Value="&#xE73E;" Target="PART_content.(PART_content.Text)"/>
+                                                            <Setter Value="Green" Target="PART_content.(PART_content.Foreground)"/>
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                    <VisualState x:Name="Unchecked">
+                                                        <VisualState.Setters>
+                                                            <Setter Value="&#xE895;" Target="PART_content.(PART_content.Text)" />
+                                                            <Setter Value="#70e9ff" Target="PART_content.(PART_content.Foreground)" />
+                                                        </VisualState.Setters>
+                                                    </VisualState>
+                                                </VisualStateGroup.States>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+                                        <TextBlock x:Name="PART_content" FontSize="20" 
+                                                   FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Foreground="Black" FocusVisualSecondaryBrush="#990C5A8F" FocusVisualPrimaryBrush="{x:Null}"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
@@ -91,7 +123,7 @@
                         ScrollViewer.VerticalScrollBarVisibility="Auto"
                         ItemsSource="{x:Bind ListInstaUserShorts}">
                     <ListView.ItemTemplate>
-                        <DataTemplate x:Name="SingleLineDataTemplate" x:DataType="models:InstaUserShort">
+                        <DataTemplate x:Name="SingleLineDataTemplate" x:DataType="model:UserFeed">
                             <StackPanel
                                     Grid.Column="0"
                                     Height="80"
@@ -99,7 +131,7 @@
                                     Padding="12">
                                 <StackPanel.ContextFlyout>
                                     <MenuFlyout>
-                                        <MenuFlyoutItem Text="Delete" Click="DeleteButton_OnClick" Tag="{x:Bind UserName}"/>
+                                        <MenuFlyoutItem Text="Delete" Click="DeleteButton_OnClick" Tag="{x:Bind InstaUserShort.UserName}"/>
                                     </MenuFlyout>
                                 </StackPanel.ContextFlyout>
                                 <Ellipse
@@ -109,7 +141,7 @@
                                     <Ellipse.Fill>
                                         <ImageBrush>
                                             <ImageBrush.ImageSource>
-                                                <BitmapImage UriSource="{Binding ProfilePicUrl}" />
+                                                <BitmapImage UriSource="{Binding InstaUserShort.ProfilePicUrl}" />
                                             </ImageBrush.ImageSource>
                                         </ImageBrush>
                                     </Ellipse.Fill>
@@ -119,7 +151,13 @@
                                         VerticalAlignment="Center"
                                         Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
                                         Style="{ThemeResource BaseTextBlockStyle}"
-                                        Text="{x:Bind UserName}" />
+                                        Width="160"
+                                        Text="{x:Bind InstaUserShort.UserName}" />
+                                <CheckBox FontSize="25" 
+                                          VerticalContentAlignment="Center"
+                                          IsEnabled="False"
+                                          IsChecked="{x:Bind Received}"
+                                          Style="{StaticResource BoolStyle}"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
@@ -133,7 +171,7 @@
                     <ColumnDefinition Width="60"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel x:Name="ProgressStack" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock x:Name="LoadBlock" Text="Feed loading time depends on the number of accounts..." FontSize="15"
+                    <TextBlock x:Name="LoadBlock" Text="" FontSize="15"
                                FontWeight="Light" Margin="10"/>
                     <ProgressRing x:Name="FeedProgressRing" 
                                   Margin="10" 

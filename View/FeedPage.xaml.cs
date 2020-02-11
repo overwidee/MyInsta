@@ -33,34 +33,46 @@ namespace MyInsta.View
         {
             InitializeComponent();
 
-            InstaServer.OnUsersFeedLoaded += UsersFeedLoaded;
-            InstaServer.OnFeedLoaded += FeedLoaded;
             InstaServer.UpdateCountFeed += UpdateCountFeed;
+            InstaServer.OnUserFeedLoaded += UpdateCheckStatus;
+            InstaServer.OnUsersFeedLoaded += UsersFeedLoaded;
+
             PostsList.ItemsSource = Feed;
         }
 
         #region CompleteEvent
-        private void FeedLoaded()
+        private void UpdateCountFeed()
+        {
+            if (!InstaServer.IsFeedLoading && InstaUser.UserData.Feed.Count == 0)
+            {
+                ProgressStack.Visibility = Visibility.Visible;
+                FeedProgressRing.IsActive = false;
+                LoadBlock.Text = "No posts";
+            }
+        }
+        private void UpdateCheckStatus(int pk)
         {
             ProgressStack.Visibility = Visibility.Collapsed;
             Feed = InstaUser.UserData.Feed;
             PostsList.ItemsSource = Feed;
-            InstaUser.UserData.Feed = Feed;
-        }
 
+            (ListFollowers.Items[pk] as UserFeed).Received = true;
+
+            if (ListFollowers.ContainerFromItem(ListFollowers.Items[pk]) is ListViewItem listViewItem)
+            {
+                var itemsStackPanel = listViewItem.ContentTemplateRoot as StackPanel;
+                var myToggleSwitch = itemsStackPanel.Children.FirstOrDefault(x => x is CheckBox) as CheckBox;
+                myToggleSwitch.IsChecked = true;
+            }
+        }
         private void UsersFeedLoaded()
         {
             MainProgressRing.IsActive = false;
         }
-
-        private void UpdateCountFeed()
-        {
-            LoadBlock.Text = $"Feed loading time depends on the number of accounts ({InstaServer.CountFeed}/{ListInstaUserShorts.Count})...";
-        }
         #endregion
 
         public ObservableCollection<PostItem> Feed { get; set; } = new ObservableCollection<PostItem>();
-        public ObservableCollection<InstaUserShort> ListInstaUserShorts { get; set; }
+        public ObservableCollection<UserFeed> ListInstaUserShorts { get; set; }
         public User InstaUser { get; set; }
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -71,7 +83,7 @@ namespace MyInsta.View
             {
                 if (InstaUser.UserData.FeedObjUsers?.Count == 0)
                 {
-                    InstaUser.UserData.FeedObjUsers = await InstaServer.GetUserInstaShortsByNames(InstaUser, InstaUser.UserData.FeedUsers);
+                    InstaUser.UserData.FeedObjUsers = await InstaServer.GetUserInstaShortsFeed(InstaUser, InstaUser.UserData.FeedUsers);
                 }
                 else
                 {
@@ -175,7 +187,7 @@ namespace MyInsta.View
             var res = await InstaServer.AddFeedUsers(InstaUser, 15);
             foreach (var user in res)
             {
-                ListInstaUserShorts.Add(user);
+                ListInstaUserShorts.Add(new UserFeed() { InstaUserShort = user, Received = false });
             }
             ListFollowers.ItemsSource = ListInstaUserShorts;
         }
@@ -183,7 +195,7 @@ namespace MyInsta.View
         private async void DeleteButton_OnClick(object sender, RoutedEventArgs e)
         {
             await InstaServer.RemoveFeedUser(InstaUser, ((MenuFlyoutItem)sender).Tag.ToString());
-            var remove = ListInstaUserShorts.FirstOrDefault(x => x.UserName == ((MenuFlyoutItem)sender).Tag.ToString());
+            var remove = ListInstaUserShorts.FirstOrDefault(x => x.InstaUserShort.UserName == ((MenuFlyoutItem)sender).Tag.ToString());
             ListInstaUserShorts.Remove(remove);
         }
 
@@ -211,9 +223,9 @@ namespace MyInsta.View
 
         private void FeedPage_OnUnloaded(object sender, RoutedEventArgs e)
         {
-            InstaServer.OnUsersFeedLoaded -= UsersFeedLoaded;
-            InstaServer.OnFeedLoaded -= FeedLoaded;
             InstaServer.UpdateCountFeed -= UpdateCountFeed;
+            InstaServer.OnUserFeedLoaded -= UpdateCheckStatus;
+            InstaServer.OnUsersFeedLoaded -= UsersFeedLoaded;
         }
     }
 }

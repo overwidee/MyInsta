@@ -20,6 +20,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using WinRTXamlToolkit.Tools;
 using static Windows.Networking.Connectivity.NetworkInformation;
 using ReturnPersonPage = MyInsta.View.ReturnPersonPage;
 
@@ -35,7 +36,9 @@ namespace MyInsta.Logic
     {
         public static string LatestMediaMaxId = string.Empty;
         private static CancellationTokenSource cancellationTokenMedia;
+
         public delegate void CompleteHandler();
+        public delegate void UpdateUserCheck(int pk);
 
         #region Events
 
@@ -53,6 +56,7 @@ namespace MyInsta.Logic
         public static event CompleteHandler OnUsersFeedLoaded;
         public static event CompleteHandler OnFeedLoaded;
         public static event CompleteHandler UpdateCountFeed;
+        public static event UpdateUserCheck OnUserFeedLoaded;
 
         public static int CountFeed { get; set; } = 0;
 
@@ -1453,34 +1457,36 @@ namespace MyInsta.Logic
 
         #region  Custom feed
 
-        public static async Task GetCustomFeed(User user, IEnumerable<InstaUserShort> userNames, int days = 3)
+        public static async Task GetCustomFeed(User user, IEnumerable<UserFeed> userNames, int days = 3)
         {
             IsFeedLoading = true;
-            CountFeed = 0;
+            user.UserData.Feed = new ObservableCollection<PostItem>();
+            userNames.ForEach(x => x.Received = false);
 
             var medias = new ObservableCollection<PostItem>();
             var id = 1;
+            var count = 0;
             foreach (var username in userNames)
             {
-                var m = await user.API.UserProcessor.GetUserMediaAsync(username.UserName, PaginationParameters.MaxPagesToLoad(0));
-                foreach (var media in GetUrlsMediasUser(m.Value, userShort: username))
+                var m = await user.API.UserProcessor.GetUserMediaAsync(username.InstaUserShort.UserName, PaginationParameters.MaxPagesToLoad(0));
+                foreach (var media in GetUrlsMediasUser(m.Value, userShort: username.InstaUserShort))
                 {
                     if (media.Items[0].Date >= DateTime.Now.AddDays(-days))
                     {
                         media.Id = id;
-                        medias.Add(media);
                         id++;
+                        user.UserData.Feed.Add(media);
+
+                        user.UserData.Feed = new ObservableCollection<PostItem>(user.UserData.Feed.OrderByDescending(x => x.Items[0].Date).ToList());
                     }
                 }
-
-                CountFeed++;
-                UpdateCountFeed?.Invoke();
+                user.UserData.FeedObjUsers.FirstOrDefault(x => x.InstaUserShort.Pk == username.InstaUserShort.Pk).Received = true;
+                OnUserFeedLoaded?.Invoke(count);
+                count++;
             }
-            
+
             IsFeedLoading = false;
-            user.UserData.Feed =
-                new ObservableCollection<PostItem>(medias.OrderByDescending(x => x.Items[0].Date).ToList());
-            OnFeedLoaded?.Invoke();
+            UpdateCountFeed?.Invoke();
         }
 
         public static async Task<ObservableCollection<PostItem>> GetCustomFeedA(User user, InstaUserShort username, int days = 3)
@@ -1509,6 +1515,25 @@ namespace MyInsta.Logic
                 if (!string.IsNullOrEmpty(name))
                 {
                     ob.Add(await GetInstaUserShortByName(user, name));
+                }
+            }
+
+            OnUsersFeedLoaded?.Invoke();
+            return ob;
+        }
+
+        public static async Task<ObservableCollection<UserFeed>> GetUserInstaShortsFeed(User user, ObservableCollection<string> names)
+        {
+            var ob = new ObservableCollection<UserFeed>();
+            foreach (string name in names)
+            {
+                if (!string.IsNullOrEmpty(name))
+                {
+                    ob.Add(new UserFeed()
+                    {
+                        InstaUserShort = await GetInstaUserShortByName(user, name),
+                        Received = false
+                    });
                 }
             }
 
@@ -1574,6 +1599,14 @@ namespace MyInsta.Logic
 
             await SaveFeedUsers(instaUser);
             return resultCollection;
+        }
+
+        private static void RemoveEvents(UpdateUserCheck eventHandler)
+        {
+            foreach (Delegate d in eventHandler.GetInvocationList())
+            {
+                eventHandler -= d as UpdateUserCheck;
+            }
         }
         #endregion
     }

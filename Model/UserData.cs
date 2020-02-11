@@ -17,7 +17,7 @@ namespace MyInsta.Model
         public ObservableCollection<InstaUserShort> UserUnfollowers { get; set; }
         public ObservableCollection<InstaUserShort> UserFriends { get; set; }
         public ObservableCollection<string> FeedUsers { get; set; }
-        public ObservableCollection<InstaUserShort> FeedObjUsers { get; set; }
+        public ObservableCollection<UserFeed> FeedObjUsers { get; set; }
         public ObservableCollection<PostItem> Feed { get; set; }
         public ObservableCollection<PostItem> SavedPostItems { get; set; }
         public ObservableCollection<UserStory> Stories { get; set; }
@@ -31,8 +31,14 @@ namespace MyInsta.Model
             SavedPostItems = new ObservableCollection<PostItem>();
             FeedUsers = new ObservableCollection<string>();
             Bookmarks = new ObservableCollection<InstaUserShort>();
-            FeedObjUsers = new ObservableCollection<InstaUserShort>();
+            FeedObjUsers = new ObservableCollection<UserFeed>();
             Feed = new ObservableCollection<PostItem>();
         }
+    }
+
+    public class UserFeed
+    {
+        public InstaUserShort InstaUserShort { get; set; }
+        public bool Received { get; set; }
     }
 }
