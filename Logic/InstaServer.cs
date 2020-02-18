@@ -58,6 +58,7 @@ namespace MyInsta.Logic
         public static event CompleteHandler OnFeedLoaded;
         public static event CompleteHandler UpdateCountFeed;
         public static event UpdateUserCheck OnUserFeedLoaded;
+        public static event CompleteHandler OnUserInfoLoaded;
 
         public static int CountFeed { get; set; } = 0;
 
@@ -427,12 +428,12 @@ namespace MyInsta.Logic
             if (userObject != null)
             {
                 IResult<InstaUserInfo> userInfo = await userObject.API.UserProcessor.GetUserInfoByUsernameAsync(nick);
+                userInfo.Value.FriendshipStatus = await GetFriendshipStatus(userObject, userInfo.Value);
+
                 return userInfo.Value;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         public static async Task UnfollowUser(User userObject, InstaUserShort unfUser)

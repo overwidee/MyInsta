@@ -83,6 +83,7 @@ namespace MyInsta.View
             {
                 if (InstaUser.UserData.FeedObjUsers?.Count == 0)
                 {
+                    SplitView.IsPaneOpen = true;
                     InstaUser.UserData.FeedObjUsers = await InstaServer.GetUserInstaShortsFeed(InstaUser, InstaUser.UserData.FeedUsers);
                 }
                 else
@@ -176,6 +177,7 @@ namespace MyInsta.View
 
         private async void LoadButton_OnClick(object sender, RoutedEventArgs e)
         {
+            SplitView.IsPaneOpen = true;
             ProgressStack.Visibility = Visibility.Visible;
 
             PostsList.ItemsSource = null;

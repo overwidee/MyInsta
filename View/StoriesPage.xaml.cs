@@ -37,6 +37,8 @@ namespace MyInsta.View
             progressStories.IsActive = !InstaServer.IsStoriesLoaded;
             InstaServer.OnUserStoriesLoaded += () =>
             {
+                Bindings.Update();
+
                 progressStories.IsActive = false;
                 SelectedUserStory = InstaUser.UserData.Stories?[0] ?? new UserStory();
             };
@@ -57,7 +59,7 @@ namespace MyInsta.View
 
         private async void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (SelectedUserStory.User != null)
+            if (SelectedUserStory?.User != null)
             {
                 Stories = await InstaServer.GetStoryUser(InstaUser, SelectedUserStory.User.Pk);
                 storiesList.ItemsSource = Stories;
@@ -71,7 +73,7 @@ namespace MyInsta.View
 
         private async void Image_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            var story = Stories.FirstOrDefault(x => x.Pk == ((Image)sender).Tag.ToString());
+            var story = Stories.FirstOrDefault(x => x.Pk == ((Border)sender).Tag.ToString());
             if (story == null)
             {
                 return;

@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.ServiceModel.Channels;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
@@ -46,6 +47,11 @@ namespace MyInsta.View
         {
             ProgressAllPosts.IsActive = false;
         }
+
+        private void UserInfoLoaded()
+        {
+            Bindings.Update();
+        }
         #endregion
         public InstaUserShort SelectUser { get; set; }
         public InstaUserInfo InstaUserInfo { get; set; }
@@ -70,19 +76,12 @@ namespace MyInsta.View
                 CurrentUser = obj[1] as User;
             }
 
-            InstaUserInfo = AsyncHelpers.RunSync(() => InstaServer.GetInfoUser(CurrentUser, SelectUser.UserName));
-            InstaUserInfo.FriendshipStatus = AsyncHelpers.RunSync(()
-                => InstaServer.GetFriendshipStatus(CurrentUser, InstaUserInfo));
+            InstaUserInfo = await InstaServer.GetInfoUser(CurrentUser, SelectUser.UserName);
+            UserInfoLoaded();
 
             ButtonFollow = !InstaUserInfo.FriendshipStatus.Following;
             ButtonUnFollow = InstaUserInfo.FriendshipStatus.Following;
             SetBookmarkStatus();
-
-            if (InstaUserInfo.IsPrivate && !InstaUserInfo.FriendshipStatus.Following)
-            {
-                progressPosts.IsActive = false;
-                return;
-            }
 
             InstaHighlightFeeds = await InstaServer.GetArchiveCollectionStories(CurrentUser, SelectUser.Pk);
             collectionsBox.ItemsSource = InstaHighlightFeeds.Items;
@@ -104,6 +103,8 @@ namespace MyInsta.View
             mediaList.ItemsSource = Posts?.Take(countPosts);
 
             Posts = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo, 1);
+
+            progressPosts.IsActive = false;
         }
 
         private async void UnfollowButton_Click(object sender, RoutedEventArgs e)
@@ -165,7 +166,7 @@ namespace MyInsta.View
 
         private void MediaList_SelectionChanged(object sender, TappedRoutedEventArgs e)
         {
-            if (e.OriginalSource.GetType() != typeof(Image))
+            if (e.OriginalSource.GetType() != typeof(Border))
             {
                 return;
             }

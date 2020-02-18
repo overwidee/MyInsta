@@ -124,7 +124,7 @@
             <ColumnDefinition Width="131*" />
             <ColumnDefinition Width="131*" />
         </Grid.ColumnDefinitions>
-            <Image Grid.Column="1" Grid.ColumnSpan="4" Stretch="Fill" Grid.RowSpan="4" Source="{x:Bind InstaUserInfo.HdProfilePicVersions[0].Uri, Mode=OneWay}">
+            <Image Grid.Column="1" Grid.ColumnSpan="4" Stretch="Fill" Grid.RowSpan="4" Source="{x:Bind InstaUserInfo.HdProfilePicUrlInfo.Uri, Mode=OneWay}">
             <interactivity:Interaction.Behaviors>
                 <behaviors:Blur Value="100"></behaviors:Blur>
             </interactivity:Interaction.Behaviors> 
@@ -133,14 +133,14 @@
             Grid.Row="0"
             Grid.RowSpan="3"
             Grid.Column="0"
-            Width="200"
-            Height="200"
+            Width="239"
+            Height="239"
             DoubleTapped="UIElement_OnDoubleTapped"
-            Margin="20,20,20,20">
+            Margin="5">
             <Ellipse.Fill>
                 <ImageBrush>
                     <ImageBrush.ImageSource>
-                        <BitmapImage UriSource="{x:Bind InstaUserInfo.HdProfilePicVersions[0].Uri, Mode=OneWay}" />
+                        <BitmapImage UriSource="{x:Bind InstaUserInfo.HdProfilePicUrlInfo.Uri, Mode=OneWay}" />
                     </ImageBrush.ImageSource>
                 </ImageBrush>
             </Ellipse.Fill>
@@ -347,6 +347,7 @@
                                             <FlipView
                                                 x:Name="itemsList"
                                                 Width="400"
+                                                Height="400"
                                                 HorizontalContentAlignment="Center"
                                                 Background="{x:Null}"
                                                 CanBeScrollAnchor="True"
@@ -361,11 +362,26 @@
                                                 <FlipView.ItemTemplate>
                                                     <DataTemplate x:DataType="model:CustomMedia">
                                                         <StackPanel PointerWheelChanged="Image_PointerWheelChanged" >
-                                                            <Image
+                                                            <Border BorderBrush="{x:Null}"
+                                                                    BorderThickness="1"
+                                                                    Width="400"
+                                                                    Height="400"
+                                                                    ToolTipService.ToolTip="{x:Bind DatePost}"
+                                                                    CornerRadius="15"
+                                                                    >
+                                                                <Border.Background>
+                                                                    <ImageBrush Stretch="UniformToFill" 
+                                                                                 ImageSource="{x:Bind UrlSmallImage}"/>
+                                                                </Border.Background>
+                                                            </Border>
+                                                            <!--<Image
                                                                 Height="400"
+                                                                Width="400"
                                                                 Margin="10"
+                                                                
+                                                                Stretch="UniformToFill"
                                                                 ToolTipService.ToolTip="{x:Bind DatePost}"
-                                                                Source="{x:Bind UrlSmallImage}"/>
+                                                                Source="{x:Bind UrlSmallImage}"/>-->
                                                         </StackPanel>
                                                     </DataTemplate>
                                                 </FlipView.ItemTemplate>
