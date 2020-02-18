@@ -15,6 +15,5 @@ namespace MyInsta.Model
         public long UserPk { get; set; }
         public string UserPicture { get; set; }
         public ObservableCollection<CustomMedia> Items { get; set; }
-        public Visibility IsVisible { get; set; } = Visibility.Visible;
     }
 }

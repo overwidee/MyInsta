@@ -34,6 +34,7 @@ namespace MyInsta.Logic
     }
     public static class InstaServer
     {
+        public static int UtcValue = 0;
         public static string LatestMediaMaxId = string.Empty;
         private static CancellationTokenSource cancellationTokenMedia;
 
@@ -732,7 +733,7 @@ namespace MyInsta.Logic
                         CountLikes = item.LikesCount,
                         CountComments = item.CommentsCount != null ? int.Parse(item.CommentsCount) : 0,
                         MediaType = MediaType.Image,
-                        Date = item.TakenAt,
+                        Date = item.TakenAt.AddHours(UtcValue),
                         Liked = item.HasLiked
                     };
                     if (item.Videos != null && item.Videos.Count != 0)
@@ -762,7 +763,7 @@ namespace MyInsta.Logic
                                 CountComments = item.CommentsCount != null ? int.Parse(item.CommentsCount) : 0,
                                 MediaType = MediaType.Image,
                                 Liked = item.HasLiked,
-                                Date = item.TakenAt
+                                Date = item.TakenAt.AddHours(UtcValue)
                             };
                             if (car.Videos != null && car.Videos.Count != 0)
                             {
@@ -922,7 +923,7 @@ namespace MyInsta.Logic
                     UrlBigImage = story.ImageList[0].Uri,
                     UrlSmallImage = story.ImageList[1].Uri,
                     MediaType = MediaType.Image,
-                    Date = story.TakenAt
+                    Date = story.TakenAt.AddHours(UtcValue)
                 };
                 if (story.VideoList.Count > 0)
                 {
@@ -1108,6 +1109,14 @@ namespace MyInsta.Logic
             {
                 await DownloadMedia(medias[0]);
             }
+        }
+
+        public static async Task Download(string url)
+        {
+            await DownloadMedia(new CustomMedia()
+            {
+                Pk = "123", MediaType = MediaType.Image, Name = "ProfileImage", UrlBigImage = url
+            });
         }
 
         public static async Task DownloadAnyPosts(InstaUserShort selectedUser, ObservableCollection<PostItem> medias)

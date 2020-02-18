@@ -8,9 +8,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -18,6 +20,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Shapes;
 
 namespace MyInsta.View
 {
@@ -384,6 +387,31 @@ namespace MyInsta.View
         private async void LikesBlock_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             await InstaServer.ShowLikers(CurrentUser, ((TextBlock)sender).Tag.ToString(), Frame);
+        }
+
+        private async void ProfileImageButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            await InstaServer.Download(((MenuFlyoutItem)sender).Tag.ToString());
+        }
+
+        private async void UIElement_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            var newCoreAppView = CoreApplication.CreateNewView();
+            var appView = ApplicationView.GetForCurrentView();
+            await newCoreAppView.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
+                async () =>
+                {
+                    var window = Window.Current;
+                    var newAppView = ApplicationView.GetForCurrentView();
+
+                    var frame = new Frame();
+                    window.Content = frame;
+
+                    frame.Navigate(typeof(ImagePage), InstaUserInfo.HdProfilePicUrlInfo.Uri);
+                    window.Activate();
+                    await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newAppView.Id,
+                        ViewSizePreference.UseMinimum, appView.Id, ViewSizePreference.UseMinimum);
+                });
         }
     }
 }

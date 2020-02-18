@@ -6,6 +6,7 @@ using MyInsta.Logic;
 using MyInsta.Model;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -38,14 +39,6 @@ namespace MyInsta.View
             InstaUser = e.Parameter as User;
 
             await InstaServer.GetUserData(InstaUser);
-            //if (InstaServer.IsInternetConnected())
-            //{
-            //    await InstaServer.GetUserData(InstaUser);
-            //}
-            //else
-            //{
-            //    _ = new CustomDialog("Warning!", "Check your internet connection", "All right");
-            //}
         }
 
         private async void NavigationViewControl_ItemInvoked(NavigationView sender,

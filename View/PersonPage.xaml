@@ -124,7 +124,7 @@
             <ColumnDefinition Width="131*" />
             <ColumnDefinition Width="131*" />
         </Grid.ColumnDefinitions>
-            <Image Grid.Column="1" Grid.ColumnSpan="4" Stretch="Fill" Grid.RowSpan="4" Source="{x:Bind InstaUserInfo.ProfilePicUrl, Mode=OneWay}">
+            <Image Grid.Column="1" Grid.ColumnSpan="4" Stretch="Fill" Grid.RowSpan="4" Source="{x:Bind InstaUserInfo.HdProfilePicVersions[0].Uri, Mode=OneWay}">
             <interactivity:Interaction.Behaviors>
                 <behaviors:Blur Value="100"></behaviors:Blur>
             </interactivity:Interaction.Behaviors> 
@@ -135,11 +135,12 @@
             Grid.Column="0"
             Width="200"
             Height="200"
+            DoubleTapped="UIElement_OnDoubleTapped"
             Margin="20,20,20,20">
             <Ellipse.Fill>
                 <ImageBrush>
                     <ImageBrush.ImageSource>
-                        <BitmapImage UriSource="{x:Bind InstaUserInfo.ProfilePicUrl, Mode=OneWay}" />
+                        <BitmapImage UriSource="{x:Bind InstaUserInfo.HdProfilePicVersions[0].Uri, Mode=OneWay}" />
                     </ImageBrush.ImageSource>
                 </ImageBrush>
             </Ellipse.Fill>
@@ -170,6 +171,12 @@
                                 CornerRadius="5"
                                 IsEnabled="{x:Bind ButtonUnFollow, Mode=OneWay}"
                                 Text="Unfollow" />
+                            <MenuFlyoutItem 
+                                x:Name="profileImageButton"
+                                HorizontalAlignment="Stretch"
+                                Click="ProfileImageButton_OnClick"
+                                Text="Download profile photo (HD)"
+                                Tag="{x:Bind InstaUserInfo.HdProfilePicUrlInfo.Uri}"/>
                             <MenuFlyoutItem
                                 x:Name="saveButton"
                                 HorizontalAlignment="Stretch"
@@ -357,6 +364,7 @@
                                                             <Image
                                                                 Height="400"
                                                                 Margin="10"
+                                                                ToolTipService.ToolTip="{x:Bind DatePost}"
                                                                 Source="{x:Bind UrlSmallImage}"/>
                                                         </StackPanel>
                                                     </DataTemplate>
@@ -495,6 +503,7 @@
                                             Margin="10"
                                             HorizontalAlignment="Center"
                                             Source="{x:Bind UrlBigImage}"
+                                            ToolTipService.ToolTip="{x:Bind DatePost}"
                                             Tag="{x:Bind Pk}"
                                             Tapped="Image_Tapped_1" />
                                         <Button
@@ -597,6 +606,7 @@
                                                 Width="500"
                                                 Height="400"
                                                 Margin="5"
+                                                ToolTipService.ToolTip="{x:Bind DatePost}"
                                                 HorizontalAlignment="Center"
                                                 Source="{x:Bind UrlBigImage}"
                                                 Tag="{x:Bind Pk}"

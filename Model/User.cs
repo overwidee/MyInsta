@@ -14,7 +14,6 @@ namespace MyInsta.Model
         public string PasswordUser { get; set; }
         public IInstaApi API;
         public UserData UserData { get; set; }
-
         public User()
         {
             UserData = new UserData();

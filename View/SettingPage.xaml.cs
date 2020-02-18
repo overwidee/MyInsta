@@ -62,24 +62,17 @@ namespace MyInsta.View
 
         private void ComboBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
-            if (((ComboBox)sender).SelectedItem.ToString() == "Light")
-            {
-                ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-                localSettings.Values["Theme"] = ApplicationTheme.Light.ToString();
-            }
-            else if (((ComboBox)sender).SelectedItem.ToString() == "Dark")
-            {
-                ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-                localSettings.Values["Theme"] = ApplicationTheme.Dark.ToString();
-            }
-            RestartApp();
+            ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            localSettings.Values["UTC"] = ((ComboBox)sender).SelectedValue.ToString();
         }
 
         private async void ButtonLogout_Click(object sender, RoutedEventArgs e)
         {
-            var log = await InstaServer.RemoveConnection(InstaUser.API);
+            bool log = await InstaServer.RemoveConnection(InstaUser.API);
             if (log)
+            {
                 RestartApp();
+            }
         }
 
         private async void RestartApp()

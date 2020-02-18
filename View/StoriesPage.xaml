@@ -124,15 +124,13 @@
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="localInsta1:CustomMedia">
                             <StackPanel Orientation="Vertical" Margin="20">
-                                <TextBlock
-                                    HorizontalAlignment="Center"
-                                    Text="{x:Bind DatePost}" FontWeight="Bold"/>
                                 <Image
                                     Width="500"
                                     Height="500"
                                     Margin="5"
                                     HorizontalAlignment="Center"
                                     Source="{x:Bind UrlBigImage}"
+                                    ToolTipService.ToolTip="{x:Bind DatePost}"
                                     Tag="{x:Bind Pk}"
                                     Tapped="Image_Tapped" />
                                 <Button
