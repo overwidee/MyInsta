@@ -16,6 +16,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
+using WinRTXamlToolkit.Controls.Extensions;
 
 // Документацию по шаблону элемента "Пустая страница" см. по адресу https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -67,7 +69,8 @@ namespace MyInsta.View
                 imageBack.Source = new BitmapImage
                     (new Uri(SelectedUserStory.User.ProfilePicUrl));
 
-                scrollList.ChangeView(null, 0, 1, true);
+                var scrollList = storiesList.GetScrollViewer();
+                scrollList.ChangeView(0, null, 1, true);
             }
         }
 

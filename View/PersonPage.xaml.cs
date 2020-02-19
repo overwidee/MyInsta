@@ -271,7 +271,7 @@ namespace MyInsta.View
 
         private async void Image_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            var high = HighlightsStories.FirstOrDefault(x => x.Pk == ((Image)sender).Tag.ToString());
+            var high = HighlightsStories.FirstOrDefault(x => x.Pk == ((Border)sender).Tag.ToString());
             
             if (high != null)
             {
@@ -289,7 +289,7 @@ namespace MyInsta.View
 
         private async void Image_Tapped_1(object sender, TappedRoutedEventArgs e)
         {
-            var high = UrlStories.FirstOrDefault(x => x.Pk == ((Image)sender).Tag.ToString());
+            var high = UrlStories.FirstOrDefault(x => x.Pk == ((Border)sender).Tag.ToString());
             if (high != null)
             {
                 string urlMedia = high.MediaType switch

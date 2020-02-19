@@ -512,8 +512,20 @@
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="model:CustomMedia">
                                     <StackPanel Margin="20" Orientation="Vertical">
-                                        <TextBlock HorizontalAlignment="Center" Text="{x:Bind DatePost}" />
-                                        <Image
+                                        <Border BorderBrush="{x:Null}"
+                                                BorderThickness="1"
+                                                Width="350"
+                                                Height="550"
+                                                ToolTipService.ToolTip="{x:Bind DatePost}"
+                                                Tag="{x:Bind Pk}"
+                                                Tapped="Image_Tapped_1" 
+                                                CornerRadius="15">
+                                                <Border.Background>
+                                                    <ImageBrush Stretch="UniformToFill" 
+                                                                ImageSource="{x:Bind UrlSmallImage}"/>
+                                                </Border.Background>
+                                        </Border>
+                                        <!--<Image
                                             Width="600"
                                             Height="500"
                                             Margin="10"
@@ -521,7 +533,7 @@
                                             Source="{x:Bind UrlBigImage}"
                                             ToolTipService.ToolTip="{x:Bind DatePost}"
                                             Tag="{x:Bind Pk}"
-                                            Tapped="Image_Tapped_1" />
+                                            Tapped="Image_Tapped_1" />-->
                                         <Button
                                             x:Name="buttonDownloadStory"
                                             x:Uid="DownloadStory"
@@ -601,7 +613,7 @@
                         </ListView>
                         <ScrollViewer
                             x:Name="scrollArchive"
-                            Margin="0, 122, 0, 0"
+                            Margin="0, 135, 0, 0"
                             VerticalScrollBarVisibility="Hidden">
                             <GridView
                                 x:Name="archiveList"
@@ -617,8 +629,20 @@
                                 <GridView.ItemTemplate>
                                     <DataTemplate x:DataType="model:CustomMedia">
                                         <StackPanel Margin="10" Orientation="Vertical">
-                                            <TextBlock HorizontalAlignment="Center" Text="{x:Bind DatePost}" />
-                                            <Image
+                                            <Border BorderBrush="{x:Null}"
+                                                    BorderThickness="1"
+                                                    Width="350"
+                                                    Height="550"
+                                                    ToolTipService.ToolTip="{x:Bind DatePost}"
+                                                    Tag="{x:Bind Pk}"
+                                                    Tapped="Image_Tapped" 
+                                                    CornerRadius="15">
+                                                <Border.Background>
+                                                    <ImageBrush Stretch="UniformToFill" 
+                                                                ImageSource="{x:Bind UrlSmallImage}"/>
+                                                </Border.Background>
+                                            </Border>
+                                            <!--<Image
                                                 Width="500"
                                                 Height="400"
                                                 Margin="5"
@@ -626,7 +650,7 @@
                                                 HorizontalAlignment="Center"
                                                 Source="{x:Bind UrlBigImage}"
                                                 Tag="{x:Bind Pk}"
-                                                Tapped="Image_Tapped" />
+                                                Tapped="Image_Tapped" />-->
                                             <Button
                                                 x:Name="buttonDownloadHigh"
                                                 x:Uid="DownloadStory"
