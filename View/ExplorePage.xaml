@@ -118,7 +118,7 @@
                                 <RowDefinition Height="80" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="20, 0">
                                 <Ellipse
                                     Width="40"
                                     Height="40"
@@ -140,10 +140,11 @@
                                     CornerRadius="5"
                                     Tag="{x:Bind UserPk}" />
                             </StackPanel>
-                            <StackPanel Grid.Row="1" Orientation="Vertical">
+                            <StackPanel Grid.Row="1" Orientation="Vertical" Margin="20, 0">
                                 <FlipView
                                     x:Name="itemsList"
-                                    Width="380"
+                                    Width="500"
+                                    Height="500"
                                     HorizontalContentAlignment="Center"
                                     Background="{x:Null}"
                                     ItemsSource="{x:Bind Items}"
@@ -156,10 +157,17 @@
                                     <FlipView.ItemTemplate>
                                         <DataTemplate x:DataType="model:CustomMedia">
                                             <StackPanel>
-                                                <Image
-                                                    Height="300"
-                                                    Margin="0"
-                                                    Source="{x:Bind UrlSmallImage}" />
+                                                <Border BorderBrush="{x:Null}"
+                                                        BorderThickness="1"
+                                                        Height="500"
+                                                        Width="500"
+                                                        ToolTipService.ToolTip="{x:Bind DatePost}"
+                                                        CornerRadius="15">
+                                                    <Border.Background>
+                                                        <ImageBrush Stretch="UniformToFill" 
+                                                                    ImageSource="{x:Bind UrlSmallImage}"/>
+                                                    </Border.Background>
+                                                </Border>
                                             </StackPanel>
                                         </DataTemplate>
                                     </FlipView.ItemTemplate>
@@ -206,6 +214,52 @@
                                                 Grid.Column="1"
                                                 Orientation="Horizontal">
                                         <Button
+                                                            Background="{x:Null}"
+                                                            CornerRadius="12"
+                                                            FontFamily="Segoe MDL2 Assets"
+                                                            FontSize="20"
+                                                            FontStretch="Condensed"
+                                                            FontWeight="Light"
+                                                            Content="&#xE712;"
+                                                            RenderTransformOrigin="0.5,0.5">
+                                            <Button.RenderTransform >
+                                                <RotateTransform Angle="90"/>
+                                            </Button.RenderTransform>
+                                            <Button.Resources>
+                                                <ResourceDictionary>
+                                                    <ResourceDictionary.ThemeDictionaries>
+                                                        <ResourceDictionary x:Key="Dark">
+                                                            <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White"/>
+                                                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent"/>
+                                                        </ResourceDictionary>
+                                                        <ResourceDictionary x:Key="Light">
+                                                            <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White"/>
+                                                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent"/>
+                                                        </ResourceDictionary>
+                                                    </ResourceDictionary.ThemeDictionaries>
+                                                </ResourceDictionary>
+                                            </Button.Resources>
+                                            <Button.Flyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyoutItem
+                                                                        Click="ButtonDownload_OnClick"
+                                                                        Text="Download"
+                                                                        Tag="{x:Bind Id}">
+                                                    </MenuFlyoutItem>
+                                                    <MenuFlyoutItem
+                                                                        Click="ButtonSaveInProfile_OnClick"
+                                                                        Text="Save in profile"
+                                                                        Tag="{x:Bind Items[0].Pk}">
+                                                    </MenuFlyoutItem>
+                                                    <MenuFlyoutItem
+                                                                        Click="ButtonShare_OnClick"
+                                                                        Text="Share in Direct"
+                                                                        Tag="{x:Bind Id}">
+                                                    </MenuFlyoutItem>
+                                                </MenuFlyout>
+                                            </Button.Flyout>
+                                        </Button>
+                                        <!--<Button
                                             x:Name="buttonDownload"
                                             Margin="5"
                                             Click="ButtonDownload_OnClick "
@@ -237,7 +291,7 @@
                                             <Button.Content>
                                                 <SymbolIcon Symbol="Share" />
                                             </Button.Content>
-                                        </Button>
+                                        </Button>-->
                                     </StackPanel>
                                 </Grid>
                             </StackPanel>

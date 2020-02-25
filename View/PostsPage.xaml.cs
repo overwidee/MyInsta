@@ -118,8 +118,8 @@ namespace MyInsta.View
             {
                 await InstaServer.DownloadAnyPost(
                     await InstaServer.GetInstaUserShortById(InstUser
-                        , ((IEnumerable<PostItem>)postsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).UserPk)
-                        , ((IEnumerable<PostItem>)postsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString()))?.Items);
+                        , ((IEnumerable<PostItem>)postsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((MenuFlyoutItem)sender).Tag.ToString())).UserPk)
+                        , ((IEnumerable<PostItem>)postsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((MenuFlyoutItem)sender).Tag.ToString()))?.Items);
             }
         }
 
@@ -132,7 +132,7 @@ namespace MyInsta.View
         private async void ButtonShare_Click(object sender, RoutedEventArgs e)
         {
             await InstaServer.ShareMedia(InstUser,
-                SavedPosts?.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString()))?.Items);
+                SavedPosts?.FirstOrDefault(x => x.Id == int.Parse(((MenuFlyoutItem)sender).Tag.ToString()))?.Items);
         }
 
         private async void CollectionsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -167,6 +167,16 @@ namespace MyInsta.View
                     InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString()))?.Items[0]);
                 InstUser.UserData.SavedPostItems.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0].Liked = false;
             }
+        }
+
+        private async void LikesItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            await InstaServer.ShowLikers(InstUser, ((MenuFlyoutItem)sender).Tag.ToString(), Frame);
+        }
+
+        private void CommentsItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            InstaServer.ShowComments(InstUser, this, ((MenuFlyoutItem)sender).Tag.ToString());
         }
     }
 }

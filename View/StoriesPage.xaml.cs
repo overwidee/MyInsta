@@ -70,7 +70,7 @@ namespace MyInsta.View
                     (new Uri(SelectedUserStory.User.ProfilePicUrl));
 
                 var scrollList = storiesList.GetScrollViewer();
-                scrollList.ChangeView(0, null, 1, true);
+                scrollList.ChangeView(null, 0, 1, true);
             }
         }
 

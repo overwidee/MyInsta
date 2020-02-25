@@ -77,10 +77,11 @@ namespace MyInsta.View
             }
 
             InstaUserInfo = await InstaServer.GetInfoUser(CurrentUser, SelectUser.UserName);
-            UserInfoLoaded();
-
             ButtonFollow = !InstaUserInfo.FriendshipStatus.Following;
             ButtonUnFollow = InstaUserInfo.FriendshipStatus.Following;
+            
+            UserInfoLoaded();
+
             SetBookmarkStatus();
 
             InstaHighlightFeeds = await InstaServer.GetArchiveCollectionStories(CurrentUser, SelectUser.Pk);
@@ -134,8 +135,8 @@ namespace MyInsta.View
         private async void ButtonDownload_Click(object sender, RoutedEventArgs e)
         {
             await InstaServer.DownloadAnyPost(await InstaServer.GetInstaUserShortById(CurrentUser,
-                    Posts.First(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).UserPk),
-                Posts.First(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items);
+                    Posts.First(x => x.Id == int.Parse(((MenuFlyoutItem)sender).Tag.ToString())).UserPk),
+                Posts.First(x => x.Id == int.Parse(((MenuFlyoutItem)sender).Tag.ToString())).Items);
         }
 
         private async void ButtonDownloadStory_Click(object sender, RoutedEventArgs e)
@@ -200,13 +201,13 @@ namespace MyInsta.View
 
         private async void ButtonSaveInProfile_Click(object sender, RoutedEventArgs e)
         {
-            await InstaServer.SaveMediaInProfile(CurrentUser, ((Button)sender).Tag.ToString());
+            await InstaServer.SaveMediaInProfile(CurrentUser, ((MenuFlyoutItem)sender).Tag.ToString());
         }
 
         private async void ButtonShare_Click(object sender, RoutedEventArgs e)
         {
             await InstaServer.ShareMedia(CurrentUser,
-                       Posts.First(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).Items);
+                       Posts.First(x => x.Id == int.Parse(((MenuFlyoutItem)sender).Tag.ToString())).Items);
         }
 
         private void PostBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
@@ -306,7 +307,6 @@ namespace MyInsta.View
 
         private void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            InstaServer.ShowComments(CurrentUser, this, ((TextBlock)sender).Tag.ToString());
         }
 
         private async void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender,
@@ -387,7 +387,6 @@ namespace MyInsta.View
 
         private async void LikesBlock_OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            await InstaServer.ShowLikers(CurrentUser, ((TextBlock)sender).Tag.ToString(), Frame);
         }
 
         private async void ProfileImageButton_OnClick(object sender, RoutedEventArgs e)
@@ -413,6 +412,16 @@ namespace MyInsta.View
                     await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newAppView.Id,
                         ViewSizePreference.UseMinimum, appView.Id, ViewSizePreference.UseMinimum);
                 });
+        }
+
+        private async void MenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            await InstaServer.ShowLikers(CurrentUser, ((MenuFlyoutItem)sender).Tag.ToString(), Frame);
+        }
+
+        private void MenuFlyoutItem1_OnClick(object sender, RoutedEventArgs e)
+        {
+            InstaServer.ShowComments(CurrentUser, this, ((MenuFlyoutItem)sender).Tag.ToString());
         }
     }
 }

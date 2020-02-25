@@ -19,6 +19,8 @@ namespace MyInsta.Model
         public string UrlVideo { get; set; }
         public DateTime Date { get; set; }
         public string DatePost => $"{Date.ToLongDateString()} {Date.ToLongTimeString()}";
+        public string CountLikersShow => $"Likes ({CountLikes})";
+        public string CountCommentsShow => $"Comments ({CountComments})";
     }
 
 

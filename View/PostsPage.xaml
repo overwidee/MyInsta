@@ -97,7 +97,7 @@
                           Margin="5, 0, 0, 0"
                           Foreground="White"/>
         </StackPanel>
-        
+
         <ListView
             x:Name="collectionsBox"
             Grid.Row="0"
@@ -150,7 +150,7 @@
         <ScrollViewer
             x:Name="scrollListPosts"
             Grid.Row="2"
-            Margin="10"
+            Margin="0, 15"
             VerticalScrollBarVisibility="Auto"
             ViewChanged="ScrollListPosts_ViewChanged">
             <GridView
@@ -182,7 +182,7 @@
                                 <RowDefinition Height="80" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="20, 0">
                                 <Ellipse
                                     Width="40"
                                     Height="40"
@@ -204,10 +204,11 @@
                                     CornerRadius="5"
                                     Tag="{x:Bind UserPk}" />
                             </StackPanel>
-                            <StackPanel Grid.Row="1" Orientation="Vertical">
+                            <StackPanel Grid.Row="1" Orientation="Vertical" Margin="20, 0">
                                 <FlipView
                                     x:Name="itemsList"
                                     Width="500"
+                                    Height="500"
                                     HorizontalContentAlignment="Center"
                                     ItemsSource="{x:Bind Items}"
                                     Background="{x:Null}"
@@ -240,50 +241,109 @@
                                         </DataTemplate>
                                     </FlipView.ItemTemplate>
                                 </FlipView>
-                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                                    <TextBlock
-                                        x:Uid="Likes"
-                                        Margin="0,0,10, 0"
-                                        FontSize="20" />
-                                    <TextBlock
-                                        Margin="0,0,10, 0"
-                                        FontSize="20"
-                                        Text="{x:Bind Items[0].CountLikes}" />
-                                </StackPanel>
-                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                                    <TextBlock
-                                        x:Uid="Comments"
-                                        Margin="0, 0, 10, 0"
-                                        FontSize="20" />
-                                    <TextBlock
-                                        Margin="0, 0, 10, 0"
-                                        FontSize="20"
-                                        Text="{x:Bind Items[0].CountComments}" />
-                                </StackPanel>
+
                                 <Grid>
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="6*"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="6*"/>
                                     </Grid.ColumnDefinitions>
                                     <CheckBox
                                         x:Name="buttonLike"
                                         Grid.Column="0"
-                                        Margin="20, 10, 10, 10"
+                                        Margin="20, 20, 10, 10"
                                         MinWidth="20"
                                         Click="buttonLike_Click"
                                         CornerRadius="0"
                                         IsChecked="{x:Bind Items[0].Liked}"
                                         Tag="{x:Bind Id}">
                                         <CheckBox.Content>
-                                            <SymbolIcon Symbol="Like" />
+                                            <SymbolIcon Symbol="Like"/>
                                         </CheckBox.Content>
                                     </CheckBox>
+                                    <!--<StackPanel Grid.Column="1" Orientation="Vertical">
+                                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                            <TextBlock
+                                                x:Uid="Likes"
+                                                Margin="0,0,10, 0"
+                                                FontSize="20" />
+                                            <TextBlock
+                                                Margin="0,0,10, 0"
+                                                FontSize="20"
+                                                Text="{x:Bind Items[0].CountLikes}" />
+                                        </StackPanel>
+                                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                            <TextBlock
+                                                x:Uid="Comments"
+                                                Margin="0, 0, 10, 0"
+                                                FontSize="20" />
+                                            <TextBlock
+                                                Margin="0, 0, 10, 0"
+                                                FontSize="20"
+                                                Text="{x:Bind Items[0].CountComments}" />
+                                        </StackPanel>
+                                    </StackPanel>-->
                                     <StackPanel HorizontalAlignment="Right"
-                                                Grid.Column="1"
+                                                Grid.Column="2"
                                                 Orientation="Horizontal">
-                                        <Button
+                                        <Button 
+                                            Background="{x:Null}"
+                                            CornerRadius="12"
+                                            FontFamily="Segoe MDL2 Assets"
+                                            FontSize="20"
+                                            Margin="0, 0, 10, 0"
+                                            FontStretch="Condensed"
+                                            FontWeight="Light"
+                                            Content="&#xE712;"
+                                            RenderTransformOrigin="0.5,0.5">
+                                            <Button.RenderTransform >
+                                                <RotateTransform Angle="90"/>
+                                            </Button.RenderTransform>
+                                            <Button.Resources>
+                                                <ResourceDictionary>
+                                                    <ResourceDictionary.ThemeDictionaries>
+                                                        <ResourceDictionary x:Key="Dark">
+                                                            <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White"/>
+                                                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent"/>
+                                                        </ResourceDictionary>
+                                                        <ResourceDictionary x:Key="Light">
+                                                            <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White"/>
+                                                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent"/>
+                                                        </ResourceDictionary>
+                                                    </ResourceDictionary.ThemeDictionaries>
+                                                </ResourceDictionary>
+                                            </Button.Resources>
+                                            <Button.Flyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyoutItem 
+                                                        Text="{x:Bind Items[0].CountLikersShow}"
+                                                        Tag="{x:Bind Items[0].Pk}"
+                                                        Click="LikesItem_OnClick">
+                                                    </MenuFlyoutItem>
+                                                    <MenuFlyoutItem 
+                                                        Text="{x:Bind Items[0].CountCommentsShow}"
+                                                        Tag="{x:Bind Items[0].Pk}"
+                                                        Click="CommentsItem_OnClick"
+                                                                    >
+                                                    </MenuFlyoutItem>
+                                                    <MenuFlyoutSeparator/>
+                                                    <MenuFlyoutItem 
+                                                    Click="ButtonDownload_Click"
+                                                    Text="Download post"
+                                                    Tag="{x:Bind Id}"
+                                                    />
+                                                    <MenuFlyoutItem
+                                                    Click="ButtonShare_Click"
+                                                    Text="Share in direct"
+                                                    Tag="{x:Bind Id}"
+                                                    />
+                                                </MenuFlyout>
+                                            </Button.Flyout>
+                                        </Button>
+                                        <!--<Button
                                             x:Name="buttonDownload"
                                             Margin="5"
+                                            Background="{x:Null}"
                                             Click="ButtonDownload_Click"
                                             ToolTipService.ToolTip="Download saved post"
                                             CornerRadius="10"
@@ -291,8 +351,8 @@
                                             <Button.Content>
                                                 <SymbolIcon Symbol="Download" />
                                             </Button.Content>
-                                        </Button>
-                                        <Button
+                                        </Button>-->
+                                        <!--<Button
                                             x:Name="buttonShare"
                                             Margin="5"
                                             Click="ButtonShare_Click"
@@ -302,7 +362,7 @@
                                             <Button.Content>
                                                 <SymbolIcon Symbol="Share" />
                                             </Button.Content>
-                                        </Button>
+                                        </Button>-->
                                     </StackPanel>
                                 </Grid>
                             </StackPanel>

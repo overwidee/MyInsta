@@ -508,7 +508,7 @@ namespace MyInsta.Logic
                 Pk = userInfo.Value.Pk,
                 ProfilePicture = userInfo.Value.ProfilePicUrl,
                 ProfilePictureId = userInfo.Value.ProfilePicId,
-                ProfilePicUrl = userInfo.Value.ProfilePicUrl
+                ProfilePicUrl = userInfo.Value.HdProfilePicUrlInfo.Uri
             };
         }
 

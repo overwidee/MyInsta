@@ -41,9 +41,9 @@
     <Grid Background="{ThemeResource CMapUwpAcrylicBrush}">
         <GridView
             x:Name="mainGrid"
-            Grid.Row="1"
             Grid.ColumnSpan="4"
             HorizontalAlignment="Center"
+            VerticalAlignment="Center"
             IsItemClickEnabled="True"
             ItemClick="MainGrid_ItemClick"
             ItemsSource="{x:Bind InstaUser.UserData.Bookmarks}"

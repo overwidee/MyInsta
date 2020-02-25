@@ -52,5 +52,10 @@ namespace MyInsta.View
         {
             listFollowers.ItemsSource = InstaServer.SearchByUserName(InstaUser.UserData.UserFriends, ((AutoSuggestBox)sender).Text);
         }
+
+        private void SharedPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            ((ContentDialog)((Frame)Parent).Parent).Background = Background;
+        }
     }
 }

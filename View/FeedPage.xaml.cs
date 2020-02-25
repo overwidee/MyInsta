@@ -159,15 +159,15 @@ namespace MyInsta.View
             {
                 await InstaServer.DownloadAnyPost(
                     await InstaServer.GetInstaUserShortById(InstaUser
-                        , ((IEnumerable<PostItem>)PostsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).UserPk)
-                    , ((IEnumerable<PostItem>)PostsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString()))?.Items);
+                        , ((IEnumerable<PostItem>)PostsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((MenuFlyoutItem)sender).Tag.ToString())).UserPk)
+                    , ((IEnumerable<PostItem>)PostsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((MenuFlyoutItem)sender).Tag.ToString()))?.Items);
             }
         }
 
         private async void ButtonShare_OnClick(object sender, RoutedEventArgs e)
         {
             await InstaServer.ShareMedia(InstaUser,
-                Feed?.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString()))?.Items);
+                Feed?.FirstOrDefault(x => x.Id == int.Parse(((MenuFlyoutItem)sender).Tag.ToString()))?.Items);
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
@@ -213,21 +213,26 @@ namespace MyInsta.View
             Window.Current.CoreWindow.PointerCursor = cursorBeforePointerEntered;
         }
 
-        private async void UIElement_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            await InstaServer.ShowLikers(InstaUser, ((TextBlock)sender).Tag.ToString(), Frame);
-        }
-
-        private void BlockComments_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            InstaServer.ShowComments(InstaUser, this, ((TextBlock)sender).Tag.ToString());
-        }
-
         private void FeedPage_OnUnloaded(object sender, RoutedEventArgs e)
         {
             InstaServer.UpdateCountFeed -= UpdateCountFeed;
             InstaServer.OnUserFeedLoaded -= UpdateCheckStatus;
             InstaServer.OnUsersFeedLoaded -= UsersFeedLoaded;
+        }
+
+        private async void MenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            await InstaServer.ShowLikers(InstaUser, ((MenuFlyoutItem)sender).Tag.ToString(), Frame);
+        }
+
+        private void MenuFlyoutItem1_OnClick(object sender, RoutedEventArgs e)
+        {
+            InstaServer.ShowComments(InstaUser, this, ((MenuFlyoutItem)sender).Tag.ToString());
+        }
+
+        private void MenuFlyoutItem2_OnClick(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }
