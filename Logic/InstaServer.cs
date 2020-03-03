@@ -115,51 +115,123 @@ namespace MyInsta.Logic
                     }).UseLogger(new DebugLogger(LogLevel.Exceptions)).Build();
                     userObject.API = api;
 
-                    var logResult = await userObject.API.LoginAsync();
-                    if (logResult.Succeeded)
+                    if (!userObject.API.IsUserAuthenticated)
                     {
-                        ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-                        localSettings.Values["Login"] = userObject.LoginUser;
-                        localSettings.Values["Password"] = userObject.PasswordUser;
+                        await userObject.API.SendRequestsBeforeLoginAsync();
+                        await Task.Delay(5000);
 
-                        await SaveApiString(userObject.API);
-                        page.Frame.Navigate(typeof(MenuPage), userObject);
-                    }
-                    else
-                    {
-                        switch (logResult.Value)
+                        var logResult = await userObject.API.LoginAsync();
+                        if (logResult.Succeeded)
                         {
-                            case InstaLoginResult.InvalidUser:
-                                _ = new CustomDialog("Warning", logResult.Info.Message, "Ok");
-                                break;
-                            case InstaLoginResult.Success:
-                                page.Frame.Navigate(typeof(MenuPage), userObject);
-                                break;
-                            case InstaLoginResult.Exception:
-                                _ = new CustomDialog("Warning", logResult.Info.Message, "Ok");
-                                break;
-                            case InstaLoginResult.BadPassword:
-                                _ = new CustomDialog("Warning", "Bad password", "Ok");
-                                break;
-                            case InstaLoginResult.ChallengeRequired:
-                                page.Frame.Navigate(typeof(VerifyPage), userObject);
-                                break;
-                            case InstaLoginResult.TwoFactorRequired:
-                                userObject.API = await LoginByTwoFactor(userObject);
-                                if (userObject.API != null)
+                            ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+                            localSettings.Values["Login"] = userObject.LoginUser;
+                            localSettings.Values["Password"] = userObject.PasswordUser;
+
+                            await userObject.API.SendRequestsAfterLoginAsync();
+                            SaveSession(userObject.API);
+
+                            await SaveApiString(userObject.API);
+                            page.Frame.Navigate(typeof(MenuPage), userObject);
+
+                        }
+                        else
+                        {
+                            if (logResult.Value == InstaLoginResult.ChallengeRequired)
+                            {
+                                var challenge = await userObject.API.GetChallengeRequireVerifyMethodAsync();
+                                if (challenge.Succeeded)
                                 {
-                                    page.Frame.Navigate(typeof(MenuPage), userObject);
+                                    if (challenge.Value.SubmitPhoneRequired)
+                                    {
+                                        var submitPhone = await userObject.API.SubmitPhoneNumberForChallengeRequireAsync("+375333085326");
+                                        if (submitPhone.Succeeded)
+                                        {
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        page.Frame.Navigate(typeof(VerifyPage), userObject);
+
+                                    }
                                 }
-                                break;
-                            case InstaLoginResult.CheckpointLoggedOut:
-                                break;
-                            default:
-                                _ = new CustomDialog("Warning", logResult.Info.Message, "Ok");
-                                break;
+                            }
+                            //switch (logResult.Value)
+                            //{
+                            //    case InstaLoginResult.InvalidUser:
+                            //        _ = new CustomDialog("Warning", logResult.Info.Message, "Ok");
+                            //        break;
+                            //    case InstaLoginResult.Success:
+                            //        page.Frame.Navigate(typeof(MenuPage), userObject);
+                            //        break;
+                            //    case InstaLoginResult.Exception:
+                            //        _ = new CustomDialog("Warning", logResult.Info.Message, "Ok");
+                            //        break;
+                            //    case InstaLoginResult.BadPassword:
+                            //        _ = new CustomDialog("Warning", "Bad password", "Ok");
+                            //        break;
+                            //    case InstaLoginResult.ChallengeRequired:
+                            //        var challenge = await userObject.API.GetChallengeRequireVerifyMethodAsync();
+                            //        if (challenge.Succeeded)
+                            //        {
+
+                            //        }
+                            //        //page.Frame.Navigate(typeof(VerifyPage), userObject);
+                            //        break;
+                            //    case InstaLoginResult.TwoFactorRequired:
+                            //        userObject.API = await LoginByTwoFactor(userObject);
+                            //        if (userObject.API != null)
+                            //        {
+                            //            page.Frame.Navigate(typeof(MenuPage), userObject);
+                            //        }
+                            //        break;
+                            //    case InstaLoginResult.CheckpointLoggedOut:
+                            //        break;
+                            //    default:
+                            //        _ = new CustomDialog("Warning", logResult.Info.Message, "Ok");
+                            //        break;
+                            //}
                         }
                     }
                 }
             }
+        }
+
+        static void LoadSession(IInstaApi InstaApi)
+        {
+            InstaApi?.SessionHandler?.Load();
+
+            //// Old load session
+            //try
+            //{
+            //    if (File.Exists(StateFile))
+            //    {
+            //        Debug.WriteLine("Loading state from file");
+            //        using (var fs = File.OpenRead(StateFile))
+            //        {
+            //            InstaApi.LoadStateDataFromStream(fs);
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine(ex);
+            //}
+        }
+
+        static void SaveSession(IInstaApi InstaApi)
+        {
+            if (InstaApi == null)
+            {
+                return;
+            }
+
+            if (!InstaApi.IsUserAuthenticated)
+            {
+                return;
+            }
+
+            InstaApi.SessionHandler.Save();
         }
         private static bool ExistsConnection()
         {
@@ -178,16 +250,15 @@ namespace MyInsta.Logic
 
         public static async Task<bool> SendSMSVerify(IInstaApi api)
         {
-            var challenge = await api.GetChallengeRequireVerifyMethodAsync();
-            if (challenge.Value.StepData != null && challenge.Value.StepData.PhoneNumber != null)
+
+            var result = await api.RequestVerifyCodeToSMSForChallengeRequireAsync();
+            if (result.Succeeded)
             {
-                var result = await api.RequestVerifyCodeToSMSForChallengeRequireAsync();
-                if (result.Succeeded)
-                    _ = new CustomDialog("Message", $"Code sent on email {challenge.Value.StepData.PhoneNumber}",
-                        "All right");
-                return result.Succeeded;
+                _ = new CustomDialog("Message", $"Code sent on email {result.Value}",
+                    "All right");
             }
-            return false;
+
+            return result.Succeeded;
         }
 
         public static async Task<bool> SendEmailVerify(IInstaApi api)
@@ -212,7 +283,7 @@ namespace MyInsta.Logic
                 if (result.Value == InstaLoginResult.TwoFactorRequired)
                 {
                     // TwoFactorRequired
-                    await user.API.SendTwoFactorLoginSMSAsync();
+                    //await user.API.SendTwoFactorLoginSMSAsync();
                     var dialog = new InputDialog("Two factor required code:", "Send");
                     if (await dialog.ShowAsync() == ContentDialogResult.Primary)
                     {
@@ -337,7 +408,7 @@ namespace MyInsta.Logic
         private static async Task GetUserFollowers(User user)
         {
             var f = await user.API.UserProcessor.GetUserFollowersAsync(user.LoginUser,
-                PaginationParameters.MaxPagesToLoad(5));
+                PaginationParameters.Empty);
             foreach (var item in f.Value)
             {
                 if (!user.UserData.UserFollowers.Contains(item))
@@ -363,7 +434,7 @@ namespace MyInsta.Logic
         private static async Task GetUserFriendsAndUnfollowers(User user, bool all = false, int count = 30)
         {
             var fling = await user.API.UserProcessor.GetUserFollowingAsync(user.LoginUser,
-                PaginationParameters.MaxPagesToLoad(5));
+                PaginationParameters.Empty);
             if (all)
             {
                 count = fling.Value.Count;
@@ -658,7 +729,8 @@ namespace MyInsta.Logic
                     CountLikes = item.LikesCount,
                     CountComments = item.CommentsCount != null ? int.Parse(item.CommentsCount) : 0,
                     MediaType = MediaType.Image,
-                    Liked = item.HasLiked
+                    Liked = item.HasLiked,
+                    Date = item.TakenAt.AddHours((DateTime.Now - DateTime.UtcNow).Hours)
                 };
                 if (item.Videos != null && item.Videos.Count != 0)
                 {
@@ -684,7 +756,8 @@ namespace MyInsta.Logic
                             CountLikes = item.LikesCount,
                             CountComments = int.Parse(item.CommentsCount),
                             MediaType = MediaType.Image,
-                            Liked = item.HasLiked
+                            Liked = item.HasLiked,
+                            Date = item.TakenAt.AddHours((DateTime.Now - DateTime.UtcNow).Hours)
                         };
                         if (car.Videos != null && car.Videos.Count != 0)
                         {
@@ -734,7 +807,7 @@ namespace MyInsta.Logic
                         CountLikes = item.LikesCount,
                         CountComments = item.CommentsCount != null ? int.Parse(item.CommentsCount) : 0,
                         MediaType = MediaType.Image,
-                        Date = item.TakenAt.AddHours(UtcValue),
+                        Date = item.TakenAt.AddHours((DateTime.Now - DateTime.UtcNow).Hours),
                         Liked = item.HasLiked
                     };
                     if (item.Videos != null && item.Videos.Count != 0)
@@ -764,7 +837,7 @@ namespace MyInsta.Logic
                                 CountComments = item.CommentsCount != null ? int.Parse(item.CommentsCount) : 0,
                                 MediaType = MediaType.Image,
                                 Liked = item.HasLiked,
-                                Date = item.TakenAt.AddHours(UtcValue)
+                                Date = item.TakenAt.AddHours((DateTime.Now - DateTime.UtcNow).Hours)
                             };
                             if (car.Videos != null && car.Videos.Count != 0)
                             {
@@ -924,7 +997,7 @@ namespace MyInsta.Logic
                     UrlBigImage = story.ImageList[0].Uri,
                     UrlSmallImage = story.ImageList[1].Uri,
                     MediaType = MediaType.Image,
-                    Date = story.TakenAt.AddHours(UtcValue)
+                    Date = story.TakenAt.AddHours((DateTime.Now - DateTime.UtcNow).Hours)
                 };
                 if (story.VideoList.Count > 0)
                 {
@@ -1116,7 +1189,10 @@ namespace MyInsta.Logic
         {
             await DownloadMedia(new CustomMedia()
             {
-                Pk = "123", MediaType = MediaType.Image, Name = "ProfileImage", UrlBigImage = url
+                Pk = "123",
+                MediaType = MediaType.Image,
+                Name = "ProfileImage",
+                UrlBigImage = url
             });
         }
 
@@ -1467,36 +1543,43 @@ namespace MyInsta.Logic
 
         #region  Custom feed
 
-        public static async Task GetCustomFeed(User user, IEnumerable<UserFeed> userNames, int days = 3)
+        public static string FeedMaxLoadedId;
+        public static async Task GetCustomFeed(User user, bool refresh = false)
         {
-            IsFeedLoading = true;
-            user.UserData.Feed = new ObservableCollection<PostItem>();
-            userNames.ForEach(x => x.Received = false);
-
-            var medias = new ObservableCollection<PostItem>();
-            var id = 1;
-            var count = 0;
-            foreach (var username in userNames)
+            if (!IsFeedLoading)
             {
-                var m = await user.API.UserProcessor.GetUserMediaAsync(username.InstaUserShort.UserName, PaginationParameters.MaxPagesToLoad(0));
-                foreach (var media in GetUrlsMediasUser(m.Value, userShort: username.InstaUserShort))
+                if (refresh)
                 {
-                    if (media.Items[0].Date >= DateTime.Now.AddDays(-days))
-                    {
-                        media.Id = id;
-                        id++;
-                        user.UserData.Feed.Add(media);
+                    FeedMaxLoadedId = "";
+                }
 
-                        user.UserData.Feed = new ObservableCollection<PostItem>(user.UserData.Feed.OrderByDescending(x => x.Items[0].Date).ToList());
+                IsFeedLoading = true;
+                var timeLineFeed =
+                    await user.API.FeedProcessor.GetUserTimelineFeedAsync(PaginationParameters.MaxPagesToLoad(1)
+                        .StartFromMaxId(FeedMaxLoadedId));
+                FeedMaxLoadedId = timeLineFeed.Value.NextMaxId;
+
+                int i = user.UserData.Feed.Count != 0 ? user.UserData.Feed.Last().Id + 1 : 1;
+                foreach (var media in timeLineFeed.Value.Medias)
+                {
+                    var userMedia = user.UserData.UserFollowing.FirstOrDefault(x => x.UserName == media.User.UserName);
+                    if (userMedia != null)
+                    {
+                        var m = user.UserData.Feed.FirstOrDefault(x => x.Items[0].Pk == media.Pk);
+                        if (m != null)
+                        {
+                            user.UserData.Feed.Remove(m);
+                        }
+
+                        user.UserData.Feed.Add(GetPostItem(media, i));
+                        OnUserFeedLoaded?.Invoke(i);
+                        i++;
                     }
                 }
-                user.UserData.FeedObjUsers.FirstOrDefault(x => x.InstaUserShort.Pk == username.InstaUserShort.Pk).Received = true;
-                OnUserFeedLoaded?.Invoke(count);
-                count++;
-            }
 
-            IsFeedLoading = false;
-            UpdateCountFeed?.Invoke();
+                IsFeedLoading = false;
+                UpdateCountFeed?.Invoke();
+            }
         }
 
         public static async Task<ObservableCollection<PostItem>> GetCustomFeedA(User user, InstaUserShort username, int days = 3)

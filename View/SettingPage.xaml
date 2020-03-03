@@ -42,33 +42,6 @@
                 <x:String>Русский</x:String>
             </ComboBox>
 
-            <ComboBox Header="UTC" Width="200" SelectionChanged="ComboBox_SelectionChanged_1" Margin="10">
-                <x:String>-12</x:String>
-                <x:String>-11</x:String>
-                <x:String>-10</x:String>
-                <x:String>-9</x:String>
-                <x:String>-8</x:String>
-                <x:String>-7</x:String>
-                <x:String>-6</x:String>
-                <x:String>-5</x:String>
-                <x:String>-4</x:String>
-                <x:String>-3</x:String>
-                <x:String>-2</x:String>
-                <x:String>-1</x:String>
-                <x:String>0</x:String>
-                <x:String>1</x:String>
-                <x:String>2</x:String>
-                <x:String>3</x:String>
-                <x:String>4</x:String>
-                <x:String>5</x:String>
-                <x:String>6</x:String>
-                <x:String>7</x:String>
-                <x:String>8</x:String>
-                <x:String>9</x:String>
-                <x:String>10</x:String>
-                <x:String>11</x:String>
-                <x:String>12</x:String>
-            </ComboBox>
             <Button x:Name="buttonLogout" Click="ButtonLogout_Click" Content="Log out" HorizontalAlignment="Center" Margin="10"/>
         </StackPanel>
     </Grid>

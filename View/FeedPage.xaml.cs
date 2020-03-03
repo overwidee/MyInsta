@@ -19,6 +19,7 @@ using InstagramApiSharp.Classes.Models;
 using Microsoft.Toolkit.Uwp.UI.Controls.TextToolbarSymbols;
 using MyInsta.Logic;
 using MyInsta.Model;
+using WinRTXamlToolkit.Tools;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -33,44 +34,27 @@ namespace MyInsta.View
         {
             InitializeComponent();
 
-            InstaServer.UpdateCountFeed += UpdateCountFeed;
-            InstaServer.OnUserFeedLoaded += UpdateCheckStatus;
-            InstaServer.OnUsersFeedLoaded += UsersFeedLoaded;
-
-            PostsList.ItemsSource = Feed;
+            InstaServer.OnUserFeedLoaded += UpdateList;
         }
 
         #region CompleteEvent
-        private void UpdateCountFeed()
+        private void UpdateList(int pk)
         {
-            if (!InstaServer.IsFeedLoading && InstaUser.UserData.Feed.Count == 0)
+            foreach (var postItem in InstaUser.UserData.Feed)
             {
-                ProgressStack.Visibility = Visibility.Visible;
-                FeedProgressRing.IsActive = false;
-                LoadBlock.Text = "No posts";
+                var m = Feed.FirstOrDefault(x => x.Id == postItem.Id);
+                if (m == null)
+                {
+                    Feed.Add(postItem);
+                }
             }
-        }
-        private void UpdateCheckStatus(int pk)
-        {
+
             ProgressStack.Visibility = Visibility.Collapsed;
-            Feed = InstaUser.UserData.Feed;
-            PostsList.ItemsSource = Feed;
-
-            (ListFollowers.Items[pk] as UserFeed).Received = true;
-
-            if (ListFollowers.ContainerFromItem(ListFollowers.Items[pk]) is ListViewItem listViewItem)
-            {
-                var itemsStackPanel = listViewItem.ContentTemplateRoot as StackPanel;
-                var myToggleSwitch = itemsStackPanel.Children.FirstOrDefault(x => x is CheckBox) as CheckBox;
-                myToggleSwitch.IsChecked = true;
-            }
-        }
-        private void UsersFeedLoaded()
-        {
-            MainProgressRing.IsActive = false;
+            LoadBlock.Visibility = Visibility.Collapsed;
         }
         #endregion
 
+        private int count = 6;
         public ObservableCollection<PostItem> Feed { get; set; } = new ObservableCollection<PostItem>();
         public ObservableCollection<UserFeed> ListInstaUserShorts { get; set; }
         public User InstaUser { get; set; }
@@ -81,37 +65,27 @@ namespace MyInsta.View
             InstaUser = e.Parameter as User;
             if (InstaUser != null)
             {
-                if (InstaUser.UserData.FeedObjUsers?.Count == 0)
-                {
-                    SplitView.IsPaneOpen = true;
-                    InstaUser.UserData.FeedObjUsers = await InstaServer.GetUserInstaShortsFeed(InstaUser, InstaUser.UserData.FeedUsers);
-                }
-                else
-                {
-                    MainProgressRing.IsActive = false;
-                }
+                InstaUser.UserData.Feed.Clear();
 
-                ListInstaUserShorts = InstaUser.UserData.FeedObjUsers;
-                ListFollowers.ItemsSource = ListInstaUserShorts;
-                LoadButton.IsEnabled = true;
-
-                if (InstaUser.UserData.Feed.Count != 0)
+                if (!InstaServer.IsFeedLoading)
                 {
-                    Feed = InstaUser.UserData.Feed;
-                    PostsList.ItemsSource = Feed;
-
-                    ProgressStack.Visibility = Visibility.Collapsed;
-                }
-                else if (!InstaServer.IsFeedLoading)
-                {
-                    InstaUser.UserData.Feed = new ObservableCollection<PostItem>();
-
-                    await InstaServer.GetCustomFeed(InstaUser, ListInstaUserShorts, 3);
+                    InstaServer.FeedMaxLoadedId = "";
+                    await InstaServer.GetCustomFeed(InstaUser, true);
                 }
             }
         }
-        private void ScrollListPosts_OnViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        private async void ScrollListPosts_OnViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
+            var svPosts = sender as ScrollViewer;
+
+            double verticalOffset = svPosts.VerticalOffset;
+            double maxVerticalOffset = svPosts.ScrollableHeight;
+
+
+            if (verticalOffset >= maxVerticalOffset - maxVerticalOffset / 3 && InstaUser.UserData.Feed.Count < 250)
+            {
+                await InstaServer.GetCustomFeed(InstaUser);
+            }
         }
 
         private async void ButtonProfile_OnClick(object sender, RoutedEventArgs e)
@@ -119,7 +93,6 @@ namespace MyInsta.View
             InstaUserShort user = await InstaServer.GetInstaUserShortById(InstaUser, long.Parse(((Button)sender).Tag.ToString()));
             Frame.Navigate(typeof(PersonPage), new object[] { user, InstaUser });
         }
-
         private void ItemsList_OnTapped(object sender, TappedRoutedEventArgs e)
         {
             if (((FlipView)sender).SelectedItem is CustomMedia sav)
@@ -135,7 +108,6 @@ namespace MyInsta.View
                 _ = mediaDialog.ShowMediaAsync();
             }
         }
-
         private async void ButtonLike_OnClick(object sender, RoutedEventArgs e)
         {
             var isChecked = ((CheckBox)sender).IsChecked;
@@ -152,7 +124,6 @@ namespace MyInsta.View
                 Feed.FirstOrDefault(x => x.Id == int.Parse(((CheckBox)sender).Tag.ToString())).Items[0].Liked = false;
             }
         }
-
         private async void ButtonDownload_OnClick(object sender, RoutedEventArgs e)
         {
             if (PostsList.ItemsSource != null)
@@ -163,61 +134,23 @@ namespace MyInsta.View
                     , ((IEnumerable<PostItem>)PostsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((MenuFlyoutItem)sender).Tag.ToString()))?.Items);
             }
         }
-
         private async void ButtonShare_OnClick(object sender, RoutedEventArgs e)
         {
             await InstaServer.ShareMedia(InstaUser,
                 Feed?.FirstOrDefault(x => x.Id == int.Parse(((MenuFlyoutItem)sender).Tag.ToString()))?.Items);
         }
 
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
-        {
-            SplitView.IsPaneOpen = !SplitView.IsPaneOpen;
-        }
-
         private async void LoadButton_OnClick(object sender, RoutedEventArgs e)
         {
-            SplitView.IsPaneOpen = true;
             ProgressStack.Visibility = Visibility.Visible;
 
-            PostsList.ItemsSource = null;
-            await InstaServer.GetCustomFeed(InstaUser, ListInstaUserShorts, 3);
-        }
-
-        private async void AddButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            var res = await InstaServer.AddFeedUsers(InstaUser, 15);
-            foreach (var user in res)
-            {
-                ListInstaUserShorts.Add(new UserFeed() { InstaUserShort = user, Received = false });
-            }
-            ListFollowers.ItemsSource = ListInstaUserShorts;
-        }
-
-        private async void DeleteButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            await InstaServer.RemoveFeedUser(InstaUser, ((MenuFlyoutItem)sender).Tag.ToString());
-            var remove = ListInstaUserShorts.FirstOrDefault(x => x.InstaUserShort.UserName == ((MenuFlyoutItem)sender).Tag.ToString());
-            ListInstaUserShorts.Remove(remove);
-        }
-
-        CoreCursor cursorBeforePointerEntered = null;
-        private void UIElement_OnPointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            cursorBeforePointerEntered = Window.Current.CoreWindow.PointerCursor;
-            Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Hand, 0);
-        }
-
-        private void UIElement_OnPointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            Window.Current.CoreWindow.PointerCursor = cursorBeforePointerEntered;
+            Feed.Clear();
+            await InstaServer.GetCustomFeed(InstaUser);
         }
 
         private void FeedPage_OnUnloaded(object sender, RoutedEventArgs e)
         {
-            InstaServer.UpdateCountFeed -= UpdateCountFeed;
-            InstaServer.OnUserFeedLoaded -= UpdateCheckStatus;
-            InstaServer.OnUsersFeedLoaded -= UsersFeedLoaded;
+            InstaServer.OnUserFeedLoaded -= UpdateList;
         }
 
         private async void MenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)
@@ -232,7 +165,6 @@ namespace MyInsta.View
 
         private void MenuFlyoutItem2_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
         }
     }
 }

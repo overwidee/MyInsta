@@ -135,7 +135,7 @@
                     <NavigationViewItem
                         x:Name="button_feed"
                         Content="Your feed"
-                        Icon="ContactInfo"
+                        Icon="Home"
                         Style="{StaticResource TextStyle}"
                         Tag="Feed" />
                     <NavigationViewItem

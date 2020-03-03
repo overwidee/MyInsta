@@ -55,43 +55,53 @@
             FontSize="20"
             Foreground="{ThemeResource BackButtonPointerOverForegroundThemeBrush}"
             KeyUp="SearchBox_KeyDown"
+            QuerySubmitted="SearchBox_OnQuerySubmitted"
             QueryIcon="Find" />
-        <ListView
+        <ScrollViewer Grid.Row="1" ViewChanged="ScrollViewer_OnViewChanged">
+            <GridView
             x:Name="listFollowers"
             Grid.Row="1"
             Margin="10,10,10,10"
-            ItemsSource="{x:Bind InstaUser.UserData.UserFriends}"
+            ItemsSource="{x:Bind TempUsers}"
+            HorizontalAlignment="Center"
             SelectionChanged="ListFollowers_SelectionChanged">
-            <ListView.ItemTemplate>
-                <DataTemplate x:Name="SingleLineDataTemplate" x:DataType="localInsta:InstaUserShort">
-                    <StackPanel
-                        Grid.Column="0"
-                        Height="80"
-                        Orientation="Horizontal"
-                        Padding="12">
-                        <Ellipse
-                            Width="56"
-                            Height="56"
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+                <GridView.ItemTemplate>
+                    <DataTemplate x:Name="SingleLineDataTemplate" x:DataType="localInsta:InstaUserShort">
+                        <StackPanel
+                        Orientation="Vertical"
+                        Padding="12"
+                        Width="200"
+                        Margin="20">
+                            <Ellipse
+                            Width="150"
+                            Height="150"
                             VerticalAlignment="Center">
-                            <Ellipse.Fill>
-                                <ImageBrush>
-                                    <ImageBrush.ImageSource>
-                                        <BitmapImage UriSource="{Binding ProfilePicUrl}" />
-                                    </ImageBrush.ImageSource>
-                                </ImageBrush>
-                            </Ellipse.Fill>
-                        </Ellipse>
-                        <TextBlock
-                            Margin="12,0,0,0"
+                                <Ellipse.Fill>
+                                    <ImageBrush>
+                                        <ImageBrush.ImageSource>
+                                            <BitmapImage UriSource="{Binding ProfilePicUrl}" />
+                                        </ImageBrush.ImageSource>
+                                    </ImageBrush>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <TextBlock
+                            Margin="5"
                             VerticalAlignment="Center"
-                            FontFamily="Century Gothic"
                             Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
                             Style="{ThemeResource BaseTextBlockStyle}"
-                            Text="{x:Bind UserName}" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                            Text="{x:Bind UserName}" 
+                            TextWrapping="WrapWholeWords"
+                            HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+        </ScrollViewer>
     </Grid>
 
 </Page>

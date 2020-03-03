@@ -291,19 +291,19 @@
                 </StackPanel>
             </ScrollViewer>
             <controls:TabView
-            Grid.Row="0"
-            Grid.RowSpan="4"
-            Grid.Column="1"
-            Grid.ColumnSpan="4"
-            Background="{ThemeResource CMapUwpAcrylicBrush}"
-            FontFamily="Myanmar Text"
-            TabWidthBehavior="Equal">
-                <controls:TabViewItem
-                x:Name="postTab"
-                x:Uid="Posts"
+                Grid.Row="0"
+                Grid.RowSpan="4"
+                Grid.Column="1"
+                Grid.ColumnSpan="4"
                 Background="{ThemeResource CMapUwpAcrylicBrush}"
-                FontFamily="Century Gothic"
-                Icon="Camera">
+                FontFamily="Myanmar Text"
+                TabWidthBehavior="Equal">
+                <controls:TabViewItem
+                    x:Name="postTab"
+                    x:Uid="Posts"
+                    Background="{ThemeResource CMapUwpAcrylicBrush}"
+                    FontFamily="Century Gothic"
+                    Icon="Camera">
                     <Frame Margin="10" CornerRadius="0">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -344,17 +344,18 @@
                                         <DataTemplate x:DataType="model:PostItem">
                                             <StackPanel Orientation="Vertical">
                                                 <FlipView
-                                                x:Name="itemsList"
-                                                Width="410"
-                                                Height="405"
-                                                HorizontalContentAlignment="Center"
-                                                Background="{x:Null}"
-                                                CanBeScrollAnchor="True"
-                                                ItemsSource="{x:Bind Items}"
-                                                Tapped="MediaList_SelectionChanged" PointerWheelChanged="itemsList_PointerWheelChanged">
+                                                    x:Name="itemsList"
+                                                    Width="410"
+                                                    Height="405"
+                                                    HorizontalContentAlignment="Center"
+                                                    Background="{x:Null}"
+                                                    CanBeScrollAnchor="True"
+                                                    ItemsSource="{x:Bind Items}"
+                                                    Tapped="MediaList_SelectionChanged" PointerWheelChanged="itemsList_PointerWheelChanged">
                                                     <FlipView.ItemsPanel>
                                                         <ItemsPanelTemplate>
-                                                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" />
+                                                            <VirtualizingStackPanel
+                                                                           Orientation="Horizontal" />
                                                         </ItemsPanelTemplate>
                                                     </FlipView.ItemsPanel>
                                                     <FlipView.ItemTemplate>
@@ -365,12 +366,21 @@
                                                                     Width="400"
                                                                     Height="400"
                                                                     ToolTipService.ToolTip="{x:Bind DatePost}"
-                                                                    CornerRadius="15"
-                                                                    >
+                                                                    CornerRadius="15">
                                                                     <Border.Background>
                                                                         <ImageBrush Stretch="UniformToFill" 
                                                                                  ImageSource="{x:Bind UrlSmallImage}"/>
                                                                     </Border.Background>
+                                                                    <Viewbox MaxHeight="20" MaxWidth="20"
+                                                                             HorizontalAlignment="Right"
+                                                                             Margin="10"
+                                                                             Visibility="{x:Bind IsVideoVisibility}"
+                                                                             VerticalAlignment="Top">
+                                                                            <TextBlock 
+                                                                                Foreground="#78898a"
+                                                                                FontFamily="Segoe MDL2 Assets"
+                                                                                Text="&#xEA0C;"/>
+                                                                    </Viewbox>
                                                                 </Border>
                                                                 <!--<Image
                                                                 Height="400"
@@ -512,12 +522,12 @@
                     </Frame>
                 </controls:TabViewItem>
                 <controls:TabViewItem
-                x:Name="storyTab"
-                x:Uid="Stories"
-                Background="{ThemeResource CMapUwpAcrylicBrush}"
-                FontFamily="Myanmar Text"
-                Icon="View"
-                Visibility="Collapsed">
+                        x:Name="storyTab"
+                        x:Uid="Stories"
+                        Background="{ThemeResource CMapUwpAcrylicBrush}"
+                        FontFamily="Myanmar Text"
+                        Icon="View"
+                        Visibility="Collapsed">
                     <Frame Margin="10" CornerRadius="0">
                         <ScrollViewer VerticalScrollBarVisibility="Hidden">
                             <GridView
@@ -546,6 +556,16 @@
                                                     <ImageBrush Stretch="UniformToFill" 
                                                                 ImageSource="{x:Bind UrlSmallImage}"/>
                                                 </Border.Background>
+                                                <Viewbox MaxHeight="20" MaxWidth="20"
+                                                         HorizontalAlignment="Right"
+                                                         Margin="10"
+                                                         Visibility="{x:Bind IsVideoVisibility}"
+                                                         VerticalAlignment="Top">
+                                                    <TextBlock 
+                                                        Foreground="#78898a"
+                                                        FontFamily="Segoe MDL2 Assets"
+                                                        Text="&#xEA0C;"/>
+                                                </Viewbox>
                                             </Border>
                                             <!--<Image
                                             Width="600"
@@ -663,6 +683,16 @@
                                                         <ImageBrush Stretch="UniformToFill" 
                                                                 ImageSource="{x:Bind UrlSmallImage}"/>
                                                     </Border.Background>
+                                                    <Viewbox MaxHeight="20" MaxWidth="20"
+                                                             HorizontalAlignment="Right"
+                                                             Margin="10"
+                                                             Visibility="{x:Bind IsVideoVisibility}"
+                                                             VerticalAlignment="Top">
+                                                        <TextBlock 
+                                                            Foreground="#78898a"
+                                                            FontFamily="Segoe MDL2 Assets"
+                                                            Text="&#xEA0C;"/>
+                                                    </Viewbox>
                                                 </Border>
                                                 <!--<Image
                                                 Width="500"

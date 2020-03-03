@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 
 namespace MyInsta.Model
 {
@@ -21,6 +22,7 @@ namespace MyInsta.Model
         public string DatePost => $"{Date.ToLongDateString()} {Date.ToLongTimeString()}";
         public string CountLikersShow => $"Likes ({CountLikes})";
         public string CountCommentsShow => $"Comments ({CountComments})";
+        public Visibility IsVideoVisibility => MediaType == MediaType.Video ? Visibility.Visible : Visibility.Collapsed;
     }
 
 

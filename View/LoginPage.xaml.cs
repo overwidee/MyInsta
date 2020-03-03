@@ -42,8 +42,6 @@ namespace MyInsta.View
             UserInsta.LoginUser = localSettings.Values["Login"] != null ? localSettings.Values["Login"].ToString() : null;
             UserInsta.PasswordUser = localSettings.Values["Password"] != null ? localSettings.Values["Password"].ToString() : null;
 
-            InstaServer.UtcValue = localSettings.Values["UTC"] != null ? int.Parse(localSettings.Values["UTC"].ToString()) : 0;
-
             DataContext = UserInsta;
         }
 

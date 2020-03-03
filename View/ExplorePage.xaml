@@ -168,6 +168,16 @@
                                                                     ImageSource="{x:Bind UrlSmallImage}"/>
                                                     </Border.Background>
                                                 </Border>
+                                                <Viewbox MaxHeight="20" MaxWidth="20"
+                                                         HorizontalAlignment="Right"
+                                                         Margin="10"
+                                                         Visibility="{x:Bind IsVideoVisibility}"
+                                                         VerticalAlignment="Top">
+                                                    <TextBlock 
+                                                        Foreground="#78898a"
+                                                        FontFamily="Segoe MDL2 Assets"
+                                                        Text="&#xEA0C;"/>
+                                                </Viewbox>
                                             </StackPanel>
                                         </DataTemplate>
                                     </FlipView.ItemTemplate>

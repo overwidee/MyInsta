@@ -60,12 +60,6 @@ namespace MyInsta.View
             RestartApp();
         }
 
-        private void ComboBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
-        {
-            ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            localSettings.Values["UTC"] = ((ComboBox)sender).SelectedValue.ToString();
-        }
-
         private async void ButtonLogout_Click(object sender, RoutedEventArgs e)
         {
             bool log = await InstaServer.RemoveConnection(InstaUser.API);

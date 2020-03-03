@@ -100,13 +100,20 @@ namespace MyInsta.View
                 storyTab.Visibility = Visibility.Visible;
             }
 
+            Posts = new ObservableCollection<PostItem>();
             Posts = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo, 0);
-            mediaList.ItemsSource = Posts?.Take(countPosts);
+            mediaList.ItemsSource = Posts;
 
-            Posts = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo, 1);
+            foreach (var post in Posts)
+            {
+                AllPosts.Add(post);
+            }
+            AllPosts = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo, 1);
 
             progressPosts.IsActive = false;
         }
+
+        public ObservableCollection<PostItem> AllPosts { get; set; } = new ObservableCollection<PostItem>();
 
         private async void UnfollowButton_Click(object sender, RoutedEventArgs e)
         {
@@ -153,15 +160,22 @@ namespace MyInsta.View
             double maxVerticalOffset = svPosts.ScrollableHeight;
 
 
-            if (verticalOffset == maxVerticalOffset && string.IsNullOrEmpty(postBox.Text))
+            if (verticalOffset >= maxVerticalOffset - maxVerticalOffset / 3 && string.IsNullOrEmpty(postBox.Text))
             {
-                if (countPosts >= Posts.Count)
+                if (countPosts >= AllPosts.Count)
                 {
                     return;
                 }
 
                 countPosts += 18;
-                mediaList.ItemsSource = Posts?.Take(countPosts);
+
+                foreach (var item in AllPosts?.Take(countPosts))
+                {
+                    if (Posts.All(x => x.Id != item.Id))
+                    {
+                        Posts.Add(item);
+                    }
+                }
             }
         }
 
@@ -216,15 +230,35 @@ namespace MyInsta.View
             {
                 var arr = Helper.ReturnNumbers(sender.Text);
 
-                var items = Posts?.Where(x => arr.Contains(x.Id));
-                if (items != null)
+                var items = AllPosts?.Where(x => arr.Contains(x.Id)).ToList();
+                if (items.Count != 0)
                 {
-                    mediaList.ItemsSource = items;
+                    for (int i = AllPosts.Count - 1; i >= 0; i--)
+                    {
+                        var item = AllPosts[i];
+                        if (!items.Contains(item))
+                        {
+                            var post = Posts.FirstOrDefault(x => x.Id == item.Id);
+                            Posts.Remove(post);
+                        }
+                    }
+
+                    foreach (var item in items)
+                    {
+                        if (!Posts.Contains(item))
+                        {
+                            Posts.Add(item);
+                        }
+                    }
                 }
             }
             else
             {
-                mediaList.ItemsSource = Posts?.Take(countPosts);
+                Posts.Clear();
+                foreach (var post in AllPosts.Select(x => x).Take(countPosts))
+                {
+                    Posts.Add(post);
+                }
             }
         }
 

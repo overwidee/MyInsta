@@ -76,7 +76,7 @@ namespace MyInsta.View
             double verticalOffset = svPosts.VerticalOffset;
             double maxVerticalOffset = svPosts.ScrollableHeight;
 
-            if (verticalOffset == maxVerticalOffset)
+            if (verticalOffset >= maxVerticalOffset - maxVerticalOffset / 3)
             {
                 if (countPosts >= InstUser.UserData.SavedPostItems.Count
                     || (collectionsBox.SelectedItem != null &&
