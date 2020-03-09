@@ -13,6 +13,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using InstagramApiSharp.Classes.Models;
 
 namespace MyInsta.View
 {
@@ -98,6 +99,9 @@ namespace MyInsta.View
                         contentFrame.Navigate(typeof(PersonPage),
                             new object[] { curt, InstaUser });
                         break;
+                    case "Archive":
+                        contentFrame.Navigate(typeof(ArchivePage), InstaUser);
+                        break;
                 }
             }
         }
@@ -126,13 +130,13 @@ namespace MyInsta.View
         {
             foreach (NavigationViewItemBase item in NavView.MenuItems)
             {
-                if (item is NavigationViewItem && item.Tag.ToString() == "Followers")
+                if (item is NavigationViewItem && item.Tag.ToString() == "Feed")
                 {
                     NavView.SelectedItem = item;
                     break;
                 }
             }
-            contentFrame.Navigate(typeof(FollowersPage), InstaUser);
+            contentFrame.Navigate(typeof(FeedPage), InstaUser);
             contentFrame.Navigated += On_Navigated;
         }
 
@@ -145,6 +149,9 @@ namespace MyInsta.View
             ("Saved", typeof(PostsPage)),
             ("Bookmarks", typeof(BookmarksPage)),
             ("Stories", typeof(StoriesPage)),
+            ("Feed", typeof(FeedPage)),
+            ("User", typeof(PersonPage)),
+            ("Archive", typeof(ArchivePage)),
             ("Preview", typeof(PreviewPostsPage))
         };
 
@@ -170,9 +177,10 @@ namespace MyInsta.View
         private bool On_BackRequested()
         {
             if (!contentFrame.CanGoBack)
+            {
                 return false;
-            if (NavView.IsPaneOpen)
-                return false;
+            }
+
             contentFrame.GoBack();
             return true;
         }

@@ -26,20 +26,19 @@ namespace MyInsta.View
             InitializeComponent();
 
             progressPosts.IsActive = !InstaServer.IsSavedPostsLoaded;
-            AllPostsRing.IsActive = !InstaServer.IsSavedPostsAllLoaded;
 
             InstaServer.OnUserSavedPostsLoaded += delegate
             {
                 progressPosts.IsActive = false;
-                SavedPosts =
-                    new ObservableCollection<PostItem>(InstUser.UserData.SavedPostItems?.Take(countPosts).Select(x => x)
-                                                           .ToList() ?? throw new InvalidOperationException());
-                postsList.ItemsSource = SavedPosts;
-            };
-            InstaServer.OnUserSavedPostsAllLoaded += () =>
-            {
-                CountPostsText.Text = InstUser.UserData.SavedPostItems.Count.ToString();
-                AllPostsRing.IsActive = false;
+                foreach (var post in InstUser.UserData.SavedPostItems)
+                {
+                    var existPost = SavedPosts.FirstOrDefault(x => x.Id == post.Id);
+
+                    if (existPost == null)
+                    {
+                        SavedPosts.Add(post);
+                    }
+                }
             };
             InstaServer.OnUserCollectionLoaded += () => progressCollection.Visibility = Visibility.Collapsed;
         }
@@ -59,17 +58,17 @@ namespace MyInsta.View
 
             if (InstUser != null)
             {
-                SavedPosts =
-                    new ObservableCollection<PostItem>(InstUser.UserData.SavedPostItems?.Take(countPosts).Select(x => x)
-                                                           .ToList() ?? throw new InvalidOperationException());
-                postsList.ItemsSource = SavedPosts;
                 InstaCollections = await InstaServer.GetListCollections(InstUser);
-                InstaCollections.Items.Add(new InstaCollectionItem() { CollectionId = 1, CollectionName = "All posts" });
+                InstaCollections.Items.Add(new InstaCollectionItem() { CollectionId = 0, CollectionName = "All posts", CoverMedia = new InstaCoverMedia()
+                {
+                    ImageVersions = new List<InstaImage>(){ (new InstaImage(InstUser.UserData.UrlPicture, 100, 100))}
+                }});
                 collectionsBox.ItemsSource = InstaCollections.Items;
+                collectionsBox.SelectedIndex = InstaCollections.Items.Count - 1;
             }
         }
 
-        private void ScrollListPosts_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        private async void ScrollListPosts_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             var svPosts = sender as ScrollViewer;
 
@@ -78,15 +77,12 @@ namespace MyInsta.View
 
             if (verticalOffset >= maxVerticalOffset - maxVerticalOffset / 3)
             {
-                if (countPosts >= InstUser.UserData.SavedPostItems.Count
-                    || (collectionsBox.SelectedItem != null &&
-                        (collectionsBox.SelectedItem as InstaCollectionItem).CollectionId != 1))
+                var selectedCollectionId = collectionsBox.SelectedItem as InstaCollectionItem;
+                
+                if (selectedCollectionId.CollectionId == 0)
                 {
-                    return;
+                    await InstaServer.GetUserPostItems(InstUser, selectedCollectionId.CollectionId);
                 }
-                countPosts += 12;
-                postsList.ItemsSource = new ObservableCollection<PostItem>(InstUser.UserData.SavedPostItems?
-                    .Take(countPosts).Select(x => x).ToList());
             }
         }
 
@@ -137,17 +133,17 @@ namespace MyInsta.View
 
         private async void CollectionsBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            countPosts = 10;
             if (((ListView)sender).SelectedItem is InstaCollectionItem collection)
             {
-                if (collection.CollectionId != 1)
-                {
-                    progressCollection.Visibility = Visibility.Visible;
-                }
+                InstUser.UserData.SavedPostItems.Clear();
+                InstaServer.UserSavedMediaMaxId = "";
 
-                postsList.ItemsSource = collection.CollectionId == 1
-                    ? SavedPosts?.Take(countPosts)
-                    : await InstaServer.GetMediasByCollection(InstUser, collection);
+                SavedPosts.Clear();
+                InstUser.UserData.SavedPostItems.Clear();
+                progressPosts.IsActive = true;
+
+                await InstaServer.GetUserPostItems(InstUser, collection.CollectionId, true);
+
                 scrollListPosts.ChangeView(null, 0, 1, true);
             }
         }

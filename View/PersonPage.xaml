@@ -151,6 +151,7 @@
                     Grid.Row="1"
                     Grid.Column="0"
                     Margin="10"
+                    FontWeight="Light"
                     HorizontalAlignment="Stretch"
                     Content="Action"
                     CornerRadius="5">
@@ -162,12 +163,14 @@
                                 Click="FollowButton_Click"
                                 CornerRadius="5"
                                 IsEnabled="{x:Bind ButtonFollow, Mode=OneWay}"
+                                FontWeight="Light"
                                 Text="Follow" />
                                 <MenuFlyoutItem
                                 x:Name="unfollowButton"
                                 HorizontalAlignment="Stretch"
                                 Click="UnfollowButton_Click"
                                 CornerRadius="5"
+                                FontWeight="Light"
                                 IsEnabled="{x:Bind ButtonUnFollow, Mode=OneWay}"
                                 Text="Unfollow" />
                                 <MenuFlyoutItem 
@@ -175,17 +178,20 @@
                                 HorizontalAlignment="Stretch"
                                 Click="ProfileImageButton_OnClick"
                                 Text="Download profile photo (HD)"
+                                FontWeight="Light"
                                 Tag="{x:Bind InstaUserInfo.HdProfilePicUrlInfo.Uri}"/>
                                 <MenuFlyoutItem
                                 x:Name="saveButton"
                                 HorizontalAlignment="Stretch"
                                 Click="SaveButton_Click"
+                                FontWeight="Light"
                                 CornerRadius="5"
                                 Text="Download posts" />
                                 <MenuFlyoutItem
                                 x:Name="unlikeButton"
                                 HorizontalAlignment="Stretch"
                                 Click="UnlikeButton_Click"
+                                FontWeight="Light"
                                 CornerRadius="5"
                                 Text="Unlike 30 posts" />
                             </MenuFlyout>
@@ -243,11 +249,11 @@
                         FontWeight="Light"
                         Text="{x:Bind InstaUserInfo.MediaCount, Mode=OneWay}"
                         TextWrapping="Wrap" />
-                        <ProgressRing x:Name="ProgressAllPosts" Margin="5, 0, 0, 0"
+                        <!--<ProgressRing x:Name="ProgressAllPosts" Margin="5, 0, 0, 0"
                                   Width="5"
                                   Height="5"
                                   Foreground="White"
-                                  IsActive="True"/>
+                                  IsActive="True"/>-->
                     </StackPanel>
                     <StackPanel Margin="2" Orientation="Horizontal">
                         <TextBlock
@@ -296,13 +302,13 @@
                 Grid.Column="1"
                 Grid.ColumnSpan="4"
                 Background="{ThemeResource CMapUwpAcrylicBrush}"
-                FontFamily="Myanmar Text"
+                FontWeight="Light"
                 TabWidthBehavior="Equal">
                 <controls:TabViewItem
                     x:Name="postTab"
                     x:Uid="Posts"
                     Background="{ThemeResource CMapUwpAcrylicBrush}"
-                    FontFamily="Century Gothic"
+                    FontWeight="ExtraLight"
                     Icon="Camera">
                     <Frame Margin="10" CornerRadius="0">
                         <Grid>
@@ -322,11 +328,13 @@
                             Margin="10"
                             PlaceholderText="1, 3-6"
                             QueryIcon="Find"
+                            Visibility="Collapsed"
                             QuerySubmitted="PostBox_QuerySubmitted"
                             RequestedTheme="Dark"/>
                             <ScrollViewer
                             x:Name="scrollListPosts"
-                            Grid.Row="1"
+                            Grid.Row="0"
+                            Grid.RowSpan="2"
                             VerticalScrollBarVisibility="Auto"
                             ViewChanged="ScrollListPosts_ViewChanged">
                                 <GridView
@@ -485,26 +493,31 @@
                                                                 <MenuFlyout>
                                                                     <MenuFlyoutItem Text="{x:Bind Items[0].CountLikersShow}"
                                                                                     Tag="{x:Bind Items[0].Pk}"
+                                                                                    FontWeight="Light"
                                                                                     Click="MenuFlyoutItem_OnClick">
                                                                     </MenuFlyoutItem>
                                                                     <MenuFlyoutItem Text="{x:Bind Items[0].CountCommentsShow}"
                                                                                     Tag="{x:Bind Items[0].Pk}"
+                                                                                    FontWeight="Light"
                                                                                     Click="MenuFlyoutItem1_OnClick">
                                                                     </MenuFlyoutItem>
                                                                     <MenuFlyoutSeparator/>
                                                                     <MenuFlyoutItem
                                                                         Click="ButtonDownload_Click"
                                                                         Text="Download"
+                                                                        FontWeight="Light"
                                                                         Tag="{x:Bind Id}">
                                                                     </MenuFlyoutItem>
                                                                     <MenuFlyoutItem
                                                                         Click="ButtonSaveInProfile_Click"
                                                                         Text="Save in profile"
+                                                                        FontWeight="Light"
                                                                         Tag="{x:Bind Items[0].Pk}">
                                                                     </MenuFlyoutItem>
                                                                     <MenuFlyoutItem
                                                                         Click="ButtonShare_Click"
                                                                         Text="Share in Direct"
+                                                                        FontWeight="Light"
                                                                         Tag="{x:Bind Id}">
                                                                     </MenuFlyoutItem>
                                                                 </MenuFlyout>
@@ -525,7 +538,7 @@
                         x:Name="storyTab"
                         x:Uid="Stories"
                         Background="{ThemeResource CMapUwpAcrylicBrush}"
-                        FontFamily="Myanmar Text"
+                        FontWeight="ExtraLight"
                         Icon="View"
                         Visibility="Collapsed">
                     <Frame Margin="10" CornerRadius="0">
@@ -583,6 +596,7 @@
                                             HorizontalAlignment="Center"
                                             Click="ButtonDownloadStory_Click"
                                             CornerRadius="5"
+                                            FontWeight="Light"
                                             Tag="{x:Bind Name}" />
                                             <AutoSuggestBox
                                             Width="200"
@@ -601,7 +615,7 @@
                 <controls:TabViewItem
                 x:Name="highTab"
                 Background="{ThemeResource CMapUwpAcrylicBrush}"
-                FontFamily="Myanmar Text"
+                FontWeight="ExtraLight"
                 Header="Highlights"
                 Icon="View"
                 Visibility="Collapsed">
@@ -648,6 +662,7 @@
                                             Margin="4"
                                             HorizontalAlignment="Center"
                                             Text="{x:Bind Title}"
+                                            FontWeight="Light"
                                             TextWrapping="Wrap" />
                                         </StackPanel>
                                     </DataTemplate>
@@ -707,6 +722,7 @@
                                                 x:Name="buttonDownloadHigh"
                                                 x:Uid="DownloadStory"
                                                 Margin="5"
+                                                FontWeight="Light"
                                                 HorizontalAlignment="Center"
                                                 Click="ButtonDownloadHigh_Click"
                                                 CornerRadius="5"

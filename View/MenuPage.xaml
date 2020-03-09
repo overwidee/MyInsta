@@ -56,12 +56,11 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <Grid Background="{ThemeResource CMapUwpAcrylicBrush}">
+    <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid Background="{ThemeResource CMapUwpAcrylicBrush}" />
         <Grid Grid.Row="0" x:Name="TitleBar" Height="32">
             <Rectangle x:Name="BackgroundElement" Fill="Transparent" />
             <Grid>
@@ -81,8 +80,16 @@
                 ItemInvoked="NavigationViewControl_ItemInvoked"
                 Loaded="NavigationViewControl_Loaded"
                 IsSettingsVisible="True"
-                PaneDisplayMode="LeftCompact">
+                FontWeight="Light"
+                PaneDisplayMode="Left">
                 <NavigationView.MenuItems>
+                    <NavigationViewItem
+                        x:Name="page_friends"
+                        x:Uid="Friends"
+                        Content="Friends"
+                        Style="{StaticResource TextStyle}"
+                        Icon="Favorite"
+                        Tag="Friends" />
                     <NavigationViewItem
                         x:Name="page_followers"
                         x:Uid="Followers"
@@ -98,27 +105,12 @@
                         Icon="UnFavorite"
                         Tag="Unfollowers" />
                     <NavigationViewItem
-                        x:Name="page_friends"
-                        x:Uid="Friends"
-                        Content="Friends"
-                        Style="{StaticResource TextStyle}"
-                        Icon="Favorite"
-                        Tag="Friends" />
-                    <NavigationViewItem
                         x:Name="page_search"
                         x:Uid="SearchProfile"
                         Content="Search profile"
                         Style="{StaticResource TextStyle}"
                         Icon="Find"
                         Tag="Search" />
-                    <NavigationViewItemSeparator />
-                    <NavigationViewItem
-                        x:Name="button_sync"
-                        x:Uid="Sync"
-                        Style="{StaticResource TextStyle}"
-                        Content="Sync"
-                        Icon="Sync"
-                        Tag="Sync" />
                     <NavigationViewItemSeparator />
                     <NavigationViewItem
                         x:Name="button_bookmarks"
@@ -144,25 +136,7 @@
                         Icon="World"
                         Style="{StaticResource TextStyle}"
                         Tag="Explore" />
-                    <NavigationViewItem
-                        x:Name="button_savedPosts"
-                        Content="Saved posts"
-                        Icon="SlideShow"
-                        Style="{StaticResource TextStyle}"
-                        Tag="Saved" />
-                    <!--<NavigationViewItem
-                        x:Name="button_direct"
-                        Content="Direct"
-                        FontFamily="Century Gothic"
-                        Icon="Message"
-                        Tag="Direct" />-->
                     <NavigationViewItemSeparator />
-                    <NavigationViewItem
-                        x:Name="button_preview"
-                        Content="Preview"
-                        Icon="ViewAll"
-                        Style="{StaticResource TextStyle}"
-                        Tag="Preview" />
                     <NavigationViewItem 
                         x:Name="MainUser" 
                         Icon="Contact" 
@@ -170,6 +144,25 @@
                         Style="{StaticResource TextStyle}"
                         Tag="User" 
                         />
+                    <NavigationViewItem 
+                        x:Name="button_archive" 
+                        Icon="Library" 
+                        Content="Archive" 
+                        Style="{StaticResource TextStyle}"
+                        Tag="Archive" 
+                    />
+                    <NavigationViewItem
+                        x:Name="button_savedPosts"
+                        Content="Saved posts"
+                        Icon="SlideShow"
+                        Style="{StaticResource TextStyle}"
+                        Tag="Saved" />
+                    <NavigationViewItem
+                        x:Name="button_preview"
+                        Content="Preview"
+                        Icon="ViewAll"
+                        Style="{StaticResource TextStyle}"
+                        Tag="Preview" />
 
                 </NavigationView.MenuItems>
                 <Frame x:Name="contentFrame" />

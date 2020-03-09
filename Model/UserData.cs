@@ -12,6 +12,7 @@ namespace MyInsta.Model
     public class UserData
     {
         public long Pk { get; set; }
+        public string UrlPicture { get; set; }
         public ObservableCollection<InstaUserShort> UserFollowers { get; set; }
         public ObservableCollection<InstaUserShort> UserFollowing { get; set; }
         public ObservableCollection<InstaUserShort> UserUnfollowers { get; set; }
@@ -22,6 +23,10 @@ namespace MyInsta.Model
         public ObservableCollection<PostItem> SavedPostItems { get; set; }
         public ObservableCollection<UserStory> Stories { get; set; }
         public ObservableCollection<InstaUserShort> Bookmarks { get; set; }
+        public ObservableCollection<PostItem> PostsLastUser { get; set; }
+        public ObservableCollection<PostItem> ArchivePosts { get; set; }
+        public InstaHighlightShortList ArchiveHigh { get; set; }
+        public ObservableCollection<CustomMedia> ArchiveStories { get; set; }
         public UserData()
         {
             UserFollowers = new ObservableCollection<InstaUserShort>();
@@ -33,6 +38,11 @@ namespace MyInsta.Model
             Bookmarks = new ObservableCollection<InstaUserShort>();
             FeedObjUsers = new ObservableCollection<UserFeed>();
             Feed = new ObservableCollection<PostItem>();
+            PostsLastUser = new ObservableCollection<PostItem>();
+            Stories = new ObservableCollection<UserStory>();
+            ArchivePosts = new ObservableCollection<PostItem>();
+            ArchiveHigh = new InstaHighlightShortList();
+            ArchiveStories = new ObservableCollection<CustomMedia>();
         }
     }
 

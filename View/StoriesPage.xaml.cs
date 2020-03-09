@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -27,31 +28,37 @@ namespace MyInsta.View
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
     public sealed partial class StoriesPage : Page
-    {
+    { 
         public User InstaUser { get; set; }
         public UserStory SelectedUserStory { get; set; }
-        public ObservableCollection<CustomMedia> Stories { get; set; }
+        public ObservableCollection<CustomMedia> Stories { get; set; } = new ObservableCollection<CustomMedia>();
 
         public StoriesPage()
         {
             InitializeComponent();
 
-            progressStories.IsActive = !InstaServer.IsStoriesLoaded;
-            InstaServer.OnUserStoriesLoaded += () =>
-            {
-                Bindings.Update();
-
-                progressStories.IsActive = false;
-                SelectedUserStory = InstaUser.UserData.Stories?[0] ?? new UserStory();
-            };
+            InstaServer.OnUserStoriesLoaded += OnUserStoriesLoaded;
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        private void OnUserStoriesLoaded()
+        {
+            Stories.Clear();
+            progressStories.IsActive = false;
+            InstaServer.OnUserStoriesLoaded -= OnUserStoriesLoaded;
+            Bindings.Update();
+        }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
             InstaUser = e.Parameter as User;
-            SelectedUserStory = InstaUser.UserData.Stories?[0] ?? new UserStory();
+
+            if (InstaUser != null)
+            {
+                InstaUser.UserData.Stories.Clear();
+                await InstaServer.GetCurrentUserStories(InstaUser);
+            }
         }
 
         private async void ButtonDownloadStory_Click(object sender, RoutedEventArgs e)
@@ -63,14 +70,44 @@ namespace MyInsta.View
         {
             if (SelectedUserStory?.User != null)
             {
+                var item = SelectedUserStory;
+
+                var listViewItem = (FrameworkElement)ListViewStories.ContainerFromItem(item);
+
+                if (listViewItem == null)
+                {
+                    ListViewStories.ScrollIntoView(item);
+                }
+
+                while (listViewItem == null)
+                {
+                    await Task.Delay(1); // wait for scrolling to complete - it takes a moment
+                    listViewItem = (FrameworkElement)ListViewStories.ContainerFromItem(item);
+                }
+
+                var topLeft =
+                    listViewItem
+                        .TransformToVisual(ListViewStories)
+                        .TransformPoint(new Point()).X;
+                var lvih = listViewItem.ActualWidth;
+                var lvh = ListViewStories.ActualWidth;
+                var desiredTopLeft = (lvh - lvih) / 2.0;
+                var desiredDelta = topLeft - desiredTopLeft;
+
+                var scrollViewer = ListViewStories.GetFirstDescendantOfType<ScrollViewer>();
+                var currentOffset = scrollViewer.HorizontalOffset;
+                var desiredOffset = currentOffset + desiredDelta;
+                scrollViewer.ChangeView(desiredOffset, null, 1, true);
+
                 Stories = await InstaServer.GetStoryUser(InstaUser, SelectedUserStory.User.Pk);
                 storiesList.ItemsSource = Stories;
                 userBox.Content = SelectedUserStory.User.UserName;
+                userBox.Visibility = Visibility.Visible;
+
                 imageBack.Source = new BitmapImage
                     (new Uri(SelectedUserStory.User.ProfilePicUrl));
 
-                var scrollList = storiesList.GetScrollViewer();
-                scrollList.ChangeView(null, 0, 1, true);
+                mainScroll.ChangeView(null, 0, 1, true);
             }
         }
 

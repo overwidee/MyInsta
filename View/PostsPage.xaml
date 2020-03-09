@@ -91,11 +91,6 @@
             <TextBlock x:Name="CountPostsText"
                 Text="{x:Bind InstUser.UserData.SavedPostItems.Count, Mode=OneWay}" 
                 HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <ProgressRing x:Name="AllPostsRing" IsActive="True" 
-                          Height="5" 
-                          Width="5" 
-                          Margin="5, 0, 0, 0"
-                          Foreground="White"/>
         </StackPanel>
 
         <ListView

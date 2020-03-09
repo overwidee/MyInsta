@@ -34,6 +34,22 @@ namespace MyInsta.View
             progressPosts.IsActive = !InstaServer.IsPostsLoaded;
             InstaServer.OnUserPostsLoaded += UsersPostsLoaded;
             InstaServer.OnUserAllPostsLoaded += UserAllPostsLoaded;
+            InstaServer.OnDynamicUserMediaLoaded += () =>
+            {
+                foreach (var postItem in CurrentUser.UserData.PostsLastUser)
+                {
+                    var m = Posts.FirstOrDefault(x => x.Id == postItem.Id);
+                    if (m == null)
+                    {
+                        Posts.Add(postItem);
+                    }
+                }
+
+                progressPosts.IsActive = false;
+                postBox.IsEnabled = true;
+                postTab.Header = $"Posts ({Posts.Count})";
+                saveButton.Text = $"Download posts ({Posts.Count})";
+            };
         }
 
         #region CompleteEvent
@@ -45,7 +61,8 @@ namespace MyInsta.View
 
         private void UserAllPostsLoaded()
         {
-            ProgressAllPosts.IsActive = false;
+            //ProgressAllPosts.IsActive = false;
+            postBox.IsEnabled = true;
         }
 
         private void UserInfoLoaded()
@@ -59,7 +76,7 @@ namespace MyInsta.View
         public bool ButtonFollow { get; set; }
         public bool ButtonUnFollow { get; set; }
 
-        public ObservableCollection<PostItem> Posts { get; set; }
+        public ObservableCollection<PostItem> Posts { get; set; } = new ObservableCollection<PostItem>();
         public ObservableCollection<CustomMedia> UrlStories { get; set; }
         public ObservableCollection<CustomMedia> HighlightsStories { get; set; }
         public InstaHighlightFeeds InstaHighlightFeeds { get; set; }
@@ -81,7 +98,6 @@ namespace MyInsta.View
             ButtonUnFollow = InstaUserInfo.FriendshipStatus.Following;
             
             UserInfoLoaded();
-
             SetBookmarkStatus();
 
             InstaHighlightFeeds = await InstaServer.GetArchiveCollectionStories(CurrentUser, SelectUser.Pk);
@@ -100,17 +116,9 @@ namespace MyInsta.View
                 storyTab.Visibility = Visibility.Visible;
             }
 
-            Posts = new ObservableCollection<PostItem>();
-            Posts = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo, 0);
-            mediaList.ItemsSource = Posts;
-
-            foreach (var post in Posts)
-            {
-                AllPosts.Add(post);
-            }
-            AllPosts = await InstaServer.GetMediaUser(CurrentUser, InstaUserInfo, 1);
-
-            progressPosts.IsActive = false;
+            CurrentUser.UserData.PostsLastUser.Clear();
+            InstaServer.MediasUserMaxId = ""; 
+            await InstaServer.GetDynamicMediaUser(CurrentUser, InstaUserInfo);
         }
 
         public ObservableCollection<PostItem> AllPosts { get; set; } = new ObservableCollection<PostItem>();
@@ -121,38 +129,32 @@ namespace MyInsta.View
             await InstaServer.UnfollowUser(CurrentUser, SelectUser);
             followButton.IsEnabled = true;
         }
-
         private async void FollowButton_Click(object sender, RoutedEventArgs e)
         {
             followButton.IsEnabled = false;
             await InstaServer.FollowUser(CurrentUser, InstaUserInfo);
             unfollowButton.IsEnabled = true;
         }
-
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             await InstaServer.DownloadAnyPosts(SelectUser, Posts);
         }
-
         private async void UnlikeButton_Click(object sender, RoutedEventArgs e)
         {
             await InstaServer.UnlikeProfile(CurrentUser, SelectUser, Posts);
         }
-
         private async void ButtonDownload_Click(object sender, RoutedEventArgs e)
         {
             await InstaServer.DownloadAnyPost(await InstaServer.GetInstaUserShortById(CurrentUser,
                     Posts.First(x => x.Id == int.Parse(((MenuFlyoutItem)sender).Tag.ToString())).UserPk),
                 Posts.First(x => x.Id == int.Parse(((MenuFlyoutItem)sender).Tag.ToString())).Items);
         }
-
         private async void ButtonDownloadStory_Click(object sender, RoutedEventArgs e)
         {
             await InstaServer.DownloadMedia(UrlStories
                 .First(x => x.Name == ((Button)sender).Tag.ToString()));
         }
-
-        private void ScrollListPosts_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        private async void ScrollListPosts_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             var svPosts = sender as ScrollViewer;
 
@@ -160,22 +162,10 @@ namespace MyInsta.View
             double maxVerticalOffset = svPosts.ScrollableHeight;
 
 
-            if (verticalOffset >= maxVerticalOffset - maxVerticalOffset / 3 && string.IsNullOrEmpty(postBox.Text))
+            if (verticalOffset >= maxVerticalOffset - maxVerticalOffset / 3 && Posts.Count < InstaUserInfo.MediaCount
+                && string.IsNullOrEmpty(postBox.Text))
             {
-                if (countPosts >= AllPosts.Count)
-                {
-                    return;
-                }
-
-                countPosts += 18;
-
-                foreach (var item in AllPosts?.Take(countPosts))
-                {
-                    if (Posts.All(x => x.Id != item.Id))
-                    {
-                        Posts.Add(item);
-                    }
-                }
+                await InstaServer.GetDynamicMediaUser(CurrentUser, InstaUserInfo);
             }
         }
 
@@ -230,12 +220,12 @@ namespace MyInsta.View
             {
                 var arr = Helper.ReturnNumbers(sender.Text);
 
-                var items = AllPosts?.Where(x => arr.Contains(x.Id)).ToList();
+                var items = CurrentUser.UserData.PostsLastUser?.Where(x => arr.Contains(x.Id)).ToList();
                 if (items.Count != 0)
                 {
-                    for (int i = AllPosts.Count - 1; i >= 0; i--)
+                    for (int i = CurrentUser.UserData.PostsLastUser.Count - 1; i >= 0; i--)
                     {
-                        var item = AllPosts[i];
+                        var item = CurrentUser.UserData.PostsLastUser[i];
                         if (!items.Contains(item))
                         {
                             var post = Posts.FirstOrDefault(x => x.Id == item.Id);
@@ -255,7 +245,7 @@ namespace MyInsta.View
             else
             {
                 Posts.Clear();
-                foreach (var post in AllPosts.Select(x => x).Take(countPosts))
+                foreach (var post in CurrentUser.UserData.PostsLastUser)
                 {
                     Posts.Add(post);
                 }
@@ -337,10 +327,6 @@ namespace MyInsta.View
                 var mediaDialog = new MediaDialog(CurrentUser, high.Pk, urlMedia, high.MediaType, 0);
                 await mediaDialog.ShowMediaAsync();
             }
-        }
-
-        private void TextBlock_Tapped(object sender, TappedRoutedEventArgs e)
-        {
         }
 
         private async void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender,
