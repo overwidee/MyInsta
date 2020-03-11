@@ -809,8 +809,8 @@ namespace MyInsta.Logic
                         {
                             Pk = item.Pk.ToString(),
                             Name = $"{postItem.UserNamePost}_savedPost_{item.Pk}_Carousel_{x + 1}",
-                            UrlSmallImage = car.Images[0].Uri,
-                            UrlBigImage = car.Images[1].Uri,
+                            UrlSmallImage = car.Images[1].Uri,
+                            UrlBigImage = car.Images[0].Uri,
                             CountLikes = item.LikesCount,
                             CountComments = item.CommentsCount != null ? int.Parse(item.CommentsCount) : 0,
                             MediaType = MediaType.Image,

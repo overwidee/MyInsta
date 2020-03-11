@@ -6,7 +6,7 @@
     xmlns:local="using:MyInsta.View"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
+    Background="{ThemeResource SystemControlAcrylicElementBrush}">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -35,17 +35,17 @@
                 x:Key="NavigationViewDefaultPaneBackground"
                 BackgroundSource="Backdrop"
                 TintColor="{ThemeResource SystemChromeMediumColor}"
-                TintOpacity=".5" />
+                TintOpacity="1" />
             <AcrylicBrush
                 x:Key="NavigationViewTopPaneBackground"
                 BackgroundSource="Backdrop"
                 TintColor="{ThemeResource SystemChromeMediumColor}"
-                TintOpacity=".5" />
+                TintOpacity="1" />
             <AcrylicBrush
                 x:Key="NavigationViewExpandedPaneBackground"
                 BackgroundSource="HostBackdrop"
                 TintColor="{ThemeResource SystemChromeMediumColor}"
-                TintOpacity=".7" />
+                TintOpacity="1" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
                     <Style TargetType="NavigationViewItem" x:Key="TextStyle">
@@ -81,6 +81,8 @@
                 Loaded="NavigationViewControl_Loaded"
                 IsSettingsVisible="True"
                 FontWeight="Light"
+                PaneTitle="Menu"
+                OpenPaneLength="200"
                 PaneDisplayMode="Left">
                 <NavigationView.MenuItems>
                     <NavigationViewItem

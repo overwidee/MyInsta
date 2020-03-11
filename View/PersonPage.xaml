@@ -377,7 +377,7 @@
                                                                     CornerRadius="15">
                                                                     <Border.Background>
                                                                         <ImageBrush Stretch="UniformToFill" 
-                                                                                 ImageSource="{x:Bind UrlSmallImage}"/>
+                                                                                 ImageSource="{x:Bind UrlBigImage}"/>
                                                                     </Border.Background>
                                                                     <Viewbox MaxHeight="20" MaxWidth="20"
                                                                              HorizontalAlignment="Right"
