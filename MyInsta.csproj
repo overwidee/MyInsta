@@ -139,6 +139,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Logic\AsyncHelpers.cs" />
+    <Compile Include="Logic\ChartModel\Chart.cs" />
     <Compile Include="Logic\CustomDialog.cs" />
     <Compile Include="Logic\Helper.cs" />
     <Compile Include="Logic\InstaServer.cs" />
@@ -479,6 +480,7 @@
     <None Include=".editorconfig" />
     <None Include="MyInsta_TemporaryKey.pfx" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

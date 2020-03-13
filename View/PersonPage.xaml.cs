@@ -2,26 +2,24 @@
 using MyInsta.Logic;
 using MyInsta.Model;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.ServiceModel.Channels;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Core;
+using Windows.UI.Text;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
+using MyInsta.Logic.ChartModel;
+using WinRTXamlToolkit.Controls.DataVisualization.Charting;
+using Chart = MyInsta.Logic.ChartModel.Chart;
 
 namespace MyInsta.View
 {
@@ -46,9 +44,36 @@ namespace MyInsta.View
                 }
 
                 progressPosts.IsActive = false;
-                postBox.IsEnabled = true;
                 postTab.Header = $"Posts ({Posts.Count})";
                 saveButton.Text = $"Download posts ({Posts.Count})";
+
+                if ((likeChart.Series[0] as LineSeries)?.ItemsSource == null)
+                {
+                    StatTab.Visibility = Visibility.Visible;
+
+                    ((LineSeries)likeChart.Series[0]).ItemsSource = Chart.GetChartLikes(Posts);
+                    ((LineSeries)commentChart.Series[0]).ItemsSource = Chart.GetChartComments(Posts);
+
+                    int maxValue = Chart.GetMax(Posts, x => x.Items[0].CountLikes);
+                    int minValue = Chart.GetMin(Posts, x => x.Items[0].CountLikes);
+                    double averageValue = Chart.GetAverage(Posts, x => x.Items[0].CountLikes);
+                    ChartMaxLikes.Text = $"Max likes = {maxValue}";
+                    ChartMinLikes.Text = $"Min likes = {minValue}";
+                    ChartAverageLikes.Text = $"Average likes = {averageValue:F}";
+
+                    int months = (Posts.Max(x => x.Items[0].Date) - Posts.Min(x => x.Items[0].Date)).Days / 30;
+                    AxisLikesY.Interval = (maxValue - minValue) / 10;
+                    AxisLikesX.Interval = AxisCommentX.Interval = months / (months / 3);
+
+                    maxValue = Chart.GetMax(Posts, x => x.Items[0].CountComments);
+                    minValue = Chart.GetMin(Posts, x => x.Items[0].CountComments);
+                    averageValue = Chart.GetAverage(Posts, x => x.Items[0].CountComments);
+                    ChartMaxComments.Text = $"Max comments = {maxValue}";
+                    ChartMinComments.Text = $"Min comments = {minValue}";
+                    ChartAverageComments.Text = $"Average comments = {averageValue:F}";
+
+                    AxisCommentY.Interval = (maxValue - minValue) / 10;
+                }
             };
         }
 
@@ -96,7 +121,7 @@ namespace MyInsta.View
             InstaUserInfo = await InstaServer.GetInfoUser(CurrentUser, SelectUser.UserName);
             ButtonFollow = !InstaUserInfo.FriendshipStatus.Following;
             ButtonUnFollow = InstaUserInfo.FriendshipStatus.Following;
-            
+
             UserInfoLoaded();
             SetBookmarkStatus();
 
@@ -116,8 +141,9 @@ namespace MyInsta.View
                 storyTab.Visibility = Visibility.Visible;
             }
 
+
             CurrentUser.UserData.PostsLastUser.Clear();
-            InstaServer.MediasUserMaxId = ""; 
+            InstaServer.MediasUserMaxId = "";
             await InstaServer.GetDynamicMediaUser(CurrentUser, InstaUserInfo);
         }
 
@@ -260,6 +286,7 @@ namespace MyInsta.View
             {
                 CornerRadius = new CornerRadius(5),
                 HorizontalAlignment = HorizontalAlignment.Stretch,
+                FontWeight = FontWeights.Light,
                 Text = !InstaServer.IsContrainsAccount(CurrentUser, SelectUser.Pk)
                     ? "Add in bookmarks" : "Remove from bookmarks"
             };
@@ -297,7 +324,7 @@ namespace MyInsta.View
         private async void Image_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var high = HighlightsStories.FirstOrDefault(x => x.Pk == ((Border)sender).Tag.ToString());
-            
+
             if (high != null)
             {
                 string urlMedia = high.MediaType switch
@@ -442,6 +469,129 @@ namespace MyInsta.View
         private void MenuFlyoutItem1_OnClick(object sender, RoutedEventArgs e)
         {
             InstaServer.ShowComments(CurrentUser, this, ((MenuFlyoutItem)sender).Tag.ToString());
+        }
+
+        private void Chart_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (e.OriginalSource is Ellipse source)
+            {
+                var point = source.DataContext as ChartModel<DateTime>;
+
+                var myFlout = new Flyout
+                {
+                    Content = new StackPanel()
+                    {
+                        Orientation = Orientation.Vertical,
+                        Children =
+                        {
+                            new Image()
+                            {
+                                Width = 300,
+                                Height = 300,
+                                Stretch = Stretch.Uniform,
+                                Source = new BitmapImage(new Uri(point.UrlImage))
+                            },
+                            new TextBlock()
+                            {
+                                Margin = new Thickness(5),
+                                HorizontalAlignment = HorizontalAlignment.Center,
+                                Text = $"Likes: {point.Value}",
+                                FontWeight = FontWeights.Light
+                            },
+                            new TextBlock()
+                            {
+                                Margin = new Thickness(5),
+                                HorizontalAlignment = HorizontalAlignment.Center,
+                                Text = $"Date: {point.Id.ToLongDateString()}",
+                                FontWeight = FontWeights.Light
+                            }
+                        }
+                    }
+                };
+
+                myFlout.ShowAt(source, new FlyoutShowOptions()
+                {
+                    Position = e.GetPosition(e.OriginalSource as UIElement),
+                    ShowMode = FlyoutShowMode.Transient,
+                    Placement = FlyoutPlacementMode.Left
+                });
+            }
+        }
+
+        private void SetChartView()
+        {
+            //likeChart.View.AxisX.ScrollBar = new AxisScrollBar();
+            //c1Chart1.View.AxisY.ScrollBar = new AxisScrollBar();
+
+            //// remove any action update delay  
+            //c1Chart1.ActionUpdateDelay = 0;
+
+            //// set manipulation mode to scale and translate  
+            //c1Chart1.ManipulationMode = ManipulationModes.Scale | // scale without inertia  
+            //                            ManipulationModes.TranslateX | // translate x axis  
+            //                            ManipulationModes.TranslateY | // translate y axis  
+            //                            ManipulationModes.TranslateInertia; // translate with inertia  
+
+            //// assign translate action to slide gesture  
+            //c1Chart1.GestureSlide = GestureSlideAction.Translate;
+
+            //// assign scale action to double tap and pinch gestures  
+            //c1Chart1.GestureDoubleTap = GestureDoubleTapAction.Scale;
+            //c1Chart1.GesturePinch = GesturePinchAction.Scale;
+        }
+
+        private Flyout imageFlyout = new Flyout();
+        private void LineSeries_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            if (e.OriginalSource is Ellipse source)
+            {
+                var point = source.DataContext as ChartModel<DateTime>;
+
+                imageFlyout = new Flyout
+                {
+                    Content = new StackPanel()
+                    {
+                        Orientation = Orientation.Vertical,
+                        Children =
+                        {
+                            new Image()
+                            {
+                                Width = 300,
+                                Height = 300,
+                                Stretch = Stretch.Uniform,
+                                Source = new BitmapImage(new Uri(point.UrlImage))
+                            },
+                            new TextBlock()
+                            {
+                                Margin = new Thickness(5),
+                                HorizontalAlignment = HorizontalAlignment.Center,
+                                Text = $"Likes: {point.Value}",
+                                FontWeight = FontWeights.Light
+                            },
+                            new TextBlock()
+                            {
+                                Margin = new Thickness(5),
+                                HorizontalAlignment = HorizontalAlignment.Center,
+                                Text = $"Date: {point.Id.ToLongDateString()}",
+                                FontWeight = FontWeights.Light
+                            }
+                        }
+                    },
+                    ShowMode = FlyoutShowMode.TransientWithDismissOnPointerMoveAway
+                };
+
+                imageFlyout.ShowAt(source, new FlyoutShowOptions()
+                {
+                    Position = e.GetCurrentPoint(e.OriginalSource as UIElement).Position,
+                    ShowMode = FlyoutShowMode.Transient,
+                    Placement = FlyoutPlacementMode.Left
+                });
+            }
+        }
+
+        private void LineSeries_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            imageFlyout.Hide();
         }
     }
 }

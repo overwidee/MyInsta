@@ -694,12 +694,12 @@ namespace MyInsta.Logic
                         if (m == null)
                         {
                             user.UserData.PostsLastUser.Add(GetPostItem(media, i));
-                            OnDynamicUserMediaLoaded?.Invoke();
                             i++;
                         }
                     }
                 }
 
+                OnDynamicUserMediaLoaded?.Invoke();
                 IsUserMediasLoading = false;
             }
         }

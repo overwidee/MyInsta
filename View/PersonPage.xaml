@@ -10,6 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
     xmlns:model="using:MyInsta.Model"
+    xmlns:charting="using:WinRTXamlToolkit.Controls.DataVisualization.Charting"
     mc:Ignorable="d"
     Background="{ThemeResource SystemControlAcrylicElementBrush}"
     Unloaded="Page_Unloaded">
@@ -117,7 +118,7 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="270" />
                 <ColumnDefinition Width="131*" />
                 <ColumnDefinition Width="131*" />
                 <ColumnDefinition Width="131*" />
@@ -129,13 +130,13 @@
                 </interactivity:Interaction.Behaviors>
             </Image>
             <Ellipse
-            Grid.Row="0"
-            Grid.RowSpan="3"
-            Grid.Column="0"
-            Width="239"
-            Height="239"
-            DoubleTapped="UIElement_OnDoubleTapped"
-            Margin="5">
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Grid.Column="0"
+                Width="236"
+                Height="236"
+                DoubleTapped="UIElement_OnDoubleTapped"
+                Margin="0">
                 <Ellipse.Fill>
                     <ImageBrush>
                         <ImageBrush.ImageSource>
@@ -146,17 +147,25 @@
             </Ellipse>
             <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Hidden">
                 <StackPanel Margin="10, 0, 10, 0">
+                    <TextBlock
+                        Grid.Column="1"
+                        HorizontalAlignment="Center"
+                        FontSize="25"
+                        FontWeight="Medium"
+                        Text="{x:Bind InstaUserInfo.Username, Mode=OneWay}"
+                        TextWrapping="Wrap" 
+                        HorizontalTextAlignment="Center"/>
                     <Button
-                    x:Name="buttonAction"
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Margin="10"
-                    FontWeight="Light"
-                    HorizontalAlignment="Stretch"
-                    Content="Action"
-                    CornerRadius="5">
+                        x:Name="buttonAction"
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="10, 20"
+                        FontWeight="Light"
+                        HorizontalAlignment="Stretch"
+                        Content="Action"
+                        CornerRadius="5">
                         <Button.Flyout>
-                            <MenuFlyout>
+                            <MenuFlyout Placement="Bottom">
                                 <MenuFlyoutItem
                                 x:Name="followButton"
                                 HorizontalAlignment="Stretch"
@@ -197,13 +206,7 @@
                             </MenuFlyout>
                         </Button.Flyout>
                     </Button>
-                    <TextBlock
-                    Grid.Column="1"
-                    HorizontalAlignment="Center"
-                    FontSize="25"
-                    FontWeight="Light"
-                    Text="{x:Bind InstaUserInfo.Username, Mode=OneWay}"
-                    TextWrapping="Wrap" />
+
                     <StackPanel Margin="2" Orientation="Horizontal">
                         <TextBlock
                         x:Uid="Following"
@@ -384,7 +387,7 @@
                                                                              Margin="10"
                                                                              Visibility="{x:Bind IsVideoVisibility}"
                                                                              VerticalAlignment="Top">
-                                                                            <TextBlock 
+                                                                        <TextBlock 
                                                                                 Foreground="#78898a"
                                                                                 FontFamily="Segoe MDL2 Assets"
                                                                                 Text="&#xEA0C;"/>
@@ -490,10 +493,11 @@
                                                                 </ResourceDictionary>
                                                             </Button.Resources>
                                                             <Button.Flyout>
-                                                                <MenuFlyout>
+                                                                <MenuFlyout >
                                                                     <MenuFlyoutItem Text="{x:Bind Items[0].CountLikersShow}"
                                                                                     Tag="{x:Bind Items[0].Pk}"
                                                                                     FontWeight="Light"
+                                                                                    Width="150"
                                                                                     Click="MenuFlyoutItem_OnClick">
                                                                     </MenuFlyoutItem>
                                                                     <MenuFlyoutItem Text="{x:Bind Items[0].CountCommentsShow}"
@@ -613,12 +617,12 @@
                     </Frame>
                 </controls:TabViewItem>
                 <controls:TabViewItem
-                x:Name="highTab"
-                Background="{ThemeResource CMapUwpAcrylicBrush}"
-                FontWeight="ExtraLight"
-                Header="Highlights"
-                Icon="View"
-                Visibility="Collapsed">
+                    x:Name="highTab"
+                    Background="{ThemeResource CMapUwpAcrylicBrush}"
+                    FontWeight="ExtraLight"
+                    Header="Highlights"
+                    Icon="View"
+                    Visibility="Collapsed">
                     <Frame Margin="10" CornerRadius="0">
                         <Grid>
                             <ListView
@@ -734,6 +738,130 @@
                             </ScrollViewer>
                         </Grid>
                     </Frame>
+                </controls:TabViewItem>
+                <controls:TabViewItem
+                    x:Name="StatTab"
+                    Header="Statistics"
+                    Visibility="Collapsed"
+                    FontWeight="Light">
+                    <Grid>
+                        <ScrollViewer>
+                            <StackPanel>
+                                <Border CornerRadius="50" 
+                                        Margin="30, 10"
+                                        Background="{ThemeResource ScrollBarButtonForegroundThemeBrush}" Padding="10, 0">
+                                    <StackPanel>
+                                        <charting:Chart x:Name="likeChart"
+                                                    Height="400" Margin="0">
+                                            <charting:Chart.Axes>
+                                                <charting:DateTimeAxis x:Name="AxisLikesX" Orientation="X" Location="Bottom" IntervalType="Months" Interval="2">
+                                                    <charting:DateTimeAxis.AxisLabelStyle>
+                                                        <Style TargetType="charting:DateTimeAxisLabel">
+                                                            <Setter Property="StringFormat" Value="{}{0:dd.MM.yyyy}"/>
+                                                        </Style>
+                                                    </charting:DateTimeAxis.AxisLabelStyle>
+                                                </charting:DateTimeAxis>
+                                                <charting:LinearAxis x:Name="AxisLikesY" Orientation="Y" Interval="10"></charting:LinearAxis>
+                                            </charting:Chart.Axes>
+                                            <charting:LineSeries 
+                                                Title="Likes"
+                                                IndependentValuePath="Id"
+                                                Tapped="Chart_OnTapped"
+                                                DependentValuePath="Value" PointerEntered="LineSeries_PointerEntered" PointerExited="LineSeries_PointerExited">
+                                            </charting:LineSeries>
+                                            <charting:Chart.Palette>
+                                                <charting:ResourceDictionaryCollection>
+                                                    <ResourceDictionary>
+                                                        <Style x:Key="DataPointStyle" TargetType="Control">
+                                                            <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentBrush}" />
+                                                        </Style>
+                                                    </ResourceDictionary>
+                                                </charting:ResourceDictionaryCollection>
+                                            </charting:Chart.Palette>
+                                        </charting:Chart>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Border CornerRadius="10" 
+                                                    Margin="10"
+                                                    Padding="10, 5"
+                                                    Background="{ThemeResource SystemControlHighlightAccentBrush}">
+                                                <TextBlock x:Name="ChartMaxLikes" 
+                                                           Margin="5" FontWeight="SemiLight"/>
+                                            </Border>
+                                            <Border CornerRadius="10" 
+                                                    Margin="10"
+                                                    Padding="10, 5"
+                                                    Background="{ThemeResource SystemControlHighlightAccentBrush}">
+                                                <TextBlock x:Name="ChartMinLikes" Margin="5" FontWeight="SemiLight"/>
+                                            </Border>
+                                            <Border CornerRadius="10" 
+                                                    Margin="10"
+                                                    Padding="10, 5"
+                                                    Background="{ThemeResource SystemControlHighlightAccentBrush}">
+                                                <TextBlock x:Name="ChartAverageLikes" Margin="5" FontWeight="SemiLight"/>
+                                            </Border>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                                <Border CornerRadius="50" 
+                                        Margin="30, 10"
+                                        Background="{ThemeResource ScrollBarButtonForegroundThemeBrush}" Padding="10, 0">
+                                    <StackPanel>
+                                        <charting:Chart x:Name="commentChart" 
+                                                    Height="400" Margin="0">
+                                            <charting:Chart.Axes>
+                                                <charting:DateTimeAxis x:Name="AxisCommentX" Orientation="X" Location="Bottom" IntervalType="Months" Interval="1">
+                                                    <charting:DateTimeAxis.AxisLabelStyle>
+                                                        <Style TargetType="charting:DateTimeAxisLabel">
+                                                            <Setter Property="StringFormat" Value="{}{0:dd.MM.yyyy}"/>
+                                                        </Style>
+                                                    </charting:DateTimeAxis.AxisLabelStyle>
+                                                </charting:DateTimeAxis>
+                                                <charting:LinearAxis x:Name="AxisCommentY" Orientation="Y" Interval="5"></charting:LinearAxis>
+                                            </charting:Chart.Axes>
+                                            <charting:LineSeries 
+                                                Title="Comments"
+                                                IndependentValuePath="Id"
+                                                PointerEntered="LineSeries_PointerEntered"
+                                                PointerExited="LineSeries_PointerExited"
+                                                Tapped="Chart_OnTapped"
+                                                DependentValuePath="Value">
+                                            </charting:LineSeries>
+                                            <charting:Chart.Palette>
+                                                <charting:ResourceDictionaryCollection>
+                                                    <ResourceDictionary>
+                                                        <Style x:Key="DataPointStyle" TargetType="Control">
+                                                            <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentBrush}" />
+                                                        </Style>
+                                                    </ResourceDictionary>
+                                                </charting:ResourceDictionaryCollection>
+                                            </charting:Chart.Palette>
+                                        </charting:Chart>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Border CornerRadius="10" 
+                                                    Margin="10"
+                                                    Padding="10, 5"
+                                                    Background="{ThemeResource SystemControlHighlightAccentBrush}">
+                                                <TextBlock x:Name="ChartMaxComments" 
+                                                           Margin="5" FontWeight="SemiLight"/>
+                                            </Border>
+                                            <Border CornerRadius="10" 
+                                                    Margin="10"
+                                                    Padding="10, 5"
+                                                    Background="{ThemeResource SystemControlHighlightAccentBrush}">
+                                                <TextBlock x:Name="ChartMinComments" Margin="5" FontWeight="SemiLight"/>
+                                            </Border>
+                                            <Border CornerRadius="10" 
+                                                    Margin="10"
+                                                    Padding="10, 5"
+                                                    Background="{ThemeResource SystemControlHighlightAccentBrush}">
+                                                <TextBlock x:Name="ChartAverageComments" Margin="5" FontWeight="SemiLight"/>
+                                            </Border>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
                 </controls:TabViewItem>
             </controls:TabView>
         </Grid>
