@@ -32,7 +32,7 @@ namespace MyInsta.View
 
         }
 
-        User InstaUser { get; set; }
+        User InstaUser { get; set; } 
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {

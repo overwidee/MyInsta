@@ -23,7 +23,7 @@ namespace MyInsta.View
     {
         public PostsPage()
         {
-            InitializeComponent();
+            InitializeComponent(); 
 
             progressPosts.IsActive = !InstaServer.IsSavedPostsLoaded;
 
@@ -40,11 +40,13 @@ namespace MyInsta.View
                     }
                 }
             };
-            InstaServer.OnUserCollectionLoaded += () => progressCollection.Visibility = Visibility.Collapsed;
+            InstaServer.OnUserCollectionLoaded += () => 
+                progressCollection.Visibility = Visibility.Collapsed;
         }
 
         public User InstUser { get; set; }
-        public ObservableCollection<PostItem> SavedPosts { get; set; } = new ObservableCollection<PostItem>();
+        public ObservableCollection<PostItem> SavedPosts { get; set; } 
+            = new ObservableCollection<PostItem>();
         public InstaCollections InstaCollections { get; set; }
         int countPosts = 12;
         protected override async void OnNavigatedTo(NavigationEventArgs e)

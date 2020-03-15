@@ -143,8 +143,8 @@
                             <StackPanel Grid.Row="1" Orientation="Vertical" Margin="20, 0">
                                 <FlipView
                                     x:Name="itemsList"
-                                    Width="500"
-                                    Height="500"
+                                    Width="{x:Bind Items[0].GetWidth}"
+                                    Height="{x:Bind Items[0].GetHeight}"
                                     HorizontalContentAlignment="Center"
                                     Background="{x:Null}"
                                     ItemsSource="{x:Bind Items}"
@@ -159,13 +159,13 @@
                                             <StackPanel>
                                                 <Border BorderBrush="{x:Null}"
                                                         BorderThickness="1"
-                                                        Height="500"
-                                                        Width="500"
+                                                        Height="{x:Bind GetHeight}"
+                                                        Width="{x:Bind GetWidth}"
                                                         ToolTipService.ToolTip="{x:Bind DatePost}"
                                                         CornerRadius="15">
                                                     <Border.Background>
                                                         <ImageBrush Stretch="UniformToFill" 
-                                                                    ImageSource="{x:Bind UrlSmallImage}"/>
+                                                                    ImageSource="{x:Bind UrlBigImage}"/>
                                                     </Border.Background>
                                                 </Border>
                                                 <Viewbox MaxHeight="20" MaxWidth="20"
@@ -182,26 +182,6 @@
                                         </DataTemplate>
                                     </FlipView.ItemTemplate>
                                 </FlipView>
-                                <!--<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                                    <TextBlock
-                                        x:Uid="Likes"
-                                        Margin="5, 5, 10, 5"
-                                        FontSize="20" />
-                                    <TextBlock
-                                        Margin="5, 5, 10, 5"
-                                        FontSize="20"
-                                        Text="{x:Bind Items[0].CountLikes}" />
-                                </StackPanel>
-                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                                    <TextBlock
-                                        x:Uid="Comments"
-                                        Margin="5, 5, 10, 5"
-                                        FontSize="20" />
-                                    <TextBlock
-                                        Margin="5, 5, 10, 5"
-                                        FontSize="20"
-                                        Text="{x:Bind Items[0].CountComments}" />
-                                </StackPanel>-->
                                 <Grid Margin="5">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>

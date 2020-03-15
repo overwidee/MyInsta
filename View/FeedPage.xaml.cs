@@ -56,7 +56,6 @@ namespace MyInsta.View
 
         private int count = 6;
         public ObservableCollection<PostItem> Feed { get; set; } = new ObservableCollection<PostItem>();
-        public ObservableCollection<UserFeed> ListInstaUserShorts { get; set; }
         public User InstaUser { get; set; }
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {

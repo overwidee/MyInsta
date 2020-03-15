@@ -11,7 +11,7 @@ namespace MyInsta.Logic
         public static IEnumerable<int> ReturnNumbers(string str)
         {
             var arr = str.Split(',');
-            foreach (var item in arr)
+            foreach (string item in arr)
             {
                 if (item.Contains("-"))
                 {

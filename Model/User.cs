@@ -12,11 +12,13 @@ namespace MyInsta.Model
     {
         public string LoginUser { get; set; }
         public string PasswordUser { get; set; }
-        public IInstaApi API;
+        public IInstaApi Api { get; set; }
         public UserData UserData { get; set; }
+        public UserSettings Settings { get; set; }
         public User()
         {
             UserData = new UserData();
+            Settings = new UserSettings();
         }
     }
 }

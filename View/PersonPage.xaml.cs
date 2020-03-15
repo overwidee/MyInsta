@@ -224,7 +224,6 @@ namespace MyInsta.View
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
-            InstaServer.CancelTasks();
             InstaServer.OnUserPostsLoaded -= UsersPostsLoaded;
             InstaServer.OnUserAllPostsLoaded -= UserAllPostsLoaded;
         }
@@ -516,28 +515,6 @@ namespace MyInsta.View
                     Placement = FlyoutPlacementMode.Left
                 });
             }
-        }
-
-        private void SetChartView()
-        {
-            //likeChart.View.AxisX.ScrollBar = new AxisScrollBar();
-            //c1Chart1.View.AxisY.ScrollBar = new AxisScrollBar();
-
-            //// remove any action update delay  
-            //c1Chart1.ActionUpdateDelay = 0;
-
-            //// set manipulation mode to scale and translate  
-            //c1Chart1.ManipulationMode = ManipulationModes.Scale | // scale without inertia  
-            //                            ManipulationModes.TranslateX | // translate x axis  
-            //                            ManipulationModes.TranslateY | // translate y axis  
-            //                            ManipulationModes.TranslateInertia; // translate with inertia  
-
-            //// assign translate action to slide gesture  
-            //c1Chart1.GestureSlide = GestureSlideAction.Translate;
-
-            //// assign scale action to double tap and pinch gestures  
-            //c1Chart1.GestureDoubleTap = GestureDoubleTapAction.Scale;
-            //c1Chart1.GesturePinch = GesturePinchAction.Scale;
         }
 
         private Flyout imageFlyout = new Flyout();

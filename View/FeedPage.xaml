@@ -101,95 +101,15 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
-    <!--<SplitView x:Name="SplitView" Background="{ThemeResource CMapUwpAcrylicBrush}" IsPaneOpen="False" DisplayMode="Overlay"
-                   OpenPaneLength="296"
-                   PaneBackground="{ThemeResource CMapUwpAcrylicBrush}"
-                   PanePlacement="Right">
-        <SplitView.Pane>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="35"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <ProgressRing x:Name="MainProgressRing" IsActive="True" Grid.Row="1" Height="100" Width="100"/>
-                <Button Grid.Row="0" 
-                        x:Name="AddButton" HorizontalAlignment="Stretch" 
-                        Margin="0" Content="Add person" Click="AddButton_OnClick"/>
-                <ListView
-                        x:Name="ListFollowers"
-                        Grid.Row="1"
-                        Margin="5"
-                        SelectionMode="None"
-                        ScrollViewer.VerticalScrollBarVisibility="Auto"
-                        ItemsSource="{x:Bind ListInstaUserShorts}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:Name="SingleLineDataTemplate" x:DataType="model:UserFeed">
-                            <StackPanel
-                                    Grid.Column="0"
-                                    Height="80"
-                                    Orientation="Horizontal"
-                                    Padding="12">
-                                <StackPanel.ContextFlyout>
-                                    <MenuFlyout>
-                                        <MenuFlyoutItem Text="Delete" Click="DeleteButton_OnClick" Tag="{x:Bind InstaUserShort.UserName}"/>
-                                    </MenuFlyout>
-                                </StackPanel.ContextFlyout>
-                                <Ellipse
-                                        Width="56"
-                                        Height="56"
-                                        VerticalAlignment="Center">
-                                    <Ellipse.Fill>
-                                        <ImageBrush>
-                                            <ImageBrush.ImageSource>
-                                                <BitmapImage UriSource="{Binding InstaUserShort.ProfilePicUrl}" />
-                                            </ImageBrush.ImageSource>
-                                        </ImageBrush>
-                                    </Ellipse.Fill>
-                                </Ellipse>
-                                <TextBlock
-                                        Margin="12,0,0,0"
-                                        VerticalAlignment="Center"
-                                        Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
-                                        Style="{ThemeResource BaseTextBlockStyle}"
-                                        Width="160"
-                                        Text="{x:Bind InstaUserShort.UserName}" />
-                                <CheckBox FontSize="25" 
-                                          VerticalContentAlignment="Center"
-                                          IsEnabled="False"
-                                          IsChecked="{x:Bind Received}"
-                                          Style="{StaticResource BoolStyle}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </Grid>
-        </SplitView.Pane>-->
-        <!--<SplitView.Content>-->
-            <Grid Background="{ThemeResource CMapUwpAcrylicBrush}">
-                <!--<Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="60"/>
-                </Grid.ColumnDefinitions>-->
-                <StackPanel x:Name="ProgressStack" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <Grid Background="{ThemeResource CMapUwpAcrylicBrush}">
+        <StackPanel x:Name="ProgressStack" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock x:Name="LoadBlock" Text="" FontSize="15"
                                FontWeight="Light" Margin="10"/>
                     <ProgressRing x:Name="FeedProgressRing" 
                                   Margin="10" 
                                   Height="100" Width="100" IsActive="True"/>
-                </StackPanel>
-                <!--<Button Grid.Column="1" VerticalAlignment="Top" 
-                            Click="ButtonBase_OnClick"
-                            FontFamily="Segoe MDL2 Assets"
-                            Content="&#xE72B;"
-                            HorizontalAlignment="Stretch" Margin="10"/>-->
-
-                <!--<Button x:Name="LoadButton"
-                        FontFamily="Segoe MDL2 Assets"
-                        Content="&#xE72C;" Grid.Column="1" VerticalAlignment="Bottom" 
-                            Click="LoadButton_OnClick"
-                            IsEnabled="False"
-                            HorizontalAlignment="Stretch" Margin="10"/>-->
-                <ScrollViewer
+        </StackPanel>
+        <ScrollViewer
                         x:Name="ScrollListPosts"
                         Grid.Row="0"
                         Grid.Column="0"
@@ -251,8 +171,8 @@
                                     <StackPanel Grid.Row="1" Orientation="Vertical" Margin="10, 0">
                                         <FlipView
                                                 x:Name="itemsList"
-                                                Width="450"
-                                                Height="450"
+                                                Width="{x:Bind Items[0].GetWidth}"
+                                                Height="{x:Bind Items[0].GetHeight}"
                                                 HorizontalContentAlignment="Center"
                                                 ItemsSource="{x:Bind Items}"
                                                 Background="{x:Null}"
@@ -267,13 +187,13 @@
                                                     <StackPanel HorizontalAlignment="Center">
                                                         <Border BorderBrush="{x:Null}"
                                                                 BorderThickness="1"
-                                                                Height="450"
-                                                                Width="450"
+                                                                Height="{x:Bind GetHeight}"
+                                                                Width="{x:Bind GetWidth}"
                                                                 ToolTipService.ToolTip="{x:Bind DatePost}"
                                                                 CornerRadius="15">
                                                             <Border.Background>
                                                                 <ImageBrush Stretch="UniformToFill" 
-                                                                            ImageSource="{x:Bind UrlSmallImage}"/>
+                                                                            ImageSource="{x:Bind UrlBigImage}"/>
                                                             </Border.Background>
                                                             <Viewbox MaxHeight="20" MaxWidth="20"
                                                                      HorizontalAlignment="Right"
@@ -290,39 +210,6 @@
                                                 </DataTemplate>
                                             </FlipView.ItemTemplate>
                                         </FlipView>
-                                        <!--<StackPanel HorizontalAlignment="Center" Margin="0, 5, 0, 0" Orientation="Horizontal">
-                                            <TextBlock
-                                                x:Uid="Likes"
-                                                Margin="0,0,10, 0"
-                                                FontWeight="Light"
-                                                FontSize="20" />
-                                            <TextBlock
-                                                Margin="0,0,10, 0"
-                                                FontSize="20"
-                                                FontWeight="Light"
-                                                PointerEntered="UIElement_OnPointerEntered"
-                                                PointerExited="UIElement_OnPointerExited"
-                                                Tag="{x:Bind Items[0].Pk}"
-                                                Tapped="UIElement_OnTapped"
-                                                Text="{x:Bind Items[0].CountLikes}" />
-                                        </StackPanel>
-                                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                                            <TextBlock
-                                                x:Uid="Comments"
-                                                FontWeight="Light"
-                                                Margin="0, 0, 10, 0"
-                                                FontSize="20" />
-                                            <TextBlock
-                                                x:Name="BlockComments"
-                                                Margin="0, 0, 10, 0"
-                                                FontSize="20"
-                                                FontWeight="Light"
-                                                PointerEntered="UIElement_OnPointerEntered"
-                                                PointerExited="UIElement_OnPointerExited"
-                                                Tag="{x:Bind Items[0].Pk}"
-                                                Tapped="BlockComments_OnTapped"
-                                                Text="{x:Bind Items[0].CountComments}" />
-                                        </StackPanel>-->
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
@@ -404,28 +291,6 @@
                                                         </MenuFlyout>
                                                     </Button.Flyout>
                                                 </Button>
-                                                <!--<Button
-                                                    x:Name="buttonDownload"
-                                                    Margin="5"
-                                                    Click="ButtonDownload_OnClick"
-                                                    ToolTipService.ToolTip="Download saved post"
-                                                    CornerRadius="10"
-                                                    Tag="{x:Bind Id}">
-                                                    <Button.Content>
-                                                        <SymbolIcon Symbol="Download" />
-                                                    </Button.Content>
-                                                </Button>
-                                                <Button
-                                                        x:Name="buttonShare"
-                                                        Margin="5"
-                                                        Click="ButtonShare_OnClick"
-                                                        CornerRadius="10"
-                                                        ToolTipService.ToolTip="Share in direct"
-                                                        Tag="{x:Bind Id}">
-                                                    <Button.Content>
-                                                        <SymbolIcon Symbol="Share" />
-                                                    </Button.Content>
-                                                </Button>-->
                                             </StackPanel>
                                         </Grid>
                                     </StackPanel>
@@ -435,7 +300,4 @@
                     </GridView>
                 </ScrollViewer>
             </Grid>
-        <!--</SplitView.Content>-->
-    <!--</SplitView>-->
-
 </Page>

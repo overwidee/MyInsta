@@ -31,7 +31,7 @@ namespace MyInsta.View
     {
         public LoginPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
             titleBar.BackgroundColor = Resources["SystemControlAcrylicElementMediumHighBrush"] as Color?;

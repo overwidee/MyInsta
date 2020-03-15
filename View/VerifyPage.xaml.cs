@@ -39,9 +39,9 @@ namespace MyInsta.View
         }
         private async void sendButton_Click(object sender, RoutedEventArgs e)
         {
-            var result = radioSMS.IsChecked.Value 
-                ? await InstaServer.SendSMSVerify(InstaUser.API) 
-                : await InstaServer.SendEmailVerify(InstaUser.API);
+            bool result = radioSMS.IsChecked.Value 
+                ? await InstaServer.SendSMSVerify(InstaUser.Api) 
+                : await InstaServer.SendEmailVerify(InstaUser.Api);
         }
 
         private async void loginButton_Click(object sender, RoutedEventArgs e)
@@ -51,7 +51,7 @@ namespace MyInsta.View
             var api = await InstaServer.LoginByCode(InstaUser, textCode.Text);
             if (api != null)
             {
-                InstaUser.API = api;
+                InstaUser.Api = api;
                 Frame.Navigate(typeof(MenuPage), InstaUser);
             }
             IsEnabled = true;

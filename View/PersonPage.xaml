@@ -353,11 +353,11 @@
                                     </GridView.ItemsPanel>
                                     <GridView.ItemTemplate>
                                         <DataTemplate x:DataType="model:PostItem">
-                                            <StackPanel Orientation="Vertical">
+                                            <StackPanel Orientation="Vertical" Margin="15, 10, 15, 0">
                                                 <FlipView
                                                     x:Name="itemsList"
-                                                    Width="410"
-                                                    Height="405"
+                                                    Width="{x:Bind Items[0].GetWidth}"
+                                                    Height="{x:Bind Items[0].GetHeight}"
                                                     HorizontalContentAlignment="Center"
                                                     Background="{x:Null}"
                                                     CanBeScrollAnchor="True"
@@ -372,10 +372,10 @@
                                                     <FlipView.ItemTemplate>
                                                         <DataTemplate x:DataType="model:CustomMedia">
                                                             <StackPanel PointerWheelChanged="Image_PointerWheelChanged" 
-                                                                        Margin="0">
+                                                                        >
                                                                 <Border BorderBrush="{x:Null}"
-                                                                    Width="400"
-                                                                    Height="400"
+                                                                    Width="{x:Bind GetWidth}"
+                                                                    Height="{x:Bind GetHeight}"
                                                                     ToolTipService.ToolTip="{x:Bind DatePost}"
                                                                     CornerRadius="15">
                                                                     <Border.Background>
@@ -393,20 +393,12 @@
                                                                                 Text="&#xEA0C;"/>
                                                                     </Viewbox>
                                                                 </Border>
-                                                                <!--<Image
-                                                                Height="400"
-                                                                Width="400"
-                                                                Margin="10"
-                                                                
-                                                                Stretch="UniformToFill"
-                                                                ToolTipService.ToolTip="{x:Bind DatePost}"
-                                                                Source="{x:Bind UrlSmallImage}"/>-->
                                                             </StackPanel>
                                                         </DataTemplate>
                                                     </FlipView.ItemTemplate>
                                                 </FlipView>
 
-                                                <Grid >
+                                                <Grid Margin="0, 5">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="6*"/>
                                                         <ColumnDefinition Width="*"/>
@@ -426,43 +418,6 @@
                                                             <SymbolIcon Symbol="Like"/>
                                                         </CheckBox.Content>
                                                     </CheckBox>
-                                                    <!--<StackPanel Grid.Column="1" Width="100">
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <TextBlock
-                                                            x:Uid="Likes"
-                                                            Margin="0, 0, 10, 0"
-                                                            FontWeight="Light"
-                                                            FontSize="20" />
-                                                            <TextBlock
-                                                            Margin="0, 0, 10, 0"
-                                                            FontSize="20"
-                                                            x:Name="LikesBlock"
-                                                            FontWeight="Light"
-                                                            PointerEntered="UIElement_OnPointerEntered"
-                                                            PointerExited="UIElement_OnPointerExited"
-                                                            Tapped="LikesBlock_OnTapped"
-                                                            Tag="{x:Bind Items[0].Pk}"
-                                                            Text="{x:Bind Items[0].CountLikes}" />
-                                                        </StackPanel>
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <TextBlock
-                                                            x:Uid="Comments"
-                                                            Margin="0, 0, 10, 0"
-                                                            FontSize="20"
-                                                            FontWeight="Light"
-                                                            Tag="{x:Bind Items[0].Pk}"
-                                                            Tapped="TextBlock_Tapped" />
-                                                            <TextBlock
-                                                            Margin="0, 0, 10, 0"
-                                                            FontSize="20"
-                                                            FontWeight="Light"
-                                                            Tag="{x:Bind Items[0].Pk}"
-                                                            Tapped="TextBlock_Tapped"
-                                                            PointerEntered="UIElement_OnPointerEntered"
-                                                            PointerExited="UIElement_OnPointerExited"
-                                                            Text="{x:Bind Items[0].CountComments}" />
-                                                        </StackPanel>
-                                                    </StackPanel>-->
                                                     <StackPanel Orientation="Horizontal" 
                                                             Grid.Column="2"
                                                             HorizontalAlignment="Right">
@@ -563,15 +518,15 @@
                                         <StackPanel Margin="20" Orientation="Vertical">
                                             <Border BorderBrush="{x:Null}"
                                                 BorderThickness="1"
-                                                Width="350"
-                                                Height="550"
+                                                Width="{x:Bind GetWidth}"
+                                                Height="{x:Bind GetHeight}"
                                                 ToolTipService.ToolTip="{x:Bind DatePost}"
                                                 Tag="{x:Bind Pk}"
                                                 Tapped="Image_Tapped_1" 
                                                 CornerRadius="15">
                                                 <Border.Background>
                                                     <ImageBrush Stretch="UniformToFill" 
-                                                                ImageSource="{x:Bind UrlSmallImage}"/>
+                                                                ImageSource="{x:Bind UrlBigImage}"/>
                                                 </Border.Background>
                                                 <Viewbox MaxHeight="20" MaxWidth="20"
                                                          HorizontalAlignment="Right"
@@ -645,13 +600,11 @@
                                     <DataTemplate x:Name="SingleLineDataTemplate" x:DataType="localInsta:InstaHighlightFeed">
                                         <StackPanel
                                         Grid.Column="0"
-                                        Width="100"
-                                        Height="122"
                                         Orientation="Vertical"
                                         Padding="9">
                                             <Ellipse
-                                            Width="70"
-                                            Height="70"
+                                            Width="100"
+                                            Height="100"
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center">
                                                 <Ellipse.Fill>
@@ -666,6 +619,7 @@
                                             Margin="4"
                                             HorizontalAlignment="Center"
                                             Text="{x:Bind Title}"
+                                            FontSize="16"
                                             FontWeight="Light"
                                             TextWrapping="Wrap" />
                                         </StackPanel>
@@ -674,7 +628,7 @@
                             </ListView>
                             <ScrollViewer
                                     x:Name="scrollArchive"
-                                    Margin="0, 135, 0, 0"
+                                    Margin="0, 150, 0, 0"
                                     VerticalScrollBarVisibility="Hidden">
                                 <GridView
                                     x:Name="archiveList"
@@ -692,15 +646,15 @@
                                             <StackPanel Margin="20, 10" Orientation="Vertical">
                                                 <Border BorderBrush="{x:Null}"
                                                     BorderThickness="1"
-                                                    Width="350"
-                                                    Height="550"
+                                                    Width="{x:Bind GetWidth}"
+                                                    Height="{x:Bind GetHeight}"
                                                     ToolTipService.ToolTip="{x:Bind DatePost}"
                                                     Tag="{x:Bind Pk}"
                                                     Tapped="Image_Tapped" 
                                                     CornerRadius="15">
                                                     <Border.Background>
                                                         <ImageBrush Stretch="UniformToFill" 
-                                                                ImageSource="{x:Bind UrlSmallImage}"/>
+                                                                ImageSource="{x:Bind UrlBigImage}"/>
                                                     </Border.Background>
                                                     <Viewbox MaxHeight="20" MaxWidth="20"
                                                              HorizontalAlignment="Right"
@@ -713,15 +667,7 @@
                                                             Text="&#xEA0C;"/>
                                                     </Viewbox>
                                                 </Border>
-                                                <!--<Image
-                                                Width="500"
-                                                Height="400"
-                                                Margin="5"
-                                                ToolTipService.ToolTip="{x:Bind DatePost}"
-                                                HorizontalAlignment="Center"
-                                                Source="{x:Bind UrlBigImage}"
-                                                Tag="{x:Bind Pk}"
-                                                Tapped="Image_Tapped" />-->
+
                                                 <Button
                                                 x:Name="buttonDownloadHigh"
                                                 x:Uid="DownloadStory"
@@ -768,6 +714,7 @@
                                                 IndependentValuePath="Id"
                                                 Tapped="Chart_OnTapped"
                                                 DependentValuePath="Value" PointerEntered="LineSeries_PointerEntered" PointerExited="LineSeries_PointerExited">
+                                                
                                             </charting:LineSeries>
                                             <charting:Chart.Palette>
                                                 <charting:ResourceDictionaryCollection>

@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
 
 namespace MyInsta.Model
 {
@@ -17,8 +18,6 @@ namespace MyInsta.Model
         public ObservableCollection<InstaUserShort> UserFollowing { get; set; }
         public ObservableCollection<InstaUserShort> UserUnfollowers { get; set; }
         public ObservableCollection<InstaUserShort> UserFriends { get; set; }
-        public ObservableCollection<string> FeedUsers { get; set; }
-        public ObservableCollection<UserFeed> FeedObjUsers { get; set; }
         public ObservableCollection<PostItem> Feed { get; set; }
         public ObservableCollection<PostItem> SavedPostItems { get; set; }
         public ObservableCollection<UserStory> Stories { get; set; }
@@ -34,9 +33,7 @@ namespace MyInsta.Model
             UserFriends = new ObservableCollection<InstaUserShort>();
             UserUnfollowers = new ObservableCollection<InstaUserShort>();
             SavedPostItems = new ObservableCollection<PostItem>();
-            FeedUsers = new ObservableCollection<string>();
             Bookmarks = new ObservableCollection<InstaUserShort>();
-            FeedObjUsers = new ObservableCollection<UserFeed>();
             Feed = new ObservableCollection<PostItem>();
             PostsLastUser = new ObservableCollection<PostItem>();
             Stories = new ObservableCollection<UserStory>();
@@ -46,9 +43,20 @@ namespace MyInsta.Model
         }
     }
 
-    public class UserFeed
+    public class UserSettings
     {
-        public InstaUserShort InstaUserShort { get; set; }
-        public bool Received { get; set; }
+        public UserSettings()
+        {
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            StoryHeight = (double?)localSettings.Values["StoryHeight"] ?? 550;
+            StoryWidth = (double?)localSettings.Values["StoryWidth"] ?? 350;
+            PostWidth = (double?)localSettings.Values["PostWidth"] ?? 500;
+            PostHeight = (double?)localSettings.Values["PostHeight"] ?? 500;
+        }
+
+        public double PostWidth { get; set; }
+        public double PostHeight { get; set; }
+        public double StoryHeight { get; set; }
+        public double StoryWidth { get; set; }
     }
 }
