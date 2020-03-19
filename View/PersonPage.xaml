@@ -690,6 +690,9 @@
                     Header="Statistics"
                     Visibility="Collapsed"
                     FontWeight="Light">
+                    <controls:TabViewItem.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE9D9;"/>
+                    </controls:TabViewItem.Icon>
                     <Grid>
                         <ScrollViewer>
                             <StackPanel>

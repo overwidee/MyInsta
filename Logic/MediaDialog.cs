@@ -115,7 +115,7 @@ namespace MyInsta.Logic
                                 frame.Navigate(typeof(ImagePage), Url);
                                 window.Activate();
                                 await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newAppView.Id,
-                                    ViewSizePreference.UseMinimum, appView.Id, ViewSizePreference.UseMinimum);
+                                    ViewSizePreference.UseLess, appView.Id, ViewSizePreference.UseLess);
                             });
                     };
                     contentDialog.Content = imageMedia;

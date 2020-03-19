@@ -10,10 +10,10 @@
 
     <Grid>
         <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                      VerticalScrollBarVisibility="Auto" MinZoomFactor="1" 
+                      VerticalScrollBarVisibility="Auto" 
                       DoubleTapped="UIElement_OnDoubleTapped"
                       ZoomMode="Enabled">
-            <Image x:Name="Image"/>
+            <Image x:Name="Image" Stretch="Uniform"/>
         </ScrollViewer>
     </Grid>
 </Page>

@@ -142,13 +142,13 @@
                             <DataTemplate x:DataType="model:PostItem">
                                 <Grid Margin="1">
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="80" />
+                                        <RowDefinition Height="Auto" />
                                         <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
-                                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="20, 0">
+                                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10, 5">
                                         <Ellipse
-                                                Width="40"
-                                                Height="40"
+                                                Width="45"
+                                                Height="45"
                                                 Margin="5">
                                             <Ellipse.Fill>
                                                 <ImageBrush>

@@ -148,17 +148,22 @@
                         />
                     <NavigationViewItem 
                         x:Name="button_archive" 
-                        Icon="Library" 
                         Content="Archive" 
                         Style="{StaticResource TextStyle}"
-                        Tag="Archive" 
-                    />
+                        Tag="Archive">
+                        <NavigationViewItem.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81C;"/>
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
                     <NavigationViewItem
                         x:Name="button_savedPosts"
                         Content="Saved posts"
-                        Icon="SlideShow"
                         Style="{StaticResource TextStyle}"
-                        Tag="Saved" />
+                        Tag="Saved">
+                        <NavigationViewItem.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEB9F;"/>
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
                     <NavigationViewItem
                         x:Name="button_preview"
                         Content="Preview"
