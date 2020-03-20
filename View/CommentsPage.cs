@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using InstagramApiSharp.Classes.Models;
 using MyInsta.Logic;
 using MyInsta.Model;

@@ -7,10 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Title="TITLE"
+    FontWeight="Light"
     PrimaryButtonText="Ok"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    Background="{StaticResource ListBoxBorderThemeBrush}">
+    Background="#212222">
     <Grid>
-        <TextBox MinWidth="300" Text="{x:Bind ResultText, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBox MinWidth="300" Text="{x:Bind ResultText, Mode=TwoWay}" 
+                 FontWeight="Light"
+                 HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>
 </ContentDialog>

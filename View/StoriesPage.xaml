@@ -144,7 +144,9 @@
                                         Text="&#xEA0C;"/>
                                 </Viewbox>
                             </Border>
-                            <Button
+                            
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button
                                     x:Name="buttonDownloadStory"
                                     x:Uid="DownloadStory"
                                     Margin="5"
@@ -153,6 +155,19 @@
                                     Click="ButtonDownloadStory_Click"
                                     CornerRadius="5"
                                     Tag="{x:Bind Name}" />
+                                <Button
+                                    x:Name="buttonViewersStory"
+                                    FontFamily="Segoe MDL2 Assets"
+                                    Margin="5"
+                                    FontWeight="Light"
+                                    FontSize="20"
+                                    Content="&#xE7B3;"
+                                    HorizontalAlignment="Center"
+                                    Click="ButtonViewersStory_OnClick"
+                                    CornerRadius="5"
+                                    Tag="{x:Bind Pk}" />
+                            </StackPanel>
+                            
                             <AutoSuggestBox
                                     Width="200"
                                     Margin="5, 5, 5, 10"

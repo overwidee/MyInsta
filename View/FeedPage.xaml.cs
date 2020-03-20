@@ -161,9 +161,10 @@ namespace MyInsta.View
         {
             InstaServer.ShowComments(InstaUser, this, ((MenuFlyoutItem)sender).Tag.ToString());
         }
-
-        private void MenuFlyoutItem2_OnClick(object sender, RoutedEventArgs e)
+         
+        private async void MenuFlyoutItem2_OnClick(object sender, RoutedEventArgs e)
         {
+            await InstaServer.SaveMediaInProfile(InstaUser, ((MenuFlyoutItem)sender).Tag.ToString());
         }
     }
 }

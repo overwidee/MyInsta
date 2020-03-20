@@ -47,7 +47,7 @@ namespace MyInsta.View
                 postTab.Header = $"Posts ({Posts.Count})";
                 saveButton.Text = $"Download posts ({Posts.Count})";
 
-                if ((likeChart.Series[0] as LineSeries)?.ItemsSource == null)
+                if ((likeChart.Series[0] as LineSeries)?.ItemsSource == null && Posts.Count != 0)
                 {
                     StatTab.Visibility = Visibility.Visible;
 

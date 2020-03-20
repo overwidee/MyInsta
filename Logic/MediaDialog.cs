@@ -45,6 +45,7 @@ namespace MyInsta.Logic
                 SecondaryButtonText = "All right",
                 PrimaryButtonText = "Copy link",
                 Tag = Url,
+                Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 33, 34, 34)),
                 FullSizeDesired = true
             };
             contentDialog.PrimaryButtonClick += delegate

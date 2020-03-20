@@ -35,7 +35,7 @@ namespace MyInsta.View
 
         public ObservableCollection<InstaDirectInboxThread> DirectItems { get; set; } 
         public ObservableCollection<InstaDirectInboxItem> AudioAttachment { get; set; }
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             InstaUser = e.Parameter as User;
@@ -50,6 +50,11 @@ namespace MyInsta.View
             AudioAttachment = await InstaServer.GetDialogAudioAsync(InstaUser, selectD.ThreadId);
 
             listDialog.ItemsSource = AudioAttachment;
+        }
+
+        private void Direct_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            ((ContentDialog)((Frame)Parent).Parent).Background = Background;
         }
     }
 }

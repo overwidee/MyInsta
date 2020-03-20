@@ -82,10 +82,18 @@ namespace MyInsta.View
                 DataType.Followers => await InstaServer.GetFollowers(InstaUser, userName, all),
                 DataType.Following => await InstaServer.GetFollowing(InstaUser, userName, all),
                 DataType.Likers => await InstaServer.GetLikers(InstaUser, userName),
+                DataType.Viewers => await InstaServer.GetViewersStory(InstaUser, userName),
                 _ => ListInstaUserShorts
             };
 
             ListFollowers.ItemsSource = ListInstaUserShorts;
+
+            //if (ListInstaUserShorts == null)
+            //{
+            //    ((ContentDialog)((Frame)Parent).Parent).Hide();
+            //    return;
+            //}
+            BlockCount.Text = $"Count: {ListInstaUserShorts?.Count}";
         }
 
         private void ListFollowers_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -94,7 +102,7 @@ namespace MyInsta.View
             {
                 ToFrame.Navigate(typeof(PersonPage), new object[] { user, InstaUser });
                 ((ContentDialog)((Frame)Parent).Parent).Hide();
-            }
+            } 
         }
 
         private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)

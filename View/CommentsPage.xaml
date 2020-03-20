@@ -9,7 +9,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Width="400"
     Height="400"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Background="#212222">
 
     <ContentDialog.Resources>
         <ResourceDictionary>
@@ -42,8 +43,7 @@
 
     <Grid
         Width="400"
-        Height="400"
-        Background="{ThemeResource CMapUwpAcrylicBrush}">
+        Height="400">
         <ListView
             x:Name="listComments"
             Margin="10"

@@ -160,5 +160,10 @@ namespace MyInsta.View
                 InstaUser
             });
         }
+
+        private async void ButtonViewersStory_OnClick(object sender, RoutedEventArgs e)
+        {
+            await InstaServer.ShowViewers(InstaUser, ((Button)sender).Tag.ToString(), Frame);
+        }
     }
 }

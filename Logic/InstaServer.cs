@@ -21,6 +21,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using WinRTXamlToolkit.Tools;
 using static Windows.Networking.Connectivity.NetworkInformation;
 
@@ -30,7 +31,8 @@ namespace MyInsta.Logic
     {
         Followers,
         Following,
-        Likers
+        Likers,
+        Viewers
     }
     public static class InstaServer
     {
@@ -767,7 +769,8 @@ namespace MyInsta.Logic
             {
                 PrimaryButtonText = "Send",
                 SecondaryButtonText = "Cancel",
-                FullSizeDesired = true
+                FullSizeDesired = true,
+                Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 33, 34, 34))
             };
             InstaMediaType mediaType = InstaMediaType.Image;
             CustomMedia media = medias[0];
@@ -890,6 +893,13 @@ namespace MyInsta.Logic
         {
             IResult<bool> result = await user.Api.StoryProcessor.ReplyToStoryAsync(storyPk, userPk, text);
             return result.Value;
+        }
+
+        public static async Task<ObservableCollection<InstaUserShort>> GetViewersStory(User user, string storyId)
+        {
+            var viewers = await user.Api.StoryProcessor.GetStoryMediaViewersAsync(storyId, PaginationParameters.Empty);
+            OnCommonDataLoaded?.Invoke();
+            return viewers.Value != null ? new ObservableCollection<InstaUserShort>(viewers?.Value.Users) : null;
         }
         #endregion
 
@@ -1288,6 +1298,11 @@ namespace MyInsta.Logic
             await ShowData(instaUser, mediaPk, parentFrame, DataType.Likers);
         }
 
+        public static async Task ShowViewers(User instaUser, string storyPk, Frame parentFrame)
+        {
+            await ShowData(instaUser, storyPk, parentFrame, DataType.Viewers);
+        }
+
         public static async Task ShowData(User instaUser, string userName, Frame parentFrame, DataType type)
         {
             var contentDialog = new ContentDialog()
@@ -1459,6 +1474,12 @@ namespace MyInsta.Logic
                 IsArchiveStoryLoading = false;
             }
         }
+
+        #endregion
+
+        #region Live
+
+
 
         #endregion
     }

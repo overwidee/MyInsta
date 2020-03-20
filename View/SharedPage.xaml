@@ -7,7 +7,8 @@
     xmlns:localInsta="using:InstagramApiSharp.Classes.Models"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource SystemControlAcrylicElementBrush}">
+    Loaded="SharedPage_OnLoaded"
+    Background="#212222">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -35,7 +36,7 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <Grid Background="{ThemeResource CMapUwpAcrylicBrush}">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60" />
             <RowDefinition Height="153*" />

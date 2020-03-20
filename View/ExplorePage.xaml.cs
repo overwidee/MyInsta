@@ -103,7 +103,7 @@ namespace MyInsta.View
         private async void ButtonShare_OnClick(object sender, RoutedEventArgs e)
         {
             await InstaServer.ShareMedia(InstaUser,
-                ExploreFeed?.FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString()))?.Items);
+                ExploreFeed?.FirstOrDefault(x => x.Id == int.Parse(((MenuFlyoutItem)sender).Tag.ToString()))?.Items);
         }
 
         private async void AutoSuggestBox_OnQuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
@@ -121,7 +121,7 @@ namespace MyInsta.View
 
         private async void ButtonSaveInProfile_OnClick(object sender, RoutedEventArgs e)
         {
-            await InstaServer.SaveMediaInProfile(InstaUser, ((Button)sender).Tag.ToString());
+            await InstaServer.SaveMediaInProfile(InstaUser, ((MenuFlyoutItem)sender).Tag.ToString());
         }
     }
 }
