@@ -26,7 +26,7 @@ namespace MyInsta.View
     {
         public BookmarksPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         public User InstaUser { get; set; }
@@ -38,9 +38,10 @@ namespace MyInsta.View
 
         private void MainGrid_ItemClick(object sender, ItemClickEventArgs e)
         {
-            var user = e.ClickedItem as InstaUserShort;
-            if (user != null)
-                this.Frame.Navigate(typeof(PersonPage), new object[] { user, InstaUser });
+            if (e.ClickedItem is InstaUserShort user)
+            {
+                Frame.Navigate(typeof(PersonPage), new object[] { user, InstaUser });
+            }
         }
     }
 }

@@ -30,6 +30,10 @@ namespace MyInsta.View
             bar.ExtendViewIntoTitleBar = true;
             Window.Current.SetTitleBar(BackgroundElement);
 
+            InstaServer.OnErrorGetting += (error) =>
+            {
+                _ = new CustomDialog("Warning", error, "Close");
+            };
         }
 
         User InstaUser { get; set; } 

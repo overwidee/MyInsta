@@ -67,7 +67,7 @@ namespace MyInsta.View
                         throw new ArgumentOutOfRangeException();
                 }
 
-                var mediaDialog = new MediaDialog(InstaUser, sav.Pk, urlMedia, sav.MediaType, 1);
+                var mediaDialog = new MediaDialog(InstaUser, sav, urlMedia, sav.MediaType, 1);
                 _ = mediaDialog.ShowMediaAsync();
             }
         }
@@ -95,8 +95,8 @@ namespace MyInsta.View
             {
                 await InstaServer.DownloadAnyPost(
                     await InstaServer.GetInstaUserShortById(InstaUser
-                        , ((IEnumerable<PostItem>)postsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString())).UserPk)
-                    , ((IEnumerable<PostItem>)postsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((Button)sender).Tag.ToString()))?.Items);
+                        , ((IEnumerable<PostItem>)postsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((MenuFlyoutItem)sender).Tag.ToString())).UserPk)
+                    , ((IEnumerable<PostItem>)postsList.ItemsSource).FirstOrDefault(x => x.Id == int.Parse(((MenuFlyoutItem)sender).Tag.ToString()))?.Items);
             }
         }
 

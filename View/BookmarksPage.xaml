@@ -52,8 +52,7 @@
                 <ItemsPanelTemplate>
                     <VariableSizedWrapGrid
                         ItemHeight="250"
-                        ItemWidth="250"
-                        MaximumRowsOrColumns="5"
+                        ItemWidth="240"
                         Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
@@ -61,16 +60,13 @@
                 <DataTemplate x:DataType="model:InstaUserShort">
                     <StackPanel Orientation="Vertical">
                         <Ellipse
-                            Grid.Row="0"
-                            Grid.RowSpan="3"
-                            Grid.Column="0"
-                            Width="170"
-                            Height="170"
-                            Margin="10">
+                            Width="200"
+                            Height="200"
+                            Margin="0">
                             <Ellipse.Fill>
                                 <ImageBrush>
                                     <ImageBrush.ImageSource>
-                                        <BitmapImage UriSource="{x:Bind ProfilePicture}" />
+                                        <BitmapImage UriSource="{x:Bind ProfilePicUrl}" />
                                     </ImageBrush.ImageSource>
                                 </ImageBrush>
                             </Ellipse.Fill>
@@ -78,6 +74,7 @@
                         <TextBlock
                             HorizontalAlignment="Center"
                             FontSize="20"
+                            Margin="5"
                             Text="{x:Bind UserName}"
                             TextWrapping="Wrap" />
                     </StackPanel>

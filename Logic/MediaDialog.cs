@@ -10,6 +10,7 @@ using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Input;
 using Windows.UI.Popups;
+using Windows.UI.Text;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -26,27 +27,34 @@ namespace MyInsta.Logic
         int type;
         public User InstaUser { get; set; }
         public string PkMedia { get; set; }
+        private CustomMedia mediaModel;
 
-        public MediaDialog(User user, string pk, string url, MediaType mediaType, int i)
+        public MediaDialog(User user, CustomMedia media, string url, MediaType mediaType, int i)
         {
             Url = url;
             MediaType = mediaType;
             type = i;
             InstaUser = user;
-            PkMedia = pk;
+            PkMedia = media.Pk;
+            mediaModel = media;
         }
 
         public async Task ShowMediaAsync()
         {
+            var bounds = Window.Current.Bounds;
+            double height = bounds.Height;
+            double width = bounds.Width;
+
             var contentDialog = new ContentDialog()
             {
-                //Height = (type == 0) ? 1100 : 1000,
-                //Width = (type == 0) ? 1000 : 1100,
-                SecondaryButtonText = "All right",
+                //Title = mediaModel.Caption ?? "",
+                SecondaryButtonText = "Close",
                 PrimaryButtonText = "Copy link",
                 Tag = Url,
                 Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 33, 34, 34)),
-                FullSizeDesired = true
+                FullSizeDesired = true,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                MaxWidth = width
             };
             contentDialog.PrimaryButtonClick += delegate
             {
@@ -67,6 +75,16 @@ namespace MyInsta.Logic
                         VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center,
                         IsLooping = true
                     };
+
+                    if (!string.IsNullOrEmpty(mediaModel.Caption))
+                    {
+                        var toolTip = new ToolTip
+                        {
+                            Content = mediaModel.Caption
+                        };
+                        ToolTipService.SetToolTip(media, toolTip);
+                    }
+                    
                     media.DoubleTapped += async (s, e) =>
                     {
                         contentDialog.Hide();
@@ -86,6 +104,7 @@ namespace MyInsta.Logic
                         });
                     };
                     contentDialog.Content = media;
+
                     break;
                 }
                 case MediaType.Image:
@@ -99,6 +118,16 @@ namespace MyInsta.Logic
                         HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
                         VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center
                     };
+
+                    if (!string.IsNullOrEmpty(mediaModel.Caption))
+                    {
+                        var toolTip = new ToolTip
+                        {
+                            Content = mediaModel.Caption
+                        };
+                        ToolTipService.SetToolTip(imageMedia, toolTip);
+                    }
+
                     imageMedia.DoubleTapped += async (s, e) =>
                     {
                         contentDialog.Hide();
@@ -119,12 +148,24 @@ namespace MyInsta.Logic
                                     ViewSizePreference.UseLess, appView.Id, ViewSizePreference.UseLess);
                             });
                     };
+
                     contentDialog.Content = imageMedia;
                     break;
                 }
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            //panel.Children.Add(new TextBlock()
+            //{
+            //    Text = mediaModel.Caption ?? "",
+            //    FontWeight = FontWeights.Light,
+            //    TextWrapping = TextWrapping.Wrap,
+            //    HorizontalAlignment = HorizontalAlignment.Center,
+            //    Margin = new Thickness(5)
+            //});
+            //contentDialog.Content = panel;
+
             _ = await contentDialog.ShowAsync();
         }
     }

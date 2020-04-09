@@ -60,13 +60,13 @@
             QueryIcon="Find" />
         <ScrollViewer Grid.Row="1" ViewChanged="ScrollViewer_OnViewChanged">
             <GridView
-            x:Name="listFollowers"
-            Grid.Row="1"
-            Margin="10,10,10,10"
-            ItemsSource="{x:Bind TempUsers}"
-            HorizontalAlignment="Center"
-            SelectionChanged="ListFollowers_SelectionChanged">
-                <GridView.ItemsPanel>
+                x:Name="listFollowers"
+                Grid.Row="1"
+                Margin="10,10,10,10"
+                ItemsSource="{x:Bind TempUsers}"
+                HorizontalAlignment="Center"
+                SelectionChanged="ListFollowers_SelectionChanged">
+                    <GridView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsWrapGrid Orientation="Horizontal"/>
                     </ItemsPanelTemplate>
@@ -74,14 +74,14 @@
                 <GridView.ItemTemplate>
                     <DataTemplate x:Name="SingleLineDataTemplate" x:DataType="localInsta:InstaUserShort">
                         <StackPanel
-                        Orientation="Vertical"
-                        Padding="12"
-                        Width="200"
-                        Margin="20">
+                            Orientation="Vertical"
+                            Padding="10"
+                            Width="190"
+                            Margin="20">
                             <Ellipse
-                            Width="150"
-                            Height="150"
-                            VerticalAlignment="Center">
+                                Width="150"
+                                Height="150"
+                                VerticalAlignment="Center">
                                 <Ellipse.Fill>
                                     <ImageBrush>
                                         <ImageBrush.ImageSource>
@@ -91,13 +91,14 @@
                                 </Ellipse.Fill>
                             </Ellipse>
                             <TextBlock
-                            Margin="5"
-                            VerticalAlignment="Center"
-                            Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
-                            Style="{ThemeResource BaseTextBlockStyle}"
-                            Text="{x:Bind UserName}" 
-                            TextWrapping="WrapWholeWords"
-                            HorizontalAlignment="Center"/>
+                                Margin="5"
+                                VerticalAlignment="Center"
+                                Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
+                                FontWeight="Light"
+                                FontSize="16"
+                                Text="{x:Bind UserName}" 
+                                TextWrapping="WrapWholeWords"
+                                HorizontalAlignment="Center"/>
                         </StackPanel>
                     </DataTemplate>
                 </GridView.ItemTemplate>

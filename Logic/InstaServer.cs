@@ -16,6 +16,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Networking.Connectivity;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -41,12 +42,15 @@ namespace MyInsta.Logic
         private static CancellationTokenSource cancellationTokenMedia;
 
         public delegate void CompleteHandler();
+
+        public delegate void ErrorHandler(string error);
         public delegate void UpdateUserCheck(int pk);
 
         #region Events
 
         public static event CompleteHandler OnUserFollowersLoaded;
         public static event CompleteHandler OnUserStoriesLoaded;
+        public static event CompleteHandler OnStoriesLoaded;
         public static event CompleteHandler OnUserSavedPostsLoaded;
         public static event CompleteHandler OnUserSavedPostsAllLoaded;
         public static event CompleteHandler OnUserUnfollowersLoaded;
@@ -63,6 +67,7 @@ namespace MyInsta.Logic
         public static event CompleteHandler OnUserInfoLoaded;
         public static event CompleteHandler OnUserArchivePostsLoaded;
 
+        public static event ErrorHandler OnErrorGetting;
         public static int CountFeed { get; set; } = 0;
 
         #endregion
@@ -332,41 +337,47 @@ namespace MyInsta.Logic
 
         public static async Task GetUserData(User userObject, bool isSync = false)
         {
-            if (!IsInternetConnected())
+            //if (!IsInternetConnected())
+            //{
+            //    userObject.UserData = new UserData();
+            //    _ = new CustomDialog("Warning", "Check your internet connection", "Ok");
+            //    return;
+            //}
+            try
             {
-                userObject.UserData = new UserData();
-                _ = new CustomDialog("Warning", "Chech your internet connection", "Ok");
-                return;
-            }
+                userObject.UserData.UserFollowers = new ObservableCollection<InstaUserShort>();
+                userObject.UserData.SavedPostItems = new ObservableCollection<PostItem>();
 
-            userObject.UserData.UserFollowers = new ObservableCollection<InstaUserShort>();
-            userObject.UserData.SavedPostItems = new ObservableCollection<PostItem>();
+                var user = await userObject.Api.UserProcessor
+                    .GetUserInfoByUsernameAsync(userObject.LoginUser);
+                userObject.UserData.Pk = user.Value?.Pk ?? 0;
+                userObject.UserData.UrlPicture = user.Value?.HdProfilePicVersions[0].Uri;
 
-            var user = await userObject.Api.UserProcessor
-                .GetUserInfoByUsernameAsync(userObject.LoginUser);
-            userObject.UserData.Pk = user.Value.Pk;
-            userObject.UserData.UrlPicture = user.Value.HdProfilePicVersions[0].Uri;
-
-            if (!isSync)
-            {
-                var listTasks = new List<Task>()
+                if (!isSync)
                 {
-                    GetBookmarksAsync(userObject),
-                    GetUserFollowers(userObject),
-                    GetUserFriendsAndUnfollowers(userObject, true)
-                };
-                await Task.WhenAll(listTasks);
-            }
-            else
-            {
-                IsSavedPostsLoaded = false;
-                IsSavedPostsAllLoaded = false;
-                var listTasks = new List<Task>()
+                    var listTasks = new List<Task>()
+                    {
+                        GetBookmarksAsync(userObject),
+                        GetUserFollowers(userObject),
+                        GetUserFriendsAndUnfollowers(userObject, true)
+                    };
+                    await Task.WhenAll(listTasks);
+                }
+                else
                 {
-                    GetUserFollowers(userObject),
-                    GetUserFriendsAndUnfollowers(userObject, true)
-                };
-                await Task.WhenAll(listTasks);
+                    IsSavedPostsLoaded = false;
+                    IsSavedPostsAllLoaded = false;
+                    var listTasks = new List<Task>()
+                    {
+                        GetUserFollowers(userObject),
+                        GetUserFriendsAndUnfollowers(userObject, true)
+                    };
+                    await Task.WhenAll(listTasks);
+                }
+            }
+            catch (Exception exception)
+            {
+                OnErrorGetting?.Invoke(exception.Message);
             }
         }
         private static async Task GetUserFollowers(User user)
@@ -677,6 +688,7 @@ namespace MyInsta.Logic
                 {
                     Pk = item.Pk,
                     Name = $"{postItem.UserNamePost}_{item.Pk}",
+                    Caption = item.Caption?.Text,
                     UrlSmallImage = item.Images[1].Uri,
                     UrlBigImage = item.Images[0].Uri,
                     CountLikes = item.LikesCount,
@@ -705,6 +717,7 @@ namespace MyInsta.Logic
                         {
                             Pk = item.Pk,
                             Name = $"{postItem.UserNamePost}_{item.Pk}_Carousel_{x + 1}",
+                            Caption = item.Caption?.Text,
                             UrlSmallImage = car.Images[1].Uri,
                             UrlBigImage = car.Images[0].Uri,
                             CountLikes = item.LikesCount,
@@ -800,7 +813,7 @@ namespace MyInsta.Logic
             {
                 if (frame.Content is SharedPage page && page.SelectedUser != null)
                 {
-                    bool shared = await InstaServer.SharedInDirect(currentUser, media.Pk, mediaType, page.SelectedUser.Pk);
+                    bool shared = await SharedInDirect(currentUser, media.Pk, mediaType, page.SelectedUser.Pk);
                     return shared;
                 }
             }
@@ -849,6 +862,7 @@ namespace MyInsta.Logic
             if (userObject != null)
             {
                 var stories = await userObject.Api.StoryProcessor.GetUserStoryAsync(userPk);
+                OnStoriesLoaded?.Invoke();
                 return stories.Succeeded ? GetUrlsStoriesUser(stories.Value.Items, PostType.Story) : null;
             }
             return null;
@@ -863,6 +877,7 @@ namespace MyInsta.Logic
                 {
                     Pk = story.Pk.ToString(),
                     Name = $"{story.User.UserName}_story_{story.Pk}",
+                    Caption = story.Caption?.Text,
                     UrlBigImage = story.ImageList[0].Uri,
                     UrlSmallImage = story.ImageList[1].Uri,
                     MediaType = MediaType.Image,
@@ -944,22 +959,18 @@ namespace MyInsta.Logic
                             var webRequest = WebRequest.CreateHttp(urlForSave);
                             var webResponse = await Task.Factory.FromAsync(webRequest.BeginGetResponse,
                                 webRequest.EndGetResponse, null);
-                            using (var responseStream = webResponse.GetResponseStream())
+                            using var responseStream = webResponse.GetResponseStream();
+                            using var resultFileStream = await file.OpenStreamForWriteAsync();
+                            if (responseStream != null)
                             {
-                                using (var resultFileStream = await file.OpenStreamForWriteAsync())
-                                {
-                                    if (responseStream != null)
-                                    {
-                                        await responseStream.CopyToAsync(resultFileStream)
-                                            .ContinueWith((e) => { });
-                                    }
-                                }
+                                await responseStream.CopyToAsync(resultFileStream)
+                                    .ContinueWith((e) => { });
                             }
                         });
                         task.Wait();
                     }
+                    _ = new CustomDialog("Message", $"Post of {instUser.UserName} downloaded", "All right", images[0].UrlBigImage);
                 }
-                _ = new CustomDialog("Message", $"Post/s of {instUser.UserName} downloaded", "All right");
             }
             catch (Exception e)
             {
@@ -967,7 +978,7 @@ namespace MyInsta.Logic
                     $"Error - {e}", "All right");
             }
         }
-        public static async Task<bool> DownloadMedia(CustomMedia media)
+        public static async Task<bool> DownloadMedia(CustomMedia media, InstaUserShort userPost = null)
         {
             string url = media.MediaType switch
             {
@@ -975,6 +986,8 @@ namespace MyInsta.Logic
                 MediaType.Video => media.UrlVideo,
                 _ => throw new ArgumentOutOfRangeException()
             };
+
+            string postString = media.PostType == PostType.Post ? "Post" : "Story";
 
             var savePicker = new FileSavePicker
             {
@@ -1016,9 +1029,21 @@ namespace MyInsta.Logic
                         .ContinueWith((e) => { result = e.IsCompletedSuccessfully; });
                 });
                 task.Wait();
+
+                var copyFile = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
+
+                copyFile.SetStorageItems(new List<IStorageFile> { file });
+                Clipboard.SetContent(copyFile);
+
+                if (userPost != null)
+                {
+                    _ = new CustomDialog("Message", $"{postString} of {userPost.UserName} downloaded\n", "All right", url);
+                }
+                else
+                {
+                    _ = new CustomDialog("Message", $"{postString} downloaded\n", "All right", url);
+                }
             }
-            _ = result != null && result.Value ? new CustomDialog("Message", $"Media downloaded\n", "All right", url)
-                : new CustomDialog("Message", "Failed\n", "All right");
 
             return result ?? false;
         }
@@ -1030,7 +1055,7 @@ namespace MyInsta.Logic
             }
             else if (medias.Count == 1)
             {
-                await DownloadMedia(medias[0]);
+                await DownloadMedia(medias[0], selectedUser);
             }
         }
         public static async Task Download(string url)
@@ -1183,15 +1208,19 @@ namespace MyInsta.Logic
         {
             var results = new ObservableCollection<InstaUserShort>();
             StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+
             if (File.Exists(localFolder.Path + @"\dataBookmarks.txt"))
             {
                 StorageFile sampleFile = await localFolder.GetFileAsync("dataBookmarks.txt");
                 string ids = await FileIO.ReadTextAsync(sampleFile);
                 string[] longIds = ids.Split(',');
-                foreach (var item in longIds)
+
+                foreach (string item in longIds)
                 {
                     if (!string.IsNullOrEmpty(item))
+                    {
                         results.Add(await GetInstaUserShortById(user, long.Parse(item)));
+                    }
                 }
                 user.UserData.Bookmarks = results;
             }
@@ -1226,7 +1255,7 @@ namespace MyInsta.Logic
 
         #endregion
 
-        #region Direct
+        #region Messaging
 
         public static async Task<ObservableCollection<InstaDirectInboxThread>> GetDirectDialogsAsync(User user)
         {
@@ -1246,6 +1275,13 @@ namespace MyInsta.Logic
                 => x.ItemType == InstaDirectThreadItemType.VoiceMedia)
                                                                       .ToList());
         }
+
+        //public static async Task SendMessage(User user, long userPk, string message = "", string link = "")
+        //{
+        //    //var userDirect = await user.Api.MessagingProcessor.GetDirectInboxAsync(PaginationParameters.Empty);
+
+        //    //var messageResponse = await user.Api.MessagingProcessor.(message, link);
+        //}
 
         #endregion
 
@@ -1479,7 +1515,10 @@ namespace MyInsta.Logic
 
         #region Live
 
-
+        //public static async Task Live(User user)
+        //{
+        //    var a = await user.Api.AccountProcessor.
+        //}
 
         #endregion
     }

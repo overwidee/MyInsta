@@ -28,7 +28,7 @@ namespace MyInsta.View
     /// Пустая страница, которую можно использовать саму по себе или для перехода внутри фрейма.
     /// </summary>
     public sealed partial class StoriesPage : Page
-    { 
+    {
         public User InstaUser { get; set; }
         public UserStory SelectedUserStory { get; set; }
         public ObservableCollection<CustomMedia> Stories { get; set; } = new ObservableCollection<CustomMedia>();
@@ -38,11 +38,12 @@ namespace MyInsta.View
             InitializeComponent();
 
             InstaServer.OnUserStoriesLoaded += OnUserStoriesLoaded;
+            InstaServer.OnStoriesLoaded += OnUserStoriesLoaded;
         }
 
         private void OnUserStoriesLoaded()
         {
-            Stories.Clear();
+            Stories?.Clear();
             progressStories.IsActive = false;
             InstaServer.OnUserStoriesLoaded -= OnUserStoriesLoaded;
             Bindings.Update();
@@ -70,6 +71,8 @@ namespace MyInsta.View
         {
             if (SelectedUserStory?.User != null)
             {
+                storiesList.ItemsSource = null;
+
                 var item = SelectedUserStory;
 
                 var listViewItem = (FrameworkElement)ListViewStories.ContainerFromItem(item);
@@ -99,6 +102,7 @@ namespace MyInsta.View
                 var desiredOffset = currentOffset + desiredDelta;
                 scrollViewer.ChangeView(desiredOffset, null, 1, true);
 
+                progressStories.IsActive = true;
                 Stories = await InstaServer.GetStoryUser(InstaUser, SelectedUserStory.User.Pk);
                 storiesList.ItemsSource = Stories;
                 userBox.Content = SelectedUserStory.User.UserName;
@@ -130,7 +134,7 @@ namespace MyInsta.View
                     break;
             }
 
-            var mediaDialog = new MediaDialog(InstaUser, story.Pk, urlMedia, story.MediaType, 0);
+            var mediaDialog = new MediaDialog(InstaUser, story, urlMedia, story.MediaType, 0);
             await mediaDialog.ShowMediaAsync();
         }
 

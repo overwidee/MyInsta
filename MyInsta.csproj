@@ -230,6 +230,8 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\instagram-logo.png" />
+    <Content Include="Assets\instagram-notif.png" />
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />
     <Content Include="Assets\LargeTile.scale-150.png" />
@@ -284,9 +286,6 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AsyncEnumerator">
-      <Version>4.0.2</Version>
-    </PackageReference>
     <PackageReference Include="InstagramApiSharp">
       <Version>1.5.0.1</Version>
     </PackageReference>

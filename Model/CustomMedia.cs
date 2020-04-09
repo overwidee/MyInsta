@@ -12,6 +12,7 @@ namespace MyInsta.Model
     {
         public string Pk { get; set; }
         public string Name { get; set; }
+        public string Caption { get; set; }
         public string UrlSmallImage { get; set; }
         public string UrlBigImage { get; set; }
         public int CountLikes { get; set; }

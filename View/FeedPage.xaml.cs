@@ -103,7 +103,7 @@ namespace MyInsta.View
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
-                var mediaDialog = new MediaDialog(InstaUser, sav.Pk, urlMedia, sav.MediaType, 1);
+                var mediaDialog = new MediaDialog(InstaUser, sav, urlMedia, sav.MediaType, 1);
                 _ = mediaDialog.ShowMediaAsync();
             }
         }

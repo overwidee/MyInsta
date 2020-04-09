@@ -75,8 +75,8 @@
                 <DataTemplate x:Name="SingleLineDataTemplate" x:DataType="localInsta:InstaUserShort">
                     <StackPanel
                         Orientation="Vertical"
-                        Padding="12"
-                        Width="200"
+                        Padding="10"
+                        Width="190"
                         Margin="20">
                         <Ellipse
                             Width="150"
@@ -94,7 +94,8 @@
                             Margin="5"
                             VerticalAlignment="Center"
                             Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
-                            Style="{ThemeResource BaseTextBlockStyle}"
+                            FontWeight="Light"
+                            FontSize="16"
                             Text="{x:Bind UserName}" 
                             TextWrapping="WrapWholeWords"
                             HorizontalAlignment="Center"/>

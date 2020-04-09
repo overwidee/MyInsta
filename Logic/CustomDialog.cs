@@ -12,7 +12,6 @@ namespace MyInsta.Logic
 {
     public class CustomDialog : ContentDialog
     {
-        ContentDialog ContentDialog { get; }
         public CustomDialog(string title, string content, string okButton, string mediaPk = "")
         {
             var visual = new ToastVisual()
@@ -38,8 +37,8 @@ namespace MyInsta.Logic
 
                     AppLogoOverride = new ToastGenericAppLogo()
                     {
-                        Source = "/Assets/instagram-logo.png",
-                        HintCrop = ToastGenericAppLogoCrop.Default
+                        Source = "/Assets/instagram-notif.png",
+                        HintCrop = ToastGenericAppLogoCrop.Circle
                     }
                 }
             };
@@ -63,13 +62,6 @@ namespace MyInsta.Logic
             var toast = new ToastNotification(toastContent.GetXml());
 
             ToastNotificationManager.CreateToastNotifier().Show(toast);
-            //ContentDialog = new ContentDialog()
-            //{
-            //    Title = title,
-            //    Content = content,
-            //    CloseButtonText = okButton
-            //};
-            //_ = ContentDialog.ShowAsync();
         }
 
     }

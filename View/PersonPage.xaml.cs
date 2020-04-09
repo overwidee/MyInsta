@@ -63,7 +63,7 @@ namespace MyInsta.View
 
                     int months = (Posts.Max(x => x.Items[0].Date) - Posts.Min(x => x.Items[0].Date)).Days / 30;
                     AxisLikesY.Interval = (maxValue - minValue) / 10;
-                    AxisLikesX.Interval = AxisCommentX.Interval = months / (months / 3);
+                    AxisLikesX.Interval = AxisCommentX.Interval = months == 0 ? 1 : months / (months / 3);
 
                     maxValue = Chart.GetMax(Posts, x => x.Items[0].CountComments);
                     minValue = Chart.GetMin(Posts, x => x.Items[0].CountComments);
@@ -121,6 +121,9 @@ namespace MyInsta.View
             InstaUserInfo = await InstaServer.GetInfoUser(CurrentUser, SelectUser.UserName);
             ButtonFollow = !InstaUserInfo.FriendshipStatus.Following;
             ButtonUnFollow = InstaUserInfo.FriendshipStatus.Following;
+
+            //await InstaServer.SendMessage(CurrentUser, InstaUserInfo.Pk);
+
 
             UserInfoLoaded();
             SetBookmarkStatus();
@@ -217,7 +220,7 @@ namespace MyInsta.View
                         throw new ArgumentOutOfRangeException();
                 }
 
-                var mediaDialog = new MediaDialog(CurrentUser, post.Pk, urlMedia, post.MediaType, 1);
+                var mediaDialog = new MediaDialog(CurrentUser, post, urlMedia, post.MediaType, 1);
                 _ = mediaDialog.ShowMediaAsync();
             }
         }
@@ -333,7 +336,7 @@ namespace MyInsta.View
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
-                var mediaDialog = new MediaDialog(CurrentUser, high.Pk, urlMedia, high.MediaType, 0);
+                var mediaDialog = new MediaDialog(CurrentUser, high, urlMedia, high.MediaType, 0);
                 await mediaDialog.ShowMediaAsync();
             }
         }
@@ -350,7 +353,7 @@ namespace MyInsta.View
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
-                var mediaDialog = new MediaDialog(CurrentUser, high.Pk, urlMedia, high.MediaType, 0);
+                var mediaDialog = new MediaDialog(CurrentUser, high, urlMedia, high.MediaType, 0);
                 await mediaDialog.ShowMediaAsync();
             }
         }
