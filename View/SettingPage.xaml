@@ -5,6 +5,7 @@
     xmlns:local="using:MyInsta.View"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:logic="using:MyInsta.Logic"
     mc:Ignorable="d"
     Background="{ThemeResource SystemControlAcrylicElementBrush}"
     Unloaded="SettingPage_OnUnloaded">
@@ -31,28 +32,82 @@
                         TintOpacity="0.4" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
-            <Style TargetType="TextBlock">
-                <Setter Property="FontFamily" Value="Century Gothic" />
-            </Style>
         </ResourceDictionary>
     </Page.Resources>
     <Grid Background="{ThemeResource CMapUwpAcrylicBrush}">
         <ScrollViewer>
-            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <StackPanel Margin="40">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock 
+            <StackPanel Margin="10" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Frame Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" Padding="20"
+                       CornerRadius="20"
+                       Margin="5">
+                    <StackPanel>
+                        <!--<TextBlock Text="Download paths" 
+                                       FontWeight="ExtraLight"
+                                       FontSize="20"
+                                       Margin="5"/>-->
+                        <Button Content="Add download path" FontWeight="Light" 
+                                CornerRadius="5"
+                                Margin="5" Click="Button_Click"/>
+                        <ListView x:Name="ListViewPaths"
+                                  SelectionMode="None"
+                                  HorizontalAlignment="Stretch">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="logic:DownloadPath">
+                                    <Grid>
+                                        <TextBlock Text="{x:Bind Path}" VerticalAlignment="Center"
+                                                   HorizontalAlignment="Left"></TextBlock>
+                                        <Button
+                                            x:Name="RemoveButton"
+                                            Tag="{x:Bind Path}" 
+                                                FontFamily="Segoe MDL2 Assets"
+                                                Content="&#xF78A;" 
+                                                CornerRadius="5"
+                                                HorizontalAlignment="Right"
+                                                Click="RemoveButton_OnClick"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                            
+                        </ListView>
+                    </StackPanel>
+                </Frame>
+
+                <Frame Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" Padding="20"
+                       CornerRadius="20"
+                       Margin="5">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock
+                            Margin="10, 5"
+                            Text="Select menu mode" FontWeight="Light" FontSize="20"></TextBlock>
+                        <ComboBox x:Name="ComboBoxPaneMode" Width="150" Margin="10, 5"
+                                  SelectionChanged="ComboBoxPaneMode_OnSelectionChanged"
+                                  SelectedItem="{x:Bind SelectedMode, Mode=TwoWay}">
+                            
+                        </ComboBox>
+                    </StackPanel>
+                </Frame>
+
+                <Frame Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" Padding="20"
+                       CornerRadius="20" Margin="5">
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <StackPanel Margin="40">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock 
                                 Grid.Column="0"
                                 Grid.ColumnSpan="2"
                                 Text="Story"
@@ -60,7 +115,7 @@
                                 Margin="10"
                                 FontSize="20"
                                 FontWeight="Light"/>
-                            <Slider 
+                                <Slider 
                                 x:Name="SliderStoryHeight"
                                 Grid.Column="0"
                                 Grid.Row="1"
@@ -68,30 +123,30 @@
                                 Value="{x:Bind StoryHeight, Mode = TwoWay}" 
                                 Minimum="150"
                                 Maximum="600"/>
-                            <Image Grid.Row="1" Grid.Column="1"
+                                <Image Grid.Row="1" Grid.Column="1"
                                    Stretch="UniformToFill"
                                    Source="{x:Bind InstaUser.UserData.UrlPicture}"
                                    Width="{Binding ElementName=SliderStoryWidth, Path=Value}"
                                    Height="{Binding ElementName=SliderStoryHeight, Path=Value}"/>
-                            <Slider x:Name="SliderStoryWidth" Grid.Row="2" Grid.Column="1"
+                                <Slider x:Name="SliderStoryWidth" Grid.Row="2" Grid.Column="1"
                                     Value="{x:Bind StoryWidth, Mode = TwoWay}" 
                                     Minimum="150"
                                     Maximum="600"/>
-                        </Grid>
-                    </StackPanel>
-                    <StackPanel Margin="40">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock 
+                            </Grid>
+                        </StackPanel>
+                        <StackPanel Margin="40">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock 
                                 Grid.Column="0"
                                 Grid.ColumnSpan="2"
                                 Text="Post"
@@ -99,7 +154,7 @@
                                 Margin="10"
                                 FontSize="20"
                                 FontWeight="Light"/>
-                            <Slider 
+                                <Slider 
                                 x:Name="SliderPostHeight"
                                 Grid.Column="0"
                                 Grid.Row="1"
@@ -107,29 +162,35 @@
                                 Value="{x:Bind PostHeight, Mode = TwoWay}" 
                                 Minimum="150"
                                 Maximum="600"/>
-                            <Image Grid.Row="1" Grid.Column="1"
+                                <Image Grid.Row="1" Grid.Column="1"
                                    Stretch="UniformToFill"
                                    Source="{x:Bind InstaUser.UserData.UrlPicture}"
                                    Width="{Binding ElementName=SliderPostWidth, Path=Value}"
                                    Height="{Binding ElementName=SliderPostHeight, Path=Value}"/>
-                            <Slider x:Name="SliderPostWidth" Grid.Row="2" Grid.Column="1"
+                                <Slider x:Name="SliderPostWidth" Grid.Row="2" Grid.Column="1"
                                     Value="{x:Bind PostWidth, Mode = TwoWay}" 
                                     Minimum="150"
                                     Maximum="600"/>
-                        </Grid>
+                            </Grid>
+                        </StackPanel>
                     </StackPanel>
-                </StackPanel>
-                <ComboBox x:Uid="Language" 
-                          HorizontalAlignment="Center"
-                          Width="200" SelectionChanged="ComboBox_SelectionChanged" Margin="10">
-                    <x:String>English</x:String>
-                    <x:String>Русский</x:String>
-                </ComboBox>
+                </Frame>
+                <Frame Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" Padding="20"
+                       CornerRadius="20" Margin="5">
+                    <StackPanel>
+                        <ComboBox x:Uid="Language" 
+                                  HorizontalAlignment="Center"
+                                  Width="200" SelectionChanged="ComboBox_SelectionChanged" Margin="10">
+                            <x:String>English</x:String>
+                            <x:String>Русский</x:String>
+                        </ComboBox>
 
-                <Button x:Name="buttonLogout" 
-                        Click="ButtonLogout_Click" 
-                        FontWeight="Light"
-                        Content="Log out" HorizontalAlignment="Center" Margin="10"/>
+                        <Button x:Name="buttonLogout" 
+                                Click="ButtonLogout_Click" 
+                                FontWeight="Light"
+                                Content="Log out" HorizontalAlignment="Center" Margin="10"/>
+                    </StackPanel>
+                </Frame>
             </StackPanel>
         </ScrollViewer>
     </Grid>

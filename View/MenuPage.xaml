@@ -75,6 +75,8 @@
         <Grid Grid.Row="1">
             <NavigationView
                 x:Name="NavView"
+                PaneOpened="NavView_OnPaneOpened"
+                PaneClosed="NavView_OnPaneClosed"
                 BackRequested="NavigationViewControl_BackRequested"
                 IsBackButtonVisible="Visible"
                 ItemInvoked="NavigationViewControl_ItemInvoked"
@@ -83,7 +85,7 @@
                 FontWeight="Light"
                 PaneTitle="Menu"
                 OpenPaneLength="200"
-                PaneDisplayMode="Left">
+                PaneDisplayMode="{x:Bind PaneMode, Mode=OneWay}">
                 <NavigationView.MenuItems>
                     <NavigationViewItem
                         x:Name="page_friends"

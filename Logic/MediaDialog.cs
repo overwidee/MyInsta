@@ -51,6 +51,7 @@ namespace MyInsta.Logic
                 SecondaryButtonText = "Close",
                 PrimaryButtonText = "Copy link",
                 Tag = Url,
+                CornerRadius = new CornerRadius(20),
                 Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 33, 34, 34)),
                 FullSizeDesired = true,
                 HorizontalAlignment = HorizontalAlignment.Stretch,

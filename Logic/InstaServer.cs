@@ -783,6 +783,7 @@ namespace MyInsta.Logic
                 PrimaryButtonText = "Send",
                 SecondaryButtonText = "Cancel",
                 FullSizeDesired = true,
+                CornerRadius = new CornerRadius(20),
                 Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 33, 34, 34))
             };
             InstaMediaType mediaType = InstaMediaType.Image;
@@ -923,18 +924,34 @@ namespace MyInsta.Logic
         {
             try
             {
-                var folderPicker = new FolderPicker
-                {
-                    SuggestedStartLocation = PickerLocationId.Desktop
-                };
-                folderPicker.FileTypeFilter.Add("*");
+                StorageFolder folder = null;
+                var pathDialog = new UserPicker();
 
-                StorageFolder folder = await folderPicker.PickSingleFolderAsync();
+                if (await pathDialog.ShowAsync() == ContentDialogResult.Primary)
+                {
+                    if (pathDialog.Path != "Custom")
+                    {
+                        folder = await StorageFolder.GetFolderFromPathAsync(pathDialog.Path);
+                    }
+                    else
+                    {
+                        var folderPicker = new FolderPicker
+                        {
+                            SuggestedStartLocation = PickerLocationId.Desktop
+                        };
+                        folderPicker.FileTypeFilter.Add("*");
+
+                        folder = await folderPicker.PickSingleFolderAsync();
+                    }
+                }
+                else
+                {
+                    return;
+                }
 
                 if (folder != null)
                 {
-                    var userFolder = await folder.CreateFolderAsync(instUser.UserName,
-                        CreationCollisionOption.ReplaceExisting);
+                    var userFolder = folder;
 
                     foreach (var item in images)
                     {
@@ -967,7 +984,6 @@ namespace MyInsta.Logic
                                     .ContinueWith((e) => { });
                             }
                         });
-                        task.Wait();
                     }
                     _ = new CustomDialog("Message", $"Post of {instUser.UserName} downloaded", "All right", images[0].UrlBigImage);
                 }
@@ -989,31 +1005,52 @@ namespace MyInsta.Logic
 
             string postString = media.PostType == PostType.Post ? "Post" : "Story";
 
-            var savePicker = new FileSavePicker
-            {
-                SuggestedStartLocation = PickerLocationId.PicturesLibrary
-            };
+            StorageFolder folder = null;
+            StorageFile file = null;
+            var pathDialog = new UserPicker();
 
-            switch (media.MediaType)
+            if (await pathDialog.ShowAsync() == ContentDialogResult.Primary)
             {
-                case MediaType.Image:
-                    savePicker.FileTypeChoices.Add("jpeg image", new List<string>()
+                if (pathDialog.Path != "Custom")
+                {
+                    folder = await StorageFolder.GetFolderFromPathAsync(pathDialog.Path);
+
+                    string type = media.MediaType == MediaType.Image ? ".jpg" : ".mp4";
+                    file = await folder.CreateFileAsync($"{media.Name}{type}");
+                }
+                else
+                {
+                    var savePicker = new FileSavePicker
                     {
-                        ".jpg"
-                    });
-                    break;
-                case MediaType.Video:
-                    savePicker.FileTypeChoices.Add("mp4 video", new List<string>()
+                        SuggestedStartLocation = PickerLocationId.PicturesLibrary
+                    };
+
+                    switch (media.MediaType)
                     {
-                        ".mp4"
-                    });
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                        case MediaType.Image:
+                            savePicker.FileTypeChoices.Add("jpeg image", new List<string>()
+                            {
+                                ".jpg"
+                            });
+                            break;
+                        case MediaType.Video:
+                            savePicker.FileTypeChoices.Add("mp4 video", new List<string>()
+                            {
+                                ".mp4"
+                            });
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+
+                    savePicker.SuggestedFileName = media.Name;
+                    file = await savePicker.PickSaveFileAsync();
+                }
             }
-
-            savePicker.SuggestedFileName = media.Name;
-            StorageFile file = await savePicker.PickSaveFileAsync();
+            else
+            {
+                return false;
+            }
 
             bool? result = null;
             if (file != null)
@@ -1026,24 +1063,20 @@ namespace MyInsta.Logic
                     using var responseStream = webResponse.GetResponseStream();
                     using var resultFileStream = await file.OpenStreamForWriteAsync();
                     await responseStream.CopyToAsync(resultFileStream)
-                        .ContinueWith((e) => { result = e.IsCompletedSuccessfully; });
+                        .ContinueWith((e) =>
+                        {
+                            result = e.IsCompletedSuccessfully;
+                        });
                 });
-                task.Wait();
-
-                var copyFile = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
-
-                copyFile.SetStorageItems(new List<IStorageFile> { file });
-                Clipboard.SetContent(copyFile);
-
-                if (userPost != null)
-                {
-                    _ = new CustomDialog("Message", $"{postString} of {userPost.UserName} downloaded\n", "All right", url);
-                }
-                else
-                {
-                    _ = new CustomDialog("Message", $"{postString} downloaded\n", "All right", url);
-                }
             }
+            var copyFile = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
+
+            copyFile.SetStorageItems(new List<IStorageFile> { file });
+            Clipboard.SetContent(copyFile);
+
+            _ = userPost != null
+                ? new CustomDialog("Message", $"{postString} of {userPost.UserName} downloaded\n", "All right", url)
+                : new CustomDialog("Message", $"{postString} downloaded\n", "All right", url);
 
             return result ?? false;
         }
@@ -1058,27 +1091,45 @@ namespace MyInsta.Logic
                 await DownloadMedia(medias[0], selectedUser);
             }
         }
-        public static async Task Download(string url)
+        public static async Task DownloadProfileImage(string url, string userName)
         {
             await DownloadMedia(new CustomMedia()
             {
                 Pk = "123",
                 MediaType = MediaType.Image,
-                Name = "ProfileImage",
+                Name = $"{userName}_profileImage",
                 UrlBigImage = url
             });
         }
-        public static async Task DownloadAnyPosts(InstaUserShort selectedUser, ObservableCollection<PostItem> medias)
+        public static async Task DownloadAllPosts(InstaUserShort selectedUser, ObservableCollection<PostItem> medias)
         {
             try
             {
-                var folderPicker = new FolderPicker
-                {
-                    SuggestedStartLocation = PickerLocationId.Desktop
-                };
-                folderPicker.FileTypeFilter.Add("*");
+                StorageFolder folder = null;
+                var pathDialog = new UserPicker();
 
-                StorageFolder folder = await folderPicker.PickSingleFolderAsync();
+                if (await pathDialog.ShowAsync() == ContentDialogResult.Primary)
+                {
+                    if (pathDialog.Path != "Custom")
+                    {
+                        folder = await StorageFolder.GetFolderFromPathAsync(pathDialog.Path);
+                    }
+                    else
+                    {
+                        var folderPicker = new FolderPicker
+                        {
+                            SuggestedStartLocation = PickerLocationId.Desktop
+                        };
+                        folderPicker.FileTypeFilter.Add("*");
+
+                        folder = await folderPicker.PickSingleFolderAsync();
+                    }
+                }
+                else
+                {
+                    return;
+                }
+
                 if (folder != null)
                 {
                     var userFolder = await folder.CreateFolderAsync(selectedUser.UserName,
@@ -1123,8 +1174,8 @@ namespace MyInsta.Logic
                             task.Wait();
                         }
                     }
+                    _ = new CustomDialog("Message", $"Posts ({medias.Count}) of {selectedUser.UserName} downloaded", "All right");
                 }
-                _ = new CustomDialog("Message", $"Posts ({medias.Count}) of {selectedUser.UserName} downloaded", "All right");
             }
             catch (Exception e)
             {
@@ -1344,7 +1395,8 @@ namespace MyInsta.Logic
             var contentDialog = new ContentDialog()
             {
                 FullSizeDesired = true,
-                PrimaryButtonText = "Close"
+                PrimaryButtonText = "Close",
+                CornerRadius = new CornerRadius(20)
             };
 
             var frame = new Frame();

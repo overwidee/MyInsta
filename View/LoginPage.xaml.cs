@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using UserSettings = MyInsta.Logic.UserSettings;
 
 namespace MyInsta.View
 {
@@ -45,6 +46,7 @@ namespace MyInsta.View
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             _ = LoginInsta();
+            UserSettings.PaneMode = NavigationViewPaneDisplayMode.Left;
         }
 
         async Task LoginInsta()

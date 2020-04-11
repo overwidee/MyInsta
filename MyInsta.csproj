@@ -143,6 +143,7 @@
     <Compile Include="Logic\Helper.cs" />
     <Compile Include="Logic\InstaServer.cs" />
     <Compile Include="Logic\MediaDialog.cs" />
+    <Compile Include="Logic\UserSettings.cs" />
     <Compile Include="Model\CustomMedia.cs" />
     <Compile Include="Model\PostItem.cs" />
     <Compile Include="Model\PreviewPost.cs" />
@@ -219,6 +220,9 @@
     </Compile>
     <Compile Include="View\PersonPage.xaml.cs">
       <DependentUpon>PersonPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UserPicker.xaml.cs">
+      <DependentUpon>UserPicker.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\VerifyPage.xaml.cs">
       <DependentUpon>VerifyPage.xaml</DependentUpon>
@@ -405,6 +409,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\PersonPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UserPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

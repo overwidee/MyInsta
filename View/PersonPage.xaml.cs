@@ -46,6 +46,7 @@ namespace MyInsta.View
                 progressPosts.IsActive = false;
                 postTab.Header = $"Posts ({Posts.Count})";
                 saveButton.Text = $"Download posts ({Posts.Count})";
+                saveButton.IsEnabled = Posts.Count > 0;
 
                 if ((likeChart.Series[0] as LineSeries)?.ItemsSource == null && Posts.Count != 0)
                 {
@@ -166,7 +167,7 @@ namespace MyInsta.View
         }
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            await InstaServer.DownloadAnyPosts(SelectUser, Posts);
+            await InstaServer.DownloadAllPosts(SelectUser, Posts);
         }
         private async void UnlikeButton_Click(object sender, RoutedEventArgs e)
         {
@@ -434,13 +435,9 @@ namespace MyInsta.View
             await InstaServer.ShowFollowing(CurrentUser, SelectUser.UserName, Frame);
         }
 
-        private async void LikesBlock_OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-        }
-
         private async void ProfileImageButton_OnClick(object sender, RoutedEventArgs e)
         {
-            await InstaServer.Download(((MenuFlyoutItem)sender).Tag.ToString());
+            await InstaServer.DownloadProfileImage(((MenuFlyoutItem)sender).Tag.ToString(), SelectUser.UserName);
         }
 
         private async void UIElement_OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
@@ -545,7 +542,7 @@ namespace MyInsta.View
                             {
                                 Margin = new Thickness(5),
                                 HorizontalAlignment = HorizontalAlignment.Center,
-                                Text = $"Likes: {point.Value}",
+                                Text = $"{((LineSeries)sender).Title}: {point.Value}",
                                 FontWeight = FontWeights.Light
                             },
                             new TextBlock()

@@ -105,11 +105,11 @@ namespace MyInsta.View
                 progressStories.IsActive = true;
                 Stories = await InstaServer.GetStoryUser(InstaUser, SelectedUserStory.User.Pk);
                 storiesList.ItemsSource = Stories;
-                userBox.Content = SelectedUserStory.User.UserName;
+                userBox.Content = SelectedUserStory?.User.UserName;
                 userBox.Visibility = Visibility.Visible;
 
                 imageBack.Source = new BitmapImage
-                    (new Uri(SelectedUserStory.User.ProfilePicUrl));
+                    (new Uri(SelectedUserStory?.User.ProfilePicUrl));
 
                 mainScroll.ChangeView(null, 0, 1, true);
             }

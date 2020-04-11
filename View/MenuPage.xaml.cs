@@ -11,9 +11,11 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using InstagramApiSharp.Classes.Models;
+using UserSettings = MyInsta.Logic.UserSettings;
 
 namespace MyInsta.View
 {
@@ -34,9 +36,13 @@ namespace MyInsta.View
             {
                 _ = new CustomDialog("Warning", error, "Close");
             };
+
+            NavView.IsPaneOpen = UserSettings.IsMenuOpen;
+            UserSettings.OnPaneModeChanged += () => Bindings.Update();
         }
 
-        User InstaUser { get; set; } 
+        User InstaUser { get; set; }
+        public NavigationViewPaneDisplayMode PaneMode => UserSettings.PaneMode;
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -53,7 +59,7 @@ namespace MyInsta.View
             {
                 contentFrame.Navigate(typeof(SettingPage), InstaUser);
             }
-            var itemContent = args.InvokedItemContainer.Tag;
+            var itemContent = args.InvokedItemContainer?.Tag;
             if (itemContent != null)
             {
                 switch (itemContent)
@@ -87,7 +93,7 @@ namespace MyInsta.View
                         contentFrame.Navigate(typeof(StoriesPage), InstaUser);
                         break;
                     case "Feed":
-                        contentFrame.Navigate(typeof(FeedPage), InstaUser );
+                        contentFrame.Navigate(typeof(FeedPage), InstaUser);
                         break;
                     case "Direct":
                         contentFrame.Navigate(typeof(Direct), InstaUser);
@@ -192,6 +198,16 @@ namespace MyInsta.View
         private void MainUser_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             contentFrame.Navigate(typeof(AccountPage), InstaUser);
+        }
+
+        private void NavView_OnPaneOpened(NavigationView sender, object args)
+        {
+            UserSettings.IsMenuOpen = true;
+        }
+
+        private void NavView_OnPaneClosed(NavigationView sender, object args)
+        {
+            UserSettings.IsMenuOpen = false;
         }
     }
 }
