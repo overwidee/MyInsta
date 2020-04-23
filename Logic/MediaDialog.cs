@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Input;
+using Windows.System;
 using Windows.UI.Popups;
 using Windows.UI.Text;
 using Windows.UI.ViewManagement;
@@ -18,6 +19,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Point = Windows.Foundation.Point;
+using User = MyInsta.Model.User;
 
 namespace MyInsta.Logic
 {
@@ -33,7 +35,7 @@ namespace MyInsta.Logic
 
         private ObservableCollection<CustomMedia> mediasCollection;
         private int currentIndexMedia;
-        private bool isScroll = false;
+        private bool isScroll;
 
         public MediaDialog(User user, CustomMedia media, string url, MediaType mediaType, int i, ObservableCollection<CustomMedia> allMedias = null)
         {
@@ -52,6 +54,7 @@ namespace MyInsta.Logic
             {
                 currentIndexMedia = allMedias.IndexOf(media);
             }
+            isScroll = false;
         }
 
         public async Task ShowMediaAsync()
@@ -62,9 +65,9 @@ namespace MyInsta.Logic
 
             var contentDialog = new ContentDialog()
             {
-                SecondaryButtonText = "Close",
-                CloseButtonText = "Next",
-                PrimaryButtonText = "Previous",
+                SecondaryButtonText = "Next >",
+                CloseButtonText = "Close",
+                PrimaryButtonText = "< Previous",
                 Tag = Url,
                 CornerRadius = new CornerRadius(20),
                 Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 33, 34, 34)),
@@ -86,11 +89,6 @@ namespace MyInsta.Logic
 
             contentDialog.SecondaryButtonClick += delegate
             {
-                isScroll = false;
-            };
-
-            contentDialog.CloseButtonClick += delegate
-            {
                 if (currentIndexMedia >= 0 && currentIndexMedia < mediasCollection.Count - 1)
                 {
                     currentIndexMedia++;
@@ -101,17 +99,28 @@ namespace MyInsta.Logic
                 }
             };
 
+            contentDialog.CloseButtonClick += delegate
+            {
+                isScroll = false;
+            };
+
             contentDialog.Closed += async (sender, args) =>
             {
                 if (isScroll)
                 {
-                    isScroll = false;
-
                     var mediaDialog =
                         new MediaDialog(InstaUser, mediaModel, Url, mediaModel.MediaType, 0, mediasCollection);
                     await mediaDialog.ShowMediaAsync();
                 }
             };
+
+            //contentDialog.PreviewKeyDown += (sender, args) =>
+            //{
+            //    if (args.Key == VirtualKey.Escape)
+            //    {
+            //        isScroll = false;
+            //    }
+            //};
 
             switch (MediaType)
             {
