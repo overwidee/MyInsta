@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MyInsta.Model;
 
 namespace MyInsta.Logic
 {
@@ -33,6 +35,21 @@ namespace MyInsta.Logic
                     yield return int.TryParse(item, out int t) ? int.Parse(item) : 0;
                 }
             }
+        }
+
+        public static ObservableCollection<CustomMedia> ConvertToCustomMedia(IEnumerable<PostItem> posts)
+        {
+            var medias = new ObservableCollection<CustomMedia>();
+
+            foreach (var post in posts)
+            {
+                foreach (var media in post.Items)
+                {
+                    medias.Add(media);
+                }
+            }
+
+            return medias;
         }
     }
 }

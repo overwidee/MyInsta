@@ -109,7 +109,7 @@ namespace MyInsta.View
                 userBox.Visibility = Visibility.Visible;
 
                 imageBack.Source = new BitmapImage
-                    (new Uri(SelectedUserStory?.User.ProfilePicUrl));
+                    (new Uri(SelectedUserStory?.User?.ProfilePicUrl));
 
                 mainScroll.ChangeView(null, 0, 1, true);
             }
@@ -134,7 +134,7 @@ namespace MyInsta.View
                     break;
             }
 
-            var mediaDialog = new MediaDialog(InstaUser, story, urlMedia, story.MediaType, 0);
+            var mediaDialog = new MediaDialog(InstaUser, story, urlMedia, story.MediaType, 0, Stories);
             await mediaDialog.ShowMediaAsync();
         }
 

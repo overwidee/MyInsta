@@ -2,6 +2,7 @@
 using MyInsta.View;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -22,21 +23,35 @@ namespace MyInsta.Logic
 {
     public class MediaDialog
     {
-        public string Url { get; set; }
+        public string Url => MediaType == MediaType.Image ? mediaModel.UrlBigImage : mediaModel.UrlVideo;
         public MediaType MediaType { get; set; }
         int type;
         public User InstaUser { get; set; }
         public string PkMedia { get; set; }
+
         private CustomMedia mediaModel;
 
-        public MediaDialog(User user, CustomMedia media, string url, MediaType mediaType, int i)
+        private ObservableCollection<CustomMedia> mediasCollection;
+        private int currentIndexMedia;
+        private bool isScroll = false;
+
+        public MediaDialog(User user, CustomMedia media, string url, MediaType mediaType, int i, ObservableCollection<CustomMedia> allMedias = null)
         {
-            Url = url;
             MediaType = mediaType;
             type = i;
             InstaUser = user;
             PkMedia = media.Pk;
             mediaModel = media;
+            mediasCollection = allMedias;
+
+            var dataPackage = new DataPackage();
+            dataPackage.SetText(Url);
+            Clipboard.SetContent(dataPackage);
+
+            if (allMedias != null)
+            {
+                currentIndexMedia = allMedias.IndexOf(media);
+            }
         }
 
         public async Task ShowMediaAsync()
@@ -47,9 +62,9 @@ namespace MyInsta.Logic
 
             var contentDialog = new ContentDialog()
             {
-                //Title = mediaModel.Caption ?? "",
                 SecondaryButtonText = "Close",
-                PrimaryButtonText = "Copy link",
+                CloseButtonText = "Next",
+                PrimaryButtonText = "Previous",
                 Tag = Url,
                 CornerRadius = new CornerRadius(20),
                 Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 33, 34, 34)),
@@ -59,9 +74,43 @@ namespace MyInsta.Logic
             };
             contentDialog.PrimaryButtonClick += delegate
             {
-                var dataPackage = new DataPackage();
-                dataPackage.SetText(Url);
-                Clipboard.SetContent(dataPackage);
+                if (currentIndexMedia > 0 && currentIndexMedia < mediasCollection.Count)
+                {
+                    currentIndexMedia--;
+                    mediaModel = mediasCollection[currentIndexMedia];
+
+                    isScroll = true;
+                    contentDialog.Hide();
+                }
+            };
+
+            contentDialog.SecondaryButtonClick += delegate
+            {
+                isScroll = false;
+            };
+
+            contentDialog.CloseButtonClick += delegate
+            {
+                if (currentIndexMedia >= 0 && currentIndexMedia < mediasCollection.Count - 1)
+                {
+                    currentIndexMedia++;
+                    mediaModel = mediasCollection[currentIndexMedia];
+
+                    isScroll = true;
+                    contentDialog.Hide();
+                }
+            };
+
+            contentDialog.Closed += async (sender, args) =>
+            {
+                if (isScroll)
+                {
+                    isScroll = false;
+
+                    var mediaDialog =
+                        new MediaDialog(InstaUser, mediaModel, Url, mediaModel.MediaType, 0, mediasCollection);
+                    await mediaDialog.ShowMediaAsync();
+                }
             };
 
             switch (MediaType)
@@ -85,7 +134,7 @@ namespace MyInsta.Logic
                         };
                         ToolTipService.SetToolTip(media, toolTip);
                     }
-                    
+
                     media.DoubleTapped += async (s, e) =>
                     {
                         contentDialog.Hide();
@@ -113,8 +162,6 @@ namespace MyInsta.Logic
                     var imageMedia = new Image()
                     {
                         Source = new BitmapImage(new Uri(Url, UriKind.Absolute)),
-                        //Width = (type == 0) ? 350 : 1000,
-                        //Height = (type == 0) ? 1100 : 450,
                         Stretch = Stretch.Uniform,
                         HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center,
                         VerticalAlignment = Windows.UI.Xaml.VerticalAlignment.Center
@@ -156,16 +203,6 @@ namespace MyInsta.Logic
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            //panel.Children.Add(new TextBlock()
-            //{
-            //    Text = mediaModel.Caption ?? "",
-            //    FontWeight = FontWeights.Light,
-            //    TextWrapping = TextWrapping.Wrap,
-            //    HorizontalAlignment = HorizontalAlignment.Center,
-            //    Margin = new Thickness(5)
-            //});
-            //contentDialog.Content = panel;
 
             _ = await contentDialog.ShowAsync();
         }

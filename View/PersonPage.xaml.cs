@@ -63,8 +63,8 @@ namespace MyInsta.View
                     ChartAverageLikes.Text = $"Average likes = {averageValue:F}";
 
                     int months = (Posts.Max(x => x.Items[0].Date) - Posts.Min(x => x.Items[0].Date)).Days / 30;
-                    AxisLikesY.Interval = (maxValue - minValue) / 10;
-                    AxisLikesX.Interval = AxisCommentX.Interval = months == 0 ? 1 : months / (months / 3);
+                    AxisLikesY.Interval = (maxValue - minValue) / 10.0;
+                    AxisLikesX.Interval = AxisCommentX.Interval = months == 0 ? 1 : months / (months / 3.0);
 
                     maxValue = Chart.GetMax(Posts, x => x.Items[0].CountComments);
                     minValue = Chart.GetMin(Posts, x => x.Items[0].CountComments);
@@ -73,7 +73,7 @@ namespace MyInsta.View
                     ChartMinComments.Text = $"Min comments = {minValue}";
                     ChartAverageComments.Text = $"Average comments = {averageValue:F}";
 
-                    AxisCommentY.Interval = (maxValue - minValue) / 10;
+                    AxisCommentY.Interval = (maxValue - minValue) / 10.0;
                 }
             };
         }
@@ -221,7 +221,7 @@ namespace MyInsta.View
                         throw new ArgumentOutOfRangeException();
                 }
 
-                var mediaDialog = new MediaDialog(CurrentUser, post, urlMedia, post.MediaType, 1);
+                var mediaDialog = new MediaDialog(CurrentUser, post, urlMedia, post.MediaType, 1, Helper.ConvertToCustomMedia(Posts));
                 _ = mediaDialog.ShowMediaAsync();
             }
         }
@@ -300,11 +300,13 @@ namespace MyInsta.View
                 {
                     CurrentUser.UserData.Bookmarks.Add(SelectUser);
                     await InstaServer.SaveBookmarksAsync(CurrentUser);
+                    item.Text = "Remove from bookmarks";
                 }
                 else
                 {
                     CurrentUser.UserData.Bookmarks.Remove(SelectUser);
                     await InstaServer.SaveBookmarksAsync(CurrentUser);
+                    item.Text = "Add in bookmarks";
                 }
             };
             menu?.Items?.Add(item);
@@ -337,7 +339,7 @@ namespace MyInsta.View
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
-                var mediaDialog = new MediaDialog(CurrentUser, high, urlMedia, high.MediaType, 0);
+                var mediaDialog = new MediaDialog(CurrentUser, high, urlMedia, high.MediaType, 0, HighlightsStories);
                 await mediaDialog.ShowMediaAsync();
             }
         }
@@ -354,7 +356,7 @@ namespace MyInsta.View
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
-                var mediaDialog = new MediaDialog(CurrentUser, high, urlMedia, high.MediaType, 0);
+                var mediaDialog = new MediaDialog(CurrentUser, high, urlMedia, high.MediaType, 0, UrlStories);
                 await mediaDialog.ShowMediaAsync();
             }
         }

@@ -173,6 +173,7 @@
                                     Margin="5, 5, 5, 10"
                                     PlaceholderText="Message"
                                     QueryIcon="Send"
+                                    CornerRadius="20"
                                     FontWeight="Light"  
                                     QuerySubmitted="AutoSuggestBox_QuerySubmitted"
                                     Tag="{x:Bind Pk}" />

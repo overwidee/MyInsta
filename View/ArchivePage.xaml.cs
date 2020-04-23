@@ -120,7 +120,7 @@ namespace MyInsta.View
                         throw new ArgumentOutOfRangeException();
                 }
 
-                var mediaDialog = new MediaDialog(InstaUser, post, urlMedia, post.MediaType, 1);
+                var mediaDialog = new MediaDialog(InstaUser, post, urlMedia, post.MediaType, 1, Helper.ConvertToCustomMedia(Posts));
                 _ = mediaDialog.ShowMediaAsync();
             }
         }
@@ -171,7 +171,7 @@ namespace MyInsta.View
                     break;
             }
 
-            var mediaDialog = new MediaDialog(InstaUser, story, urlMedia, story.MediaType, 0);
+            var mediaDialog = new MediaDialog(InstaUser, story, urlMedia, story.MediaType, 0, Stories);
             await mediaDialog.ShowMediaAsync();
         }
 

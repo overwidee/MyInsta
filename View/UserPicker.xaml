@@ -16,10 +16,13 @@
     <Grid>
         <ListView x:Name="ListViewPaths"
                   SelectionMode="Single"
-                  HorizontalAlignment="Stretch">
+                  HorizontalAlignment="Stretch"
+                  CornerRadius="5"
+                  SelectedIndex="0">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="CornerRadius" Value="20"/>
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>

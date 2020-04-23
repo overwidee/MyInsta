@@ -960,13 +960,13 @@ namespace MyInsta.Logic
                         if (item.MediaType == MediaType.Image)
                         {
                             storageFile = await userFolder.CreateFileAsync($"{item.Name}.jpg",
-                                CreationCollisionOption.FailIfExists);
+                                CreationCollisionOption.ReplaceExisting);
                             urlForSave = item.UrlBigImage;
                         }
                         else
                         {
                             storageFile = await userFolder.CreateFileAsync($"{item.Name}.mp4",
-                                CreationCollisionOption.FailIfExists);
+                                CreationCollisionOption.ReplaceExisting);
                             urlForSave = item.UrlVideo;
                         }
 
@@ -1016,7 +1016,7 @@ namespace MyInsta.Logic
                     folder = await StorageFolder.GetFolderFromPathAsync(pathDialog.Path);
 
                     string type = media.MediaType == MediaType.Image ? ".jpg" : ".mp4";
-                    file = await folder.CreateFileAsync($"{media.Name}{type}");
+                    file = await folder.CreateFileAsync($"{media.Name}{type}", CreationCollisionOption.ReplaceExisting);
                 }
                 else
                 {
