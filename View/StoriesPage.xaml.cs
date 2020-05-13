@@ -72,7 +72,7 @@ namespace MyInsta.View
             if (SelectedUserStory?.User != null)
             {
                 storiesList.ItemsSource = null;
-
+                
                 var item = SelectedUserStory;
 
                 var listViewItem = (FrameworkElement)ListViewStories.ContainerFromItem(item);

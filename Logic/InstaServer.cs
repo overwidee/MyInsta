@@ -824,12 +824,13 @@ namespace MyInsta.Logic
         #endregion
 
         #region Story
-        public static async Task GetCurrentUserStories(User userObject)
+        public static async Task GetCurrentUserStories(User user)
         {
-            var currentStories = await userObject.Api.StoryProcessor.GetStoryFeedAsync();
+            var currentStories = await user.Api.FeedProcessor.GetUserTimelineFeedAsync(PaginationParameters
+                .MaxPagesToLoad(1));//await userObject.Api.StoryProcessor.GetStoryFeedAsync();
             if (currentStories.Succeeded)
             {
-                userObject.UserData.Stories = GetUserStoriesCustom(currentStories.Value);
+                //user.UserData.Stories = GetUserStoriesCustom(currentStories.Value.Stories);
             }
 
             OnUserStoriesLoaded?.Invoke();
