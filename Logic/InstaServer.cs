@@ -826,11 +826,10 @@ namespace MyInsta.Logic
         #region Story
         public static async Task GetCurrentUserStories(User user)
         {
-            var currentStories = await user.Api.FeedProcessor.GetUserTimelineFeedAsync(PaginationParameters
-                .MaxPagesToLoad(1));//await userObject.Api.StoryProcessor.GetStoryFeedAsync();
+            var currentStories = await user.Api.StoryProcessor.GetStoryFeedAsync();
             if (currentStories.Succeeded)
             {
-                //user.UserData.Stories = GetUserStoriesCustom(currentStories.Value.Stories);
+                user.UserData.Stories = GetUserStoriesCustom(currentStories.Value);
             }
 
             OnUserStoriesLoaded?.Invoke();
@@ -839,7 +838,7 @@ namespace MyInsta.Logic
         public static ObservableCollection<UserStory> GetUserStoriesCustom(InstaStoryFeed instaStoryFeed)
         {
             var userStories = new ObservableCollection<UserStory>();
-            foreach (var story in instaStoryFeed.Items)
+            foreach (var story in instaStoryFeed.Items.Where(x => x.User != null))
             {
                 var userStoryItem = new UserStory()
                 {

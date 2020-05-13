@@ -59,7 +59,7 @@ namespace MyInsta.View
 
             modalRing.Visibility = Visibility.Collapsed;
             IsEnabled = true;
-        }
+        } 
 
         private void Grid_KeyUp(object sender, KeyRoutedEventArgs e)
         {
