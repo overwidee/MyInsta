@@ -145,7 +145,7 @@
                     </ImageBrush>
                 </Ellipse.Fill>
             </Ellipse>
-            <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Hidden">
+            <ScrollViewer Grid.Row="3" Grid.Column="0" VerticalScrollBarVisibility="Hidden">
                 <StackPanel Margin="10, 0, 10, 0">
                     <TextBlock
                         Grid.Column="1"
@@ -299,21 +299,26 @@
                     </StackPanel>
                 </StackPanel>
             </ScrollViewer>
-            <controls:TabView
+            <Pivot
+                x:Name="MainPivot"
                 Grid.Row="0"
                 Grid.RowSpan="4"
                 Grid.Column="1"
                 Grid.ColumnSpan="4"
-                Background="{ThemeResource CMapUwpAcrylicBrush}"
-                FontWeight="Light"
-                TabWidthBehavior="Equal">
-                <controls:TabViewItem
+                UseSystemFocusVisuals="True"
+                HorizontalContentAlignment="Right"
+                Background="{ThemeResource CMapUwpAcrylicBrush}">
+                <Pivot.HeaderTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" Padding="30, 0" FontSize="20" FontWeight="ExtraLight"/>
+                    </DataTemplate>
+                </Pivot.HeaderTemplate>
+                <PivotItem
                     x:Name="postTab"
                     x:Uid="Posts"
-                    Background="{ThemeResource CMapUwpAcrylicBrush}"
-                    FontWeight="ExtraLight"
-                    Icon="Camera">
-                    <Frame Margin="10" CornerRadius="0">
+                    Header="Posts"
+                    FontWeight="ExtraBlack" HorizontalAlignment="Stretch" Margin="0">
+                    <Frame Margin="0, 0" CornerRadius="0">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="70" />
@@ -335,11 +340,11 @@
                             QuerySubmitted="PostBox_QuerySubmitted"
                             RequestedTheme="Dark"/>
                             <ScrollViewer
-                            x:Name="scrollListPosts"
-                            Grid.Row="0"
-                            Grid.RowSpan="2"
-                            VerticalScrollBarVisibility="Auto"
-                            ViewChanged="ScrollListPosts_ViewChanged">
+                                x:Name="scrollListPosts"
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                VerticalScrollBarVisibility="Auto"
+                                ViewChanged="ScrollListPosts_ViewChanged">
                                 <GridView
                                 x:Name="mediaList"
                                 HorizontalAlignment="Center"
@@ -353,14 +358,14 @@
                                     </GridView.ItemsPanel>
                                     <GridView.ItemTemplate>
                                         <DataTemplate x:DataType="model:PostItem">
-                                            <StackPanel Orientation="Vertical" Margin="15, 10, 15, 0">
+                                            <StackPanel Orientation="Vertical" Margin="10, 0" Padding="0, 10">
                                                 <FlipView
                                                     x:Name="itemsList"
                                                     Width="{x:Bind Items[0].GetWidth}"
                                                     Height="{x:Bind Items[0].GetHeight}"
                                                     HorizontalContentAlignment="Center"
                                                     Background="{x:Null}"
-                                                    CanBeScrollAnchor="True"
+                                                    CanBeScrollAnchor="False"
                                                     ItemsSource="{x:Bind Items}"
                                                     Tapped="MediaList_SelectionChanged" PointerWheelChanged="itemsList_PointerWheelChanged">
                                                     <FlipView.ItemsPanel>
@@ -371,20 +376,19 @@
                                                     </FlipView.ItemsPanel>
                                                     <FlipView.ItemTemplate>
                                                         <DataTemplate x:DataType="model:CustomMedia">
-                                                            <StackPanel PointerWheelChanged="Image_PointerWheelChanged" 
-                                                                        >
+                                                            <StackPanel PointerWheelChanged="Image_PointerWheelChanged">
                                                                 <Border BorderBrush="{x:Null}"
                                                                     Width="{x:Bind GetWidth}"
                                                                     Height="{x:Bind GetHeight}"
                                                                     ToolTipService.ToolTip="{x:Bind DatePost}"
-                                                                    CornerRadius="15">
+                                                                    CornerRadius="10">
                                                                     <Border.Background>
                                                                         <ImageBrush Stretch="UniformToFill" 
                                                                                  ImageSource="{x:Bind UrlBigImage}"/>
                                                                     </Border.Background>
                                                                     <Viewbox MaxHeight="20" MaxWidth="20"
                                                                              HorizontalAlignment="Right"
-                                                                             Margin="10"
+                                                                             Margin="5"
                                                                              Visibility="{x:Bind IsVideoVisibility}"
                                                                              VerticalAlignment="Top">
                                                                         <TextBlock 
@@ -407,7 +411,7 @@
                                                     <CheckBox
                                                         x:Name="buttonLike"
                                                         Grid.Column="0"
-                                                        Margin="20, 20, 10, 10"
+                                                        Margin="10, -45, 0, 0"
                                                         HorizontalAlignment="Left"
                                                         CornerRadius="10"
                                                         IsChecked="{x:Bind Items[0].Liked}"
@@ -420,6 +424,7 @@
                                                     </CheckBox>
                                                     <StackPanel Orientation="Horizontal" 
                                                             Grid.Column="2"
+                                                            Margin="5, -60, 0, 0"
                                                             HorizontalAlignment="Right">
                                                         <Button
                                                             Background="{x:Null}"
@@ -492,16 +497,14 @@
                             </ScrollViewer>
                         </Grid>
                     </Frame>
-                </controls:TabViewItem>
-                <controls:TabViewItem
+                </PivotItem>
+                <PivotItem
                         x:Name="storyTab"
                         x:Uid="Stories"
-                        Background="{ThemeResource CMapUwpAcrylicBrush}"
-                        FontWeight="ExtraLight"
-                        Icon="View"
-                        Visibility="Collapsed">
-                    <Frame Margin="10" CornerRadius="0">
-                        <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                        Header="Stories"
+                        Margin="0">
+                    <Frame Margin="0, 0" CornerRadius="0">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <GridView
                             x:Name="storiesList"
                             HorizontalAlignment="Center"
@@ -570,19 +573,17 @@
                             </GridView>
                         </ScrollViewer>
                     </Frame>
-                </controls:TabViewItem>
-                <controls:TabViewItem
+                </PivotItem>
+                <PivotItem
                     x:Name="highTab"
-                    Background="{ThemeResource CMapUwpAcrylicBrush}"
-                    FontWeight="ExtraLight"
                     Header="Highlights"
-                    Icon="View"
-                    Visibility="Collapsed">
-                    <Frame Margin="10" CornerRadius="0">
+                    Margin="0">
+                    <Frame Margin="0" CornerRadius="0">
                         <Grid>
                             <ListView
                             x:Name="collectionsBox"
                             Grid.Row="0"
+                            Margin="5"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Top"
                             ItemsSource="{x:Bind InstaHighlightFeeds.Items}"
@@ -616,7 +617,7 @@
                                                 </Ellipse.Fill>
                                             </Ellipse>
                                             <TextBlock
-                                            Margin="4"
+                                            Margin="5"
                                             HorizontalAlignment="Center"
                                             Text="{x:Bind Title}"
                                             FontSize="16"
@@ -629,7 +630,7 @@
                             <ScrollViewer
                                     x:Name="scrollArchive"
                                     Margin="0, 150, 0, 0"
-                                    VerticalScrollBarVisibility="Hidden">
+                                    VerticalScrollBarVisibility="Auto">
                                 <GridView
                                     x:Name="archiveList"
                                     HorizontalAlignment="Center"
@@ -684,15 +685,11 @@
                             </ScrollViewer>
                         </Grid>
                     </Frame>
-                </controls:TabViewItem>
-                <controls:TabViewItem
+                </PivotItem>
+                <PivotItem
                     x:Name="StatTab"
                     Header="Statistics"
-                    Visibility="Collapsed"
-                    FontWeight="Light">
-                    <controls:TabViewItem.Icon>
-                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE9D9;"/>
-                    </controls:TabViewItem.Icon>
+                    Margin="0">
                     <Grid>
                         <ScrollViewer>
                             <StackPanel>
@@ -812,8 +809,8 @@
                             </StackPanel>
                         </ScrollViewer>
                     </Grid>
-                </controls:TabViewItem>
-            </controls:TabView>
+                </PivotItem>
+            </Pivot>
         </Grid>
     </Frame>
 </Page>

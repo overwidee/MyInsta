@@ -66,6 +66,7 @@ namespace MyInsta.Logic
         public static event UpdateUserCheck OnUserFeedLoaded;
         public static event CompleteHandler OnUserInfoLoaded;
         public static event CompleteHandler OnUserArchivePostsLoaded;
+        public static event CompleteHandler OnBookmarkUserLoaded;
 
         public static event ErrorHandler OnErrorGetting;
         public static int CountFeed { get; set; } = 0;
@@ -1270,10 +1271,10 @@ namespace MyInsta.Logic
                 {
                     if (!string.IsNullOrEmpty(item))
                     {
-                        results.Add(await GetInstaUserShortById(user, long.Parse(item)));
+                        user.UserData.Bookmarks.Add(await GetInstaUserShortById(user, long.Parse(item)));
+                        OnBookmarkUserLoaded?.Invoke();
                     }
                 }
-                user.UserData.Bookmarks = results;
             }
         }
         public static bool IsContrainsAccount(User user, long id)
@@ -1461,9 +1462,6 @@ namespace MyInsta.Logic
                 int i = user.UserData.Feed.Count != 0 ? user.UserData.Feed.Last().Id + 1 : 1;
                 foreach (var media in timeLineFeed.Value.Medias)
                 {
-                    //var userMedia = user.UserData.UserFollowing?.FirstOrDefault(x => x.UserName == media.User.UserName);
-                    //Debug.Print(user.UserData.UserFollowing.Count.ToString());
-
                     if (media.User.FriendshipStatus.Following)
                     {
                         var m = user.UserData.Feed.FirstOrDefault(x => x.Items[0].Pk == media.Pk);

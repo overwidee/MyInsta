@@ -137,12 +137,12 @@ namespace MyInsta.View
 
             if (InstaHighlightFeeds.Items.Count > 0)
             {
-                highTab.Visibility = Visibility.Visible;
+                highTab.IsEnabled = true;
             }
 
             if (UrlStories.Count > 0)
             {
-                storyTab.Visibility = Visibility.Visible;
+                highTab.IsEnabled = true;
             }
 
 

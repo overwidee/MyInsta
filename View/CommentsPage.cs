@@ -18,7 +18,7 @@ namespace MyInsta.View
     {
         public CommentsPage(User user, Page personPage, InstaCommentList commentList)
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             SetComments(commentList);
             InstaUser = user;
