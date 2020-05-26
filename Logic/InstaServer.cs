@@ -99,105 +99,113 @@ namespace MyInsta.Logic
 
         public static async Task LoginInstagram(User userObject, LoginPage page)
         {
-            if (ExistsConnection())
+            try
             {
-                string savedAPI = await GetSavedApi();
-
-                var api = InstaApiBuilder.CreateBuilder().SetUser(new UserSessionData()
+                if (ExistsConnection())
                 {
-                    UserName = userObject.LoginUser,
-                    Password = userObject.PasswordUser
-                }).UseLogger(new DebugLogger(LogLevel.Exceptions)).Build();
-                api.LoadStateDataFromString(savedAPI.ToString());
+                    string savedApi = await GetSavedApi();
 
-                userObject.Api = api;
-                page.Frame.Navigate(typeof(MenuPage), userObject);
-            }
-            else
-            {
-                if (userObject != null && userObject.LoginUser != null && userObject.PasswordUser != null)
-                {
                     var api = InstaApiBuilder.CreateBuilder().SetUser(new UserSessionData()
                     {
                         UserName = userObject.LoginUser,
                         Password = userObject.PasswordUser
                     }).UseLogger(new DebugLogger(LogLevel.Exceptions)).Build();
+                    await api.LoadStateDataFromStringAsync(savedApi);
+
                     userObject.Api = api;
-
-                    if (!userObject.Api.IsUserAuthenticated)
+                    page.Frame.Navigate(typeof(MenuPage), userObject);
+                }
+                else
+                {
+                    if (userObject != null && userObject.LoginUser != null && userObject.PasswordUser != null)
                     {
-                        await userObject.Api.SendRequestsBeforeLoginAsync();
-                        await Task.Delay(5000);
-
-                        var logResult = await userObject.Api.LoginAsync();
-                        if (logResult.Succeeded)
+                        var api = InstaApiBuilder.CreateBuilder().SetUser(new UserSessionData()
                         {
-                            ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-                            localSettings.Values["Login"] = userObject.LoginUser;
-                            localSettings.Values["Password"] = userObject.PasswordUser;
+                            UserName = userObject.LoginUser,
+                            Password = userObject.PasswordUser
+                        }).UseLogger(new DebugLogger(LogLevel.Exceptions)).Build();
+                        userObject.Api = api;
 
-                            await userObject.Api.SendRequestsAfterLoginAsync();
-                            SaveSession(userObject.Api);
-
-                            await SaveApiString(userObject.Api);
-                            page.Frame.Navigate(typeof(MenuPage), userObject);
-
-                        }
-                        else
+                        if (!userObject.Api.IsUserAuthenticated)
                         {
+                            await userObject.Api.SendRequestsBeforeLoginAsync();
+                            await Task.Delay(5000);
 
-                            switch (logResult.Value)
+                            var logResult = await userObject.Api.LoginAsync();
+                            if (logResult.Succeeded)
                             {
-                                case InstaLoginResult.InvalidUser:
-                                    _ = new CustomDialog("Warning", logResult.Info.Message, "Ok");
-                                    break;
-                                case InstaLoginResult.Success:
-                                    page.Frame.Navigate(typeof(MenuPage), userObject);
-                                    break;
-                                case InstaLoginResult.Exception:
-                                    _ = new CustomDialog("Warning", logResult.Info.Message, "Ok");
-                                    break;
-                                case InstaLoginResult.BadPassword:
-                                    _ = new CustomDialog("Warning", "Bad password", "Ok");
-                                    break;
-                                case InstaLoginResult.ChallengeRequired:
-                                    if (logResult.Value == InstaLoginResult.ChallengeRequired)
-                                    {
-                                        var challenge = await userObject.Api.GetChallengeRequireVerifyMethodAsync();
-                                        if (challenge.Succeeded)
+                                ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+                                localSettings.Values["Login"] = userObject.LoginUser;
+                                localSettings.Values["Password"] = userObject.PasswordUser;
+
+                                await userObject.Api.SendRequestsAfterLoginAsync();
+                                SaveSession(userObject.Api);
+
+                                await SaveApiString(userObject.Api);
+                                page.Frame.Navigate(typeof(MenuPage), userObject);
+
+                            }
+                            else
+                            {
+                                switch (logResult.Value)
+                                {
+                                    case InstaLoginResult.InvalidUser:
+                                        _ = new CustomDialog("Warning", logResult.Info.Message, "Ok");
+                                        break;
+                                    case InstaLoginResult.Success:
+                                        page.Frame.Navigate(typeof(MenuPage), userObject);
+                                        break;
+                                    case InstaLoginResult.Exception:
+                                        _ = new CustomDialog("Warning", logResult.Info.Message, "Ok");
+                                        break;
+                                    case InstaLoginResult.BadPassword:
+                                        _ = new CustomDialog("Warning", "Bad password", "Ok");
+                                        break;
+                                    case InstaLoginResult.ChallengeRequired:
+                                        if (logResult.Value == InstaLoginResult.ChallengeRequired)
                                         {
-                                            if (challenge.Value.SubmitPhoneRequired)
+                                            var challenge = await userObject.Api.GetChallengeRequireVerifyMethodAsync();
+                                            if (challenge.Succeeded)
                                             {
-                                                var submitPhone = await userObject.Api.SubmitPhoneNumberForChallengeRequireAsync("+375333085326");
-                                                if (submitPhone.Succeeded)
+                                                if (challenge.Value.SubmitPhoneRequired)
                                                 {
+                                                    var submitPhone = await userObject.Api.SubmitPhoneNumberForChallengeRequireAsync("+375333085326");
+                                                    if (submitPhone.Succeeded)
+                                                    {
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    page.Frame.Navigate(typeof(VerifyPage), userObject);
+
                                                 }
                                             }
-                                            else
-                                            {
-                                                page.Frame.Navigate(typeof(VerifyPage), userObject);
-
-                                            }
                                         }
-                                    }
-                                    break;
-                                case InstaLoginResult.TwoFactorRequired:
-                                    userObject.Api = await LoginByTwoFactor(userObject);
-                                    if (userObject.Api != null)
-                                    {
-                                        page.Frame.Navigate(typeof(MenuPage), userObject);
-                                    }
-                                    break;
-                                case InstaLoginResult.CheckpointLoggedOut:
-                                    break;
-                                default:
-                                    _ = new CustomDialog("Warning", logResult.Info.Message, "Ok");
-                                    break;
+                                        break;
+                                    case InstaLoginResult.TwoFactorRequired:
+                                        userObject.Api = await LoginByTwoFactor(userObject);
+                                        if (userObject.Api != null)
+                                        {
+                                            page.Frame.Navigate(typeof(MenuPage), userObject);
+                                        }
+                                        break;
+                                    case InstaLoginResult.CheckpointLoggedOut:
+                                        break;
+                                    default:
+                                        _ = new CustomDialog("Warning", logResult.Info.Message, "Ok");
+                                        break;
+                                }
                             }
                         }
                     }
                 }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                await RemoveConnection(null);
+            }
+            
         }
         static void SaveSession(IInstaApi InstaApi)
         {
@@ -316,7 +324,11 @@ namespace MyInsta.Logic
         }
         public static async Task<bool> RemoveConnection(IInstaApi api)
         {
-            var x = await api.LogoutAsync();
+            if (api != null)
+            {
+                await api.LogoutAsync();
+            }
+
             if (ExistsConnection())
             {
                 StorageFolder localFolder = ApplicationData.Current.LocalFolder;
@@ -328,8 +340,8 @@ namespace MyInsta.Logic
                 localSettings.Values["Password"] = null;
                 return true;
             }
-            else
-                return false;
+
+            return false;
         }
 
         #endregion
@@ -1070,14 +1082,15 @@ namespace MyInsta.Logic
                         });
                 });
             }
-            var copyFile = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
-
-            copyFile.SetStorageItems(new List<IStorageFile> { file });
-            Clipboard.SetContent(copyFile);
 
             _ = userPost != null
                 ? new CustomDialog("Message", $"{postString} of {userPost.UserName} downloaded\n", "All right", url)
                 : new CustomDialog("Message", $"{postString} downloaded\n", "All right", url);
+
+            var copyFile = new DataPackage { RequestedOperation = DataPackageOperation.Copy };
+
+            copyFile.SetStorageItems(new List<IStorageFile> { file });
+            Clipboard.SetContent(copyFile);
 
             return result ?? false;
         }

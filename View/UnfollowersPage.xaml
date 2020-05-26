@@ -50,7 +50,6 @@
             x:Name="searchBox"
             x:Uid="SearchBox"
             Grid.Row="0"
-            Margin="100,10,100,0"
             VerticalContentAlignment="Center"
             Background="{ThemeResource BackButtonPointerOverBackgroundThemeBrush}"
             FontSize="20"
@@ -62,7 +61,7 @@
             <GridView
                 x:Name="listFollowers"
                 Grid.Row="1"
-                Margin="10,10,10,10"
+                Margin="5, 0"
                 ItemsSource="{x:Bind TempUsers}"
                 HorizontalAlignment="Center"
                 SelectionChanged="ListFollowers_SelectionChanged">
@@ -75,12 +74,12 @@
                     <DataTemplate x:Name="SingleLineDataTemplate" x:DataType="localInsta:InstaUserShort">
                         <StackPanel
                             Orientation="Vertical"
-                            Padding="10"
-                            Width="190"
+                            Padding="5"
+                            Width="180"
                             Margin="20">
                             <Ellipse
-                                Width="150"
-                                Height="150"
+                                Width="155"
+                                Height="155"
                                 VerticalAlignment="Center">
                                 <Ellipse.Fill>
                                     <ImageBrush>
@@ -94,8 +93,8 @@
                                 Margin="5"
                                 VerticalAlignment="Center"
                                 Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
-                                FontWeight="Light"
-                                FontSize="16"
+                                FontWeight="ExtraLight"
+                                FontSize="17"
                                 Text="{x:Bind UserName}" 
                                 TextWrapping="WrapWholeWords"
                                 HorizontalAlignment="Center"/>

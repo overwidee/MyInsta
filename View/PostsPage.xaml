@@ -47,19 +47,29 @@
                                                         <VisualState.Setters>
                                                             <Setter Value="&#xEB52;" Target="PART_content.(PART_content.Text)"/>
                                                             <Setter Value="Red" Target="PART_content.(PART_content.Foreground)"/>
+                                                            <Setter Value="25" Target="PART_content.(PART_content.FontSize)"/>
                                                         </VisualState.Setters>
                                                     </VisualState>
                                                     <VisualState x:Name="Unchecked">
                                                         <VisualState.Setters>
                                                             <Setter Value="&#xEB51;" Target="PART_content.(PART_content.Text)" />
-                                                            <Setter Value="White" Target="PART_content.(PART_content.Foreground)" />
+                                                            <Setter Value="{ThemeResource SystemAccentColor}" Target="PART_content.(PART_content.Foreground)" />
                                                         </VisualState.Setters>
                                                     </VisualState>
                                                 </VisualStateGroup.States>
                                             </VisualStateGroup>
                                         </VisualStateManager.VisualStateGroups>
-                                        <TextBlock x:Name="PART_content" FontSize="20" Foreground="Red" 
-                                                   FontFamily="Segoe MDL2 Assets" Text="&#xE102;"/>
+                                        <Grid Height="29">
+                                            <TextBlock FontSize="25" Foreground="{ThemeResource CMapUwpAcrylicBrush}" 
+                                                       VerticalAlignment="Center"
+                                                       HorizontalAlignment="Center"
+                                                       FontFamily="Segoe MDL2 Assets" Text="&#xEB52;"/>
+                                            <TextBlock x:Name="PART_content" FontSize="25" Foreground="Red" 
+                                                       VerticalAlignment="Center"
+                                                       HorizontalAlignment="Center"
+                                                       FontWeight="Light"
+                                                       FontFamily="Segoe MDL2 Assets" Text="&#xE102;"/>
+                                        </Grid>
                                     </Border>
                                 </ControlTemplate>
                             </Setter.Value>
@@ -180,7 +190,7 @@
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10, 0">
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0, 5, 0, 0">
                                 <Ellipse
                                     Width="40"
                                     Height="40"
@@ -195,14 +205,14 @@
                                 </Ellipse>
                                 <Button
                                     x:Name="buttonProfile"
-                                    Margin="10"
+                                    Margin="5"
                                     VerticalAlignment="Center"
                                     Click="ButtonProfile_Click"
                                     Content="{x:Bind UserNamePost}"
                                     CornerRadius="5"
                                     Tag="{x:Bind UserPk}" />
                             </StackPanel>
-                            <StackPanel Grid.Row="1" Orientation="Vertical" Margin="15, 0">
+                            <StackPanel Grid.Row="1" Orientation="Vertical" Margin="5, 0">
                                 <FlipView
                                     x:Name="itemsList"
                                     Width="{x:Bind Items[0].GetWidth}"
@@ -216,6 +226,34 @@
                                             <VirtualizingStackPanel Orientation="Horizontal" />
                                         </ItemsPanelTemplate>
                                     </FlipView.ItemsPanel>
+                                    <FlipView.ContextFlyout>
+                                        <MenuFlyout >
+                                            <MenuFlyoutItem Text="{x:Bind Items[0].CountLikersShow}"
+                                                                            Tag="{x:Bind Items[0].Pk}"
+                                                                            FontWeight="Light"
+                                                                            Width="150"
+                                                                            Click="LikesItem_OnClick">
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem Text="{x:Bind Items[0].CountCommentsShow}"
+                                                                            Tag="{x:Bind Items[0].Pk}"
+                                                                            FontWeight="Light"
+                                                                            Click="CommentsItem_OnClick">
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator/>
+                                            <MenuFlyoutItem
+                                                                        Click="ButtonDownload_Click"
+                                                                        Text="Download"
+                                                                        FontWeight="Light"
+                                                                        Tag="{x:Bind Id}">
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem
+                                                                        Click="ButtonShare_Click"
+                                                                        Text="Share in Direct"
+                                                                        FontWeight="Light"
+                                                                        Tag="{x:Bind Id}">
+                                            </MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </FlipView.ContextFlyout>
                                     <FlipView.ItemTemplate>
                                         <DataTemplate x:DataType="model:CustomMedia">
                                             <StackPanel HorizontalAlignment="Center">
@@ -224,7 +262,7 @@
                                                         Height="{x:Bind GetHeight}"
                                                         Width="{x:Bind GetWidth}"
                                                         ToolTipService.ToolTip="{x:Bind DatePost}"
-                                                        CornerRadius="15">
+                                                        CornerRadius="10">
                                                     <Border.Background>
                                                         <ImageBrush Stretch="UniformToFill" 
                                                                     ImageSource="{x:Bind UrlBigImage}"/>
@@ -246,16 +284,11 @@
                                 </FlipView>
 
                                 <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="6*"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="6*"/>
-                                    </Grid.ColumnDefinitions>
                                     <CheckBox
                                         x:Name="buttonLike"
-                                        Grid.Column="0"
-                                        Margin="20, 20, 10, 10"
+                                        Margin="10, -45, 10, 10"
                                         MinWidth="20"
+                                        HorizontalAlignment="Right"
                                         Click="buttonLike_Click"
                                         CornerRadius="0"
                                         IsChecked="{x:Bind Items[0].Liked}"
@@ -264,7 +297,7 @@
                                             <SymbolIcon Symbol="Like"/>
                                         </CheckBox.Content>
                                     </CheckBox>
-                                    <StackPanel HorizontalAlignment="Right"
+                                    <!--<StackPanel HorizontalAlignment="Right"
                                                 Grid.Column="2"
                                                 Orientation="Horizontal">
                                         <Button 
@@ -321,7 +354,7 @@
                                                 </MenuFlyout>
                                             </Button.Flyout>
                                         </Button>
-                                    </StackPanel>
+                                    </StackPanel>-->
                                 </Grid>
                             </StackPanel>
                         </Grid>

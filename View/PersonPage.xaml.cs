@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 using MyInsta.Logic.ChartModel;
 using WinRTXamlToolkit.Controls.DataVisualization.Charting;
+using WinRTXamlToolkit.Controls.Extensions;
 using Chart = MyInsta.Logic.ChartModel.Chart;
 
 namespace MyInsta.View
@@ -122,9 +123,6 @@ namespace MyInsta.View
             InstaUserInfo = await InstaServer.GetInfoUser(CurrentUser, SelectUser.UserName);
             ButtonFollow = !InstaUserInfo.FriendshipStatus.Following;
             ButtonUnFollow = InstaUserInfo.FriendshipStatus.Following;
-
-            //await InstaServer.SendMessage(CurrentUser, InstaUserInfo.Pk);
-
 
             UserInfoLoaded();
             SetBookmarkStatus();

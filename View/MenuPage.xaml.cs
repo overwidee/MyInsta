@@ -65,16 +65,16 @@ namespace MyInsta.View
                 switch (itemContent)
                 {
                     case "Followers":
-                        contentFrame.Navigate(typeof(FollowersPage), InstaUser);
+                        contentFrame.Navigate(typeof(FollowersPage), InstaUser, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                         break;
                     case "Unfollowers":
-                        contentFrame.Navigate(typeof(UnfollowersPage), InstaUser);
+                        contentFrame.Navigate(typeof(UnfollowersPage), InstaUser, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                         break;
                     case "Friends":
-                        contentFrame.Navigate(typeof(FriendsPage), InstaUser);
+                        contentFrame.Navigate(typeof(FriendsPage), InstaUser, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                         break;
                     case "Search":
-                        contentFrame.Navigate(typeof(SearchPage), InstaUser);
+                        contentFrame.Navigate(typeof(SearchPage), InstaUser, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                         break;
                     case "Sync":
                         await InstaServer.GetUserData(InstaUser, true);
@@ -84,33 +84,33 @@ namespace MyInsta.View
                             {
                                 InstaUser,
                                 1
-                            });
+                            }, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                         break;
                     case "Bookmarks":
-                        contentFrame.Navigate(typeof(BookmarksPage), InstaUser);
+                        contentFrame.Navigate(typeof(BookmarksPage), InstaUser, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                         break;
                     case "Stories":
-                        contentFrame.Navigate(typeof(StoriesPage), InstaUser);
+                        contentFrame.Navigate(typeof(StoriesPage), InstaUser, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                         break;
                     case "Feed":
-                        contentFrame.Navigate(typeof(FeedPage), InstaUser);
+                        contentFrame.Navigate(typeof(FeedPage), InstaUser, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                         break;
                     case "Direct":
-                        contentFrame.Navigate(typeof(Direct), InstaUser);
+                        contentFrame.Navigate(typeof(Direct), InstaUser, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                         break;
                     case "Preview":
-                        contentFrame.Navigate(typeof(PreviewPostsPage), InstaUser);
+                        contentFrame.Navigate(typeof(PreviewPostsPage), InstaUser, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                         break;
                     case "Explore":
-                        contentFrame.Navigate(typeof(ExplorePage), InstaUser);
+                        contentFrame.Navigate(typeof(ExplorePage), InstaUser, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                         break;
                     case "User":
                         var curt = await InstaServer.GetInstaUserShortById(InstaUser, InstaUser.UserData.Pk);
                         contentFrame.Navigate(typeof(PersonPage),
-                            new object[] { curt, InstaUser });
+                            new object[] { curt, InstaUser }, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                         break;
                     case "Archive":
-                        contentFrame.Navigate(typeof(ArchivePage), InstaUser);
+                        contentFrame.Navigate(typeof(ArchivePage), InstaUser, new SlideNavigationTransitionInfo() { Effect = SlideNavigationTransitionEffect.FromRight });
                         break;
                 }
             }

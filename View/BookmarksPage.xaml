@@ -51,8 +51,8 @@
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VariableSizedWrapGrid
-                        ItemHeight="250"
-                        ItemWidth="240"
+                        ItemHeight="295"
+                        ItemWidth="265"
                         Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
@@ -60,9 +60,9 @@
                 <DataTemplate x:DataType="model:InstaUserShort">
                     <StackPanel Orientation="Vertical">
                         <Ellipse
-                            Width="200"
-                            Height="200"
-                            Margin="0">
+                            Width="250"
+                            Height="250"
+                            Margin="3">
                             <Ellipse.Fill>
                                 <ImageBrush>
                                     <ImageBrush.ImageSource>
@@ -74,7 +74,7 @@
                         <TextBlock
                             HorizontalAlignment="Center"
                             FontSize="20"
-                            Margin="5"
+                            Margin="5, 3"
                             Text="{x:Bind UserName}"
                             TextWrapping="Wrap" />
                     </StackPanel>

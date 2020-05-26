@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="using:MyInsta.Model"
     xmlns:models="using:InstagramApiSharp.Classes.Models"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Unloaded="FeedPage_OnUnloaded"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -47,19 +48,29 @@
                                                         <VisualState.Setters>
                                                             <Setter Value="&#xEB52;" Target="PART_content.(PART_content.Text)"/>
                                                             <Setter Value="Red" Target="PART_content.(PART_content.Foreground)"/>
+                                                            <Setter Value="25" Target="PART_content.(PART_content.FontSize)"/>
                                                         </VisualState.Setters>
                                                     </VisualState>
                                                     <VisualState x:Name="Unchecked">
                                                         <VisualState.Setters>
                                                             <Setter Value="&#xEB51;" Target="PART_content.(PART_content.Text)" />
-                                                            <Setter Value="White" Target="PART_content.(PART_content.Foreground)" />
+                                                            <Setter Value="{ThemeResource SystemAccentColor}" Target="PART_content.(PART_content.Foreground)" />
                                                         </VisualState.Setters>
                                                     </VisualState>
                                                 </VisualStateGroup.States>
                                             </VisualStateGroup>
                                         </VisualStateManager.VisualStateGroups>
-                                        <TextBlock x:Name="PART_content" FontSize="20" Foreground="Red" 
-                                                   FontFamily="Segoe MDL2 Assets" Text="&#xE102;"/>
+                                        <Grid Height="31">
+                                            <TextBlock FontSize="25" Foreground="{ThemeResource CMapUwpAcrylicBrush}" 
+                                                       VerticalAlignment="Center"
+                                                       HorizontalAlignment="Center"
+                                                       FontFamily="Segoe MDL2 Assets" Text="&#xEB52;"/>
+                                            <TextBlock x:Name="PART_content" FontSize="25" Foreground="Red" 
+                                                       VerticalAlignment="Center"
+                                                       HorizontalAlignment="Center"
+                                                       FontWeight="Light"
+                                                       FontFamily="Segoe MDL2 Assets" Text="&#xE102;"/>
+                                        </Grid>
                                     </Border>
                                 </ControlTemplate>
                             </Setter.Value>
@@ -103,9 +114,9 @@
     </Page.Resources>
     <Grid Background="{ThemeResource CMapUwpAcrylicBrush}">
         <StackPanel x:Name="ProgressStack" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock x:Name="LoadBlock" Text="" FontSize="15"
+            <TextBlock x:Name="LoadBlock" Text="" FontSize="15"
                                FontWeight="Light" Margin="10"/>
-                    <ProgressRing x:Name="FeedProgressRing" 
+            <ProgressRing x:Name="FeedProgressRing" 
                                   Margin="10" 
                                   Height="100" Width="100" IsActive="True"/>
         </StackPanel>
@@ -116,49 +127,49 @@
                         Margin="0, 0"
                         VerticalScrollBarVisibility="Auto"
                         ViewChanged="ScrollListPosts_OnViewChanged">
-                    <GridView
+            <GridView
                         x:Name="PostsList"
                         HorizontalAlignment="Center"
                         HorizontalContentAlignment="Stretch"
                         ItemsSource="{x:Bind Feed}"
                         SelectionMode="None">
-                        <GridView.Resources>
+                <GridView.Resources>
+                    <ResourceDictionary>
+                        <ResourceDictionary.MergedDictionaries>
                             <ResourceDictionary>
-                                <ResourceDictionary.MergedDictionaries>
-                                    <ResourceDictionary>
-                                        <Style TargetType="GridViewItem">
-                                            <Setter Property="HorizontalAlignment" Value="Center" />
-                                        </Style>
-                                    </ResourceDictionary>
-                                </ResourceDictionary.MergedDictionaries>
+                                <Style TargetType="GridViewItem">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                </Style>
                             </ResourceDictionary>
-                        </GridView.Resources>
-                        <GridView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsWrapGrid Orientation="Horizontal" CacheLength="0"/>
-                            </ItemsPanelTemplate>
-                        </GridView.ItemsPanel>
-                        <GridView.ItemTemplate>
-                            <DataTemplate x:DataType="model:PostItem">
-                                <Grid Margin="1">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
-                                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10, 5">
-                                        <Ellipse
+                        </ResourceDictionary.MergedDictionaries>
+                    </ResourceDictionary>
+                </GridView.Resources>
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid Orientation="Horizontal" CacheLength="0"/>
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="model:PostItem">
+                        <Grid Margin="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10, 5">
+                                <Ellipse
                                                 Width="45"
                                                 Height="45"
                                                 Margin="5">
-                                            <Ellipse.Fill>
-                                                <ImageBrush>
-                                                    <ImageBrush.ImageSource>
-                                                        <BitmapImage UriSource="{x:Bind UserPicture}" />
-                                                    </ImageBrush.ImageSource>
-                                                </ImageBrush>
-                                            </Ellipse.Fill>
-                                        </Ellipse>
-                                        <Button
+                                    <Ellipse.Fill>
+                                        <ImageBrush>
+                                            <ImageBrush.ImageSource>
+                                                <BitmapImage UriSource="{x:Bind UserPicture}" />
+                                            </ImageBrush.ImageSource>
+                                        </ImageBrush>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <Button
                                                 x:Name="buttonProfile"
                                                 Margin="5"
                                                 FontWeight="Light"
@@ -167,9 +178,9 @@
                                                 Content="{x:Bind UserNamePost}"
                                                 CornerRadius="5"
                                                 Tag="{x:Bind UserPk}" />
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="1" Orientation="Vertical" Margin="10, 0">
-                                        <FlipView
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Orientation="Vertical" Margin="5, 0">
+                                <FlipView
                                                 x:Name="itemsList"
                                                 Width="{x:Bind Items[0].GetWidth}"
                                                 Height="{x:Bind Items[0].GetHeight}"
@@ -177,61 +188,89 @@
                                                 ItemsSource="{x:Bind Items}"
                                                 Background="{x:Null}"
                                                 Tapped="ItemsList_OnTapped">
-                                            <FlipView.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" />
-                                                </ItemsPanelTemplate>
-                                            </FlipView.ItemsPanel>
-                                            <FlipView.ItemTemplate>
-                                                <DataTemplate x:DataType="model:CustomMedia">
-                                                    <StackPanel HorizontalAlignment="Center">
-                                                        <Border BorderBrush="{x:Null}"
-                                                                BorderThickness="1"
+                                    <FlipView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </FlipView.ItemsPanel>
+                                    <FlipView.ContextFlyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem Text="{x:Bind Items[0].CountLikersShow}"
+                                                            Tag="{x:Bind Items[0].Pk}"
+                                                            FontWeight="Light"
+                                                            Click="MenuFlyoutItem_OnClick">
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem Text="{x:Bind Items[0].CountCommentsShow}"
+                                                            Tag="{x:Bind Items[0].Pk}"
+                                                            FontWeight="Light"
+                                                            Click="MenuFlyoutItem1_OnClick">
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator/>
+                                            <MenuFlyoutItem Click="ButtonDownload_OnClick"
+                                                            Text="Download"
+                                                            FontWeight="Light"
+                                                            Tag="{x:Bind Id}">
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem Click="MenuFlyoutItem2_OnClick"
+                                                            Text="Save in profile"
+                                                            FontWeight="Light"
+                                                            Tag="{x:Bind Items[0].Pk}">
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem Click="ButtonShare_OnClick"
+                                                            Text="Share in Direct"
+                                                            FontWeight="Light"
+                                                            Tag="{x:Bind Id}">
+                                            </MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </FlipView.ContextFlyout>
+                                    <FlipView.ItemTemplate>
+                                        <DataTemplate x:DataType="model:CustomMedia">
+                                            <StackPanel HorizontalAlignment="Center">
+                                                <Border BorderBrush="{x:Null}"
+                                                                BorderThickness="0"
                                                                 Height="{x:Bind GetHeight}"
                                                                 Width="{x:Bind GetWidth}"
                                                                 ToolTipService.ToolTip="{x:Bind DatePost}"
-                                                                CornerRadius="15">
-                                                            <Border.Background>
-                                                                <ImageBrush Stretch="UniformToFill" 
+                                                                CornerRadius="10">
+                                                    
+                                                    <Border.Background>
+                                                        <ImageBrush Stretch="UniformToFill" 
                                                                             ImageSource="{x:Bind UrlBigImage}"/>
-                                                            </Border.Background>
-                                                            <Viewbox MaxHeight="20" MaxWidth="20"
-                                                                     HorizontalAlignment="Right"
-                                                                     Margin="10"
-                                                                     Visibility="{x:Bind IsVideoVisibility}"
-                                                                     VerticalAlignment="Top">
-                                                                <TextBlock 
+                                                    </Border.Background>
+                                                    <Viewbox MaxHeight="20" MaxWidth="20"
+                                                             HorizontalAlignment="Right"
+                                                             Margin="10"
+                                                             Visibility="{x:Bind IsVideoVisibility}"
+                                                             VerticalAlignment="Top">
+                                                        <TextBlock 
                                                                     Foreground="#78898a"
                                                                     FontFamily="Segoe MDL2 Assets"
                                                                     Text="&#xEA0C;"/>
-                                                            </Viewbox>
-                                                        </Border>
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </FlipView.ItemTemplate>
-                                        </FlipView>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="6*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <CheckBox
+                                                    </Viewbox>
+                                                </Border>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </FlipView.ItemTemplate>
+                                </FlipView>
+                                <Grid>
+                                    <CheckBox
                                                 x:Name="buttonLike"
-                                                Grid.Column="0"
-                                                Margin="20, 20, 10, 10"
+                                                Margin="10, -45, 10, 10"
                                                 MinWidth="20"
+                                                HorizontalAlignment="Right"
                                                 Click="ButtonLike_OnClick"
                                                 CornerRadius="0"
                                                 IsChecked="{x:Bind Items[0].Liked}"
                                                 Tag="{x:Bind Id}">
-                                                <CheckBox.Content>
-                                                    <SymbolIcon Symbol="Like" />
-                                                </CheckBox.Content>
-                                            </CheckBox>
-                                            <StackPanel HorizontalAlignment="Right"
+                                        <CheckBox.Content>
+                                            <SymbolIcon Symbol="Like" />
+                                        </CheckBox.Content>
+                                    </CheckBox>
+                                    <!--<StackPanel HorizontalAlignment="Right"
                                                 Grid.Column="1"
+                                                Margin="5, -60, 0, 0"
                                                 Orientation="Horizontal">
-                                                <Button
+                                        <Button
                                                             Background="{x:Null}"
                                                             CornerRadius="12"
                                                             FontFamily="Segoe MDL2 Assets"
@@ -240,64 +279,64 @@
                                                             FontWeight="Light"
                                                             Content="&#xE712;"
                                                             RenderTransformOrigin="0.5,0.5">
-                                                    <Button.RenderTransform >
-                                                        <RotateTransform Angle="90"/>
-                                                    </Button.RenderTransform>
-                                                    <Button.Resources>
-                                                        <ResourceDictionary>
-                                                            <ResourceDictionary.ThemeDictionaries>
-                                                                <ResourceDictionary x:Key="Dark">
-                                                                    <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White"/>
-                                                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent"/>
-                                                                </ResourceDictionary>
-                                                                <ResourceDictionary x:Key="Light">
-                                                                    <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White"/>
-                                                                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent"/>
-                                                                </ResourceDictionary>
-                                                            </ResourceDictionary.ThemeDictionaries>
+                                            <Button.RenderTransform >
+                                                <RotateTransform Angle="90"/>
+                                            </Button.RenderTransform>
+                                            <Button.Resources>
+                                                <ResourceDictionary>
+                                                    <ResourceDictionary.ThemeDictionaries>
+                                                        <ResourceDictionary x:Key="Dark">
+                                                            <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Black"/>
+                                                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent"/>
                                                         </ResourceDictionary>
-                                                    </Button.Resources>
-                                                    <Button.Flyout>
-                                                        <MenuFlyout>
-                                                            <MenuFlyoutItem Text="{x:Bind Items[0].CountLikersShow}"
+                                                        <ResourceDictionary x:Key="Light">
+                                                            <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Black"/>
+                                                            <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Transparent"/>
+                                                        </ResourceDictionary>
+                                                    </ResourceDictionary.ThemeDictionaries>
+                                                </ResourceDictionary>
+                                            </Button.Resources>
+                                            <Button.Flyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyoutItem Text="{x:Bind Items[0].CountLikersShow}"
                                                                                     Tag="{x:Bind Items[0].Pk}"
                                                                                     FontWeight="Light"
                                                                                     Click="MenuFlyoutItem_OnClick">
-                                                            </MenuFlyoutItem>
-                                                            <MenuFlyoutItem Text="{x:Bind Items[0].CountCommentsShow}"
+                                                    </MenuFlyoutItem>
+                                                    <MenuFlyoutItem Text="{x:Bind Items[0].CountCommentsShow}"
                                                                                     Tag="{x:Bind Items[0].Pk}"
                                                                                     FontWeight="Light"
                                                                                     Click="MenuFlyoutItem1_OnClick">
-                                                            </MenuFlyoutItem>
-                                                            <MenuFlyoutSeparator/>
-                                                            <MenuFlyoutItem
+                                                    </MenuFlyoutItem>
+                                                    <MenuFlyoutSeparator/>
+                                                    <MenuFlyoutItem
                                                                         Click="ButtonDownload_OnClick"
                                                                         Text="Download"
                                                                         FontWeight="Light"
                                                                         Tag="{x:Bind Id}">
-                                                            </MenuFlyoutItem>
-                                                            <MenuFlyoutItem
+                                                    </MenuFlyoutItem>
+                                                    <MenuFlyoutItem
                                                                         Click="MenuFlyoutItem2_OnClick"
                                                                         Text="Save in profile"
                                                                         FontWeight="Light"
                                                                         Tag="{x:Bind Items[0].Pk}">
-                                                            </MenuFlyoutItem>
-                                                            <MenuFlyoutItem
+                                                    </MenuFlyoutItem>
+                                                    <MenuFlyoutItem
                                                                         Click="ButtonShare_OnClick"
                                                                         Text="Share in Direct"
                                                                         FontWeight="Light"
                                                                         Tag="{x:Bind Id}">
-                                                            </MenuFlyoutItem>
-                                                        </MenuFlyout>
-                                                    </Button.Flyout>
-                                                </Button>
-                                            </StackPanel>
-                                        </Grid>
-                                    </StackPanel>
+                                                    </MenuFlyoutItem>
+                                                </MenuFlyout>
+                                            </Button.Flyout>
+                                        </Button>
+                                    </StackPanel>-->
                                 </Grid>
-                            </DataTemplate>
-                        </GridView.ItemTemplate>
-                    </GridView>
-                </ScrollViewer>
-            </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+        </ScrollViewer>
+    </Grid>
 </Page>
