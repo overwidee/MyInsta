@@ -797,7 +797,8 @@ namespace MyInsta.Logic
                 SecondaryButtonText = "Cancel",
                 FullSizeDesired = true,
                 CornerRadius = new CornerRadius(20),
-                Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 33, 34, 34))
+                //Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 33, 34, 34))
+                RequestedTheme = Application.Current.RequestedTheme == ApplicationTheme.Light ? ElementTheme.Light : ElementTheme.Dark
             };
             InstaMediaType mediaType = InstaMediaType.Image;
             CustomMedia media = medias[0];
@@ -1410,7 +1411,8 @@ namespace MyInsta.Logic
             {
                 FullSizeDesired = true,
                 PrimaryButtonText = "Close",
-                CornerRadius = new CornerRadius(20)
+                CornerRadius = new CornerRadius(20),
+                RequestedTheme = Application.Current.RequestedTheme == ApplicationTheme.Light ? ElementTheme.Light : ElementTheme.Dark
             };
 
             var frame = new Frame();

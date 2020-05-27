@@ -6,9 +6,7 @@
     xmlns:local="using:MyInsta.View"
     xmlns:localInsta="using:InstagramApiSharp.Classes.Models"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Loaded="Direct_OnLoaded"
-    Background="#212222">
+    mc:Ignorable="d">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -29,8 +27,16 @@
                         x:Key="CMapUwpAcrylicBrush"
                         BackgroundSource="HostBackdrop"
                         FallbackColor="{StaticResource SystemAccentColor}"
+                        TintColor="White"
+                        TintOpacity="0.7" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <AcrylicBrush
+                        x:Key="CMapUwpAcrylicBrush"
+                        BackgroundSource="HostBackdrop"
+                        FallbackColor="{StaticResource SystemAccentColor}"
                         TintColor="Black"
-                        TintOpacity="0.4" />
+                        TintOpacity="0.7" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
             <Style TargetType="TextBlock">

@@ -28,8 +28,16 @@
                         x:Key="CMapUwpAcrylicBrush"
                         BackgroundSource="HostBackdrop"
                         FallbackColor="{StaticResource SystemListMediumColor}"
+                        TintColor="White"
+                        TintOpacity="0.7" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <AcrylicBrush
+                        x:Key="CMapUwpAcrylicBrush"
+                        BackgroundSource="HostBackdrop"
+                        FallbackColor="{StaticResource SystemListMediumColor}"
                         TintColor="Black"
-                        TintOpacity="0.4" />
+                        TintOpacity="0.7" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
             <Style TargetType="TextBlock">

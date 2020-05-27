@@ -33,9 +33,17 @@
                     <AcrylicBrush
                         x:Key="CMapUwpAcrylicBrush"
                         BackgroundSource="HostBackdrop"
-                        FallbackColor="{StaticResource SystemAccentColor}"
+                        FallbackColor="{StaticResource SystemListMediumColor}"
+                        TintColor="White"
+                        TintOpacity="0.7" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <AcrylicBrush
+                        x:Key="CMapUwpAcrylicBrush"
+                        BackgroundSource="HostBackdrop"
+                        FallbackColor="{StaticResource SystemListMediumColor}"
                         TintColor="Black"
-                        TintOpacity="0.4" />
+                        TintOpacity="0.7" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
             <ResourceDictionary.MergedDictionaries>
@@ -63,12 +71,12 @@
                                                 </VisualStateGroup.States>
                                             </VisualStateGroup>
                                         </VisualStateManager.VisualStateGroups>
-                                        <Grid Height="30">
+                                        <Grid Height="30" HorizontalAlignment="Center">
                                             <TextBlock FontSize="25" Foreground="{ThemeResource CMapUwpAcrylicBrush}" 
                                                        VerticalAlignment="Center"
                                                        HorizontalAlignment="Center"
                                                        FontFamily="Segoe MDL2 Assets" Text="&#xEB52;"/>
-                                            <TextBlock x:Name="PART_content" FontSize="25" Foreground="Red" 
+                                            <TextBlock x:Name="PART_content" FontSize="24" Foreground="Red" 
                                                        VerticalAlignment="Center"
                                                        HorizontalAlignment="Center"
                                                        FontWeight="Light"
@@ -451,9 +459,8 @@
                                                     <CheckBox
                                                         x:Name="buttonLike"
                                                         Grid.Column="0"
-                                                        Margin="10, -45, 10, 10"
-                                                        HorizontalAlignment="Right"
-                                                        CornerRadius="10"
+                                                        HorizontalAlignment="Stretch"
+                                                        CornerRadius="0"
                                                         IsChecked="{x:Bind Items[0].Liked}"
                                                         Click="ButtonLike_Click"
                                                         Tag="{x:Bind Id}"
@@ -836,7 +843,7 @@
                                                 <charting:ResourceDictionaryCollection>
                                                     <ResourceDictionary>
                                                         <Style x:Key="DataPointStyle" TargetType="Control">
-                                                            <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentBrush}" />
+                                                            <Setter Property="Background" Value="{ThemeResource SystemAltLowColor}" />
                                                         </Style>
                                                     </ResourceDictionary>
                                                 </charting:ResourceDictionaryCollection>

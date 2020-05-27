@@ -29,8 +29,16 @@
                         x:Key="CMapUwpAcrylicBrush"
                         BackgroundSource="HostBackdrop"
                         FallbackColor="{StaticResource SystemListMediumColor}"
+                        TintColor="White"
+                        TintOpacity="0.7" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <AcrylicBrush
+                        x:Key="CMapUwpAcrylicBrush"
+                        BackgroundSource="HostBackdrop"
+                        FallbackColor="{StaticResource SystemListMediumColor}"
                         TintColor="Black"
-                        TintOpacity="0.4" />
+                        TintOpacity="0.7" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
             <Style TargetType="TextBlock">
@@ -89,6 +97,32 @@
                                                                            Orientation="Horizontal" />
                                                 </ItemsPanelTemplate>
                                             </FlipView.ItemsPanel>
+                                            <FlipView.ContextFlyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyoutItem 
+                                                        Text="{x:Bind Items[0].CountLikersShow}"
+                                                        Tag="{x:Bind Items[0].Pk}"
+                                                        FontWeight="Light"
+                                                        x:Name="ButtonLikers"
+                                                        Click="ButtonLikers_OnClick">
+                                                    </MenuFlyoutItem>
+                                                    <MenuFlyoutItem 
+                                                        Text="{x:Bind Items[0].CountCommentsShow}"
+                                                        Tag="{x:Bind Items[0].Pk}"
+                                                        x:Name="ButtonComments"
+                                                        FontWeight="Light"
+                                                        Click="ButtonComments_OnClick">
+                                                    </MenuFlyoutItem>
+                                                    <MenuFlyoutSeparator/>
+                                                    <MenuFlyoutItem
+                                                        Click="ButtonDownload_OnClick"
+                                                        Text="Download"
+                                                        FontWeight="Light"
+                                                        x:Name="ButtonDownload"
+                                                        Tag="{x:Bind Id}">
+                                                    </MenuFlyoutItem>
+                                                </MenuFlyout>
+                                            </FlipView.ContextFlyout>
                                             <FlipView.ItemTemplate>
                                                 <DataTemplate x:DataType="model:CustomMedia">
                                                     <StackPanel
@@ -119,7 +153,7 @@
                                             </FlipView.ItemTemplate>
                                         </FlipView>
 
-                                        <Grid >
+                                        <!--<Grid >
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="6*"/>
                                                 <ColumnDefinition Width="*"/>
@@ -156,34 +190,11 @@
                                                         </ResourceDictionary>
                                                     </Button.Resources>
                                                     <Button.Flyout>
-                                                        <MenuFlyout>
-                                                            <MenuFlyoutItem 
-                                                            Text="{x:Bind Items[0].CountLikersShow}"
-                                                            Tag="{x:Bind Items[0].Pk}"
-                                                            FontWeight="Light"
-                                                            x:Name="ButtonLikers"
-                                                            Click="ButtonLikers_OnClick">
-                                                            </MenuFlyoutItem>
-                                                            <MenuFlyoutItem 
-                                                            Text="{x:Bind Items[0].CountCommentsShow}"
-                                                            Tag="{x:Bind Items[0].Pk}"
-                                                            x:Name="ButtonComments"
-                                                            FontWeight="Light"
-                                                            Click="ButtonComments_OnClick">
-                                                            </MenuFlyoutItem>
-                                                            <MenuFlyoutSeparator/>
-                                                            <MenuFlyoutItem
-                                                            Click="ButtonDownload_OnClick"
-                                                            Text="Download"
-                                                            FontWeight="Light"
-                                                            x:Name="ButtonDownload"
-                                                            Tag="{x:Bind Id}">
-                                                            </MenuFlyoutItem>
-                                                        </MenuFlyout>
+                                                        
                                                     </Button.Flyout>
                                                 </Button>
                                             </StackPanel>
-                                        </Grid>
+                                        </Grid>-->
                                     </StackPanel>
                                 </DataTemplate>
                             </GridView.ItemTemplate>

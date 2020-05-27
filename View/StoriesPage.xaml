@@ -31,8 +31,16 @@
                         x:Key="CMapUwpAcrylicBrush"
                         BackgroundSource="HostBackdrop"
                         FallbackColor="{StaticResource SystemListMediumColor}"
+                        TintColor="White"
+                        TintOpacity="0.7" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <AcrylicBrush
+                        x:Key="CMapUwpAcrylicBrush"
+                        BackgroundSource="HostBackdrop"
+                        FallbackColor="{StaticResource SystemListMediumColor}"
                         TintColor="Black"
-                        TintOpacity="0.4" />
+                        TintOpacity="0.7" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
@@ -44,11 +52,11 @@
             <RowDefinition Height="60" />
             <RowDefinition Height="107*" />
         </Grid.RowDefinitions>
-        <Image x:Name="imageBack" Grid.RowSpan="3" Stretch="Fill" Source="{x:Bind SelectedUserStory.User.ProfilePicUrl, Mode=OneWay}">
+        <!--<Image x:Name="imageBack" Grid.RowSpan="3" Stretch="Fill" Source="{x:Bind SelectedUserStory.User.ProfilePicUrl, Mode=OneWay}">
             <interactivity:Interaction.Behaviors>
                 <behaviors:Blur Value="100"></behaviors:Blur>
             </interactivity:Interaction.Behaviors>
-        </Image>
+        </Image>-->
         <ProgressRing
             x:Name="progressStories"
             Grid.Row="0"

@@ -85,7 +85,7 @@
                 FontWeight="Light"
                 PaneTitle="Menu"
                 OpenPaneLength="200"
-                PaneDisplayMode="{x:Bind PaneMode, Mode=OneWay}">
+                PaneDisplayMode="{x:Bind PaneMode, Mode=OneWay}" RenderTransformOrigin="0.5,0.5">
                 <NavigationView.MenuItems>
                     <NavigationViewItem
                         x:Name="page_friends"
@@ -93,7 +93,8 @@
                         Content="Friends"
                         Style="{StaticResource TextStyle}"
                         Icon="Favorite"
-                        Tag="Friends" />
+                        Tag="Friends">
+                    </NavigationViewItem>
                     <NavigationViewItem
                         x:Name="page_followers"
                         x:Uid="Followers"

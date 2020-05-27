@@ -65,16 +65,19 @@ namespace MyInsta.Logic
 
             var contentDialog = new ContentDialog()
             {
+                Title = mediaModel.Caption,
                 SecondaryButtonText = "Next >",
                 CloseButtonText = "Close",
                 PrimaryButtonText = "< Previous",
                 Tag = Url,
                 CornerRadius = new CornerRadius(20),
-                Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 33, 34, 34)),
+                //Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 33, 34, 34)),
                 FullSizeDesired = true,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
-                MaxWidth = width
+                MaxWidth = width,
+                RequestedTheme = Application.Current.RequestedTheme == ApplicationTheme.Light ? ElementTheme.Light : ElementTheme.Dark
             };
+
             contentDialog.PrimaryButtonClick += delegate
             {
                 if (currentIndexMedia > 0 && currentIndexMedia < mediasCollection.Count)

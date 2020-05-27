@@ -30,8 +30,16 @@
                         x:Key="CMapUwpAcrylicBrush"
                         BackgroundSource="HostBackdrop"
                         FallbackColor="{StaticResource SystemListMediumColor}"
+                        TintColor="White"
+                        TintOpacity="0.7" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <AcrylicBrush
+                        x:Key="CMapUwpAcrylicBrush"
+                        BackgroundSource="HostBackdrop"
+                        FallbackColor="{StaticResource SystemListMediumColor}"
                         TintColor="Black"
-                        TintOpacity="0.4" />
+                        TintOpacity="0.7" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
             <ResourceDictionary.MergedDictionaries>
@@ -255,11 +263,11 @@
                                 <Grid>
                                     <CheckBox
                                                 x:Name="buttonLike"
-                                                Margin="10, -45, 10, 10"
-                                                MinWidth="20"
-                                                HorizontalAlignment="Right"
-                                                Click="ButtonLike_OnClick"
+                                                HorizontalAlignment="Stretch"
                                                 CornerRadius="0"
+                                                MinWidth="20"
+                                                Margin="5"
+                                                Click="ButtonLike_OnClick"
                                                 IsChecked="{x:Bind Items[0].Liked}"
                                                 Tag="{x:Bind Id}">
                                         <CheckBox.Content>

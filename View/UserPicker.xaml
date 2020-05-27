@@ -7,7 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:logic="using:MyInsta.Logic"
     mc:Ignorable="d"
-    Background="#212222"
     Title="Download path"
     CornerRadius="20"
     PrimaryButtonText="Select"

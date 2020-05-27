@@ -22,11 +22,20 @@
                              Color="{ThemeResource SystemColorWindowColor}"/>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Light">
-                    <AcrylicBrush x:Key="CMapUwpAcrylicBrush"
-                          BackgroundSource="HostBackdrop"
-                          TintColor="Black"
-                          TintOpacity="0.4"
-                          FallbackColor="{StaticResource SystemListMediumColor}"/>
+                    <AcrylicBrush
+                        x:Key="CMapUwpAcrylicBrush"
+                        BackgroundSource="HostBackdrop"
+                        FallbackColor="{StaticResource SystemListMediumColor}"
+                        TintColor="White"
+                        TintOpacity="0.7" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <AcrylicBrush
+                        x:Key="CMapUwpAcrylicBrush"
+                        BackgroundSource="HostBackdrop"
+                        FallbackColor="{StaticResource SystemListMediumColor}"
+                        TintColor="Black"
+                        TintOpacity="0.7" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>

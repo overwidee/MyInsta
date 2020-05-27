@@ -112,7 +112,7 @@ namespace MyInsta.View
 
         private void ListPersonsPage_OnLoaded(object sender, RoutedEventArgs e)
         {
-            ((ContentDialog)((Frame)Parent).Parent).Background = Background;
+            //((ContentDialog)((Frame)Parent).Parent).Background = Background;
         }
     }
 }

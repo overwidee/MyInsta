@@ -7,10 +7,10 @@
     xmlns:local="using:MyInsta.View"
     xmlns:localInsta="using:InstagramApiSharp.Classes.Models"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Width="400"
-    Height="400"
+    Width="500"
+    FullSizeDesired="True"
     mc:Ignorable="d"
-    Background="#212222">
+    SecondaryButtonText="Close">
 
     <ContentDialog.Resources>
         <ResourceDictionary>
@@ -30,9 +30,17 @@
                     <AcrylicBrush
                         x:Key="CMapUwpAcrylicBrush"
                         BackgroundSource="HostBackdrop"
-                        FallbackColor="Black"
+                        FallbackColor="{StaticResource SystemListMediumColor}"
+                        TintColor="White"
+                        TintOpacity="0.7" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <AcrylicBrush
+                        x:Key="CMapUwpAcrylicBrush"
+                        BackgroundSource="HostBackdrop"
+                        FallbackColor="{StaticResource SystemListMediumColor}"
                         TintColor="Black"
-                        TintOpacity="0.4" />
+                        TintOpacity="0.7" />
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
             <Style TargetType="TextBlock">
@@ -41,12 +49,10 @@
         </ResourceDictionary>
     </ContentDialog.Resources>
 
-    <Grid
-        Width="400"
-        Height="400">
+    <Grid>
         <ListView
             x:Name="listComments"
-            Margin="10"
+            Margin="0"
             ItemsSource="{x:Bind CommentList}"
             ScrollViewer.VerticalScrollBarVisibility="Visible"
             SelectionChanged="ListComments_SelectionChanged">
@@ -54,12 +60,12 @@
                 <DataTemplate x:Name="SingleLineDataTemplate" x:DataType="local:Comment">
                     <StackPanel
                         Grid.Column="0"
-                        Height="80"
+                        Height="100"
                         Orientation="Horizontal"
                         Padding="12">
                         <Ellipse
-                            Width="56"
-                            Height="56"
+                            Width="75"
+                            Height="75"
                             VerticalAlignment="Center">
                             <Ellipse.Fill>
                                 <ImageBrush>
@@ -71,20 +77,23 @@
                         </Ellipse>
                         <StackPanel Orientation="Vertical">
                             <TextBlock
-                                Width="260"
+                                Width="300"
                                 Margin="12,0,0,0"
                                 VerticalAlignment="Center"
                                 Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
                                 Style="{ThemeResource BaseTextBlockStyle}"
+                                FontWeight="SemiBold"
                                 Text="{x:Bind UserName}"
                                 TextWrapping="Wrap" />
                             <TextBlock
-                                Width="260"
-                                Margin="12,0,0,0"
+                                Width="300"
+                                Margin="12,5,0,0"
                                 VerticalAlignment="Center"
                                 Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}"
                                 Style="{ThemeResource BaseTextBlockStyle}"
                                 Text="{x:Bind CommentText}"
+                                FontWeight="Light"
+                                ToolTipService.ToolTip="{x:Bind CommentText}"
                                 TextWrapping="Wrap" />
                         </StackPanel>
                     </StackPanel>

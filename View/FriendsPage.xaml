@@ -28,7 +28,7 @@
                         x:Key="CMapUwpAcrylicBrush"
                         BackgroundSource="HostBackdrop"
                         FallbackColor="{StaticResource SystemListMediumColor}"
-                        TintColor="White"
+                        TintColor="WhiteSmoke"
                         TintOpacity="0.7" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">

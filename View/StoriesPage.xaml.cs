@@ -108,8 +108,8 @@ namespace MyInsta.View
                 userBox.Content = SelectedUserStory?.User.UserName;
                 userBox.Visibility = Visibility.Visible;
 
-                imageBack.Source = new BitmapImage
-                    (new Uri(SelectedUserStory?.User?.ProfilePicUrl));
+                //imageBack.Source = new BitmapImage
+                //    (new Uri(SelectedUserStory?.User?.ProfilePicUrl));
 
                 mainScroll.ChangeView(null, 0, 1, true);
             }
