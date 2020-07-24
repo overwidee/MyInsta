@@ -46,7 +46,7 @@
         <ScrollViewer>
             <StackPanel Margin="10" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Frame Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" Padding="20"
-                       CornerRadius="20"
+                       CornerRadius="10"
                        Margin="5">
                     <StackPanel>
                         <!--<TextBlock Text="Download paths" 
@@ -80,13 +80,13 @@
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
-                            
+
                         </ListView>
                     </StackPanel>
                 </Frame>
 
                 <Frame Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" Padding="20"
-                       CornerRadius="20"
+                       CornerRadius="10"
                        Margin="5">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                         <TextBlock
@@ -95,13 +95,13 @@
                         <ComboBox x:Name="ComboBoxPaneMode" Width="150" Margin="10, 5"
                                   SelectionChanged="ComboBoxPaneMode_OnSelectionChanged"
                                   SelectedItem="{x:Bind SelectedMode, Mode=TwoWay}">
-                            
+
                         </ComboBox>
                     </StackPanel>
                 </Frame>
 
                 <Frame Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" Padding="20"
-                       CornerRadius="20" Margin="5">
+                       CornerRadius="10" Margin="5">
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <StackPanel Margin="40">
                             <Grid>
@@ -184,13 +184,23 @@
                     </StackPanel>
                 </Frame>
                 <Frame Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" Padding="20"
-                       CornerRadius="20" Margin="5">
+                       CornerRadius="10" Margin="5">
                     <StackPanel>
-                        <ComboBox x:Uid="Language" 
+                        <ComboBox Header="Language"
                                   HorizontalAlignment="Center"
                                   Width="200" SelectionChanged="ComboBox_SelectionChanged" Margin="10">
                             <x:String>English</x:String>
                             <x:String>Русский</x:String>
+                        </ComboBox>
+
+                        <ComboBox 
+                            x:Name="ComboBoxTheme"
+                            Header="Theme"
+                                  HorizontalAlignment="Center"
+                                  SelectedItem="{x:Bind Theme, Mode=TwoWay}"
+                                  Width="200"  Margin="10">
+                            <x:String>Light</x:String>
+                            <x:String>Dark</x:String>
                         </ComboBox>
 
                         <Button x:Name="buttonLogout" 

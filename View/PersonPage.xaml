@@ -159,20 +159,31 @@
                 </Ellipse.Fill>
             </Ellipse>
             <ScrollViewer Grid.Row="3" Grid.Column="0" VerticalScrollBarVisibility="Hidden">
-                <StackPanel Margin="10, 0, 10, 0">
+                <StackPanel Padding="10, 0">
                     <TextBlock
                         Grid.Column="1"
                         HorizontalAlignment="Center"
                         FontSize="25"
-                        FontWeight="Medium"
+                        Margin="5"
+                        FontWeight="ExtraBold"
                         Text="{x:Bind InstaUserInfo.Username, Mode=OneWay}"
                         TextWrapping="Wrap" 
                         HorizontalTextAlignment="Center"/>
+
+                    <TextBlock
+                        Grid.Column="1"
+                        HorizontalAlignment="Center"
+                        FontSize="15"
+                        FontWeight="ExtraLight"
+                        Text="{x:Bind InstaUserInfo.Biography, Mode=OneWay}"
+                        TextWrapping="Wrap" 
+                        HorizontalTextAlignment="Center"/>
+                    
                     <Button
                         x:Name="buttonAction"
                         Grid.Row="1"
                         Grid.Column="0"
-                        Margin="10, 20"
+                        Margin="3"
                         FontWeight="Light"
                         HorizontalAlignment="Stretch"
                         Content="Action"
@@ -284,6 +295,20 @@
                         IsChecked="{x:Bind InstaUserInfo.IsPrivate, Mode=OneWay}"
                         Style="{StaticResource BoolStyle}"
                         />
+                    </StackPanel>
+                    <StackPanel Margin="2" Orientation="Horizontal">
+                        <TextBlock
+                            Text="Is best:"
+                            Margin="0, 0, 10, 0"
+                            FontWeight="Light"
+                            FontSize="20" />
+                        <CheckBox
+                            FontSize="25"
+                            VerticalContentAlignment="Center"
+                            IsEnabled="False"
+                            IsChecked="{x:Bind InstaUserInfo.IsBestie, Mode=OneWay}"
+                            Style="{StaticResource BoolStyle}"
+                            />
                     </StackPanel>
                     <StackPanel Margin="2" Orientation="Horizontal">
                         <TextBlock
@@ -689,7 +714,7 @@
                                 </ListView>
                                 <ScrollViewer
                                     x:Name="scrollArchive"
-                                    Margin="0, 150, 0, 0"
+                                    Margin="0, 155, 0, 0"
                                     VerticalScrollBarVisibility="Auto">
                                     <GridView
                                     x:Name="archiveList"
@@ -761,7 +786,7 @@
                             <StackPanel>
                                 <Border CornerRadius="50" 
                                         Margin="30, 10"
-                                        Background="{ThemeResource ScrollBarButtonForegroundThemeBrush}" Padding="10, 0">
+                                        Padding="10, 0">
                                     <StackPanel>
                                         <charting:Chart x:Name="likeChart"
                                                     Height="400" Margin="0">
@@ -795,21 +820,18 @@
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                             <Border CornerRadius="10" 
                                                     Margin="10"
-                                                    Padding="10, 5"
-                                                    Background="{ThemeResource SystemControlHighlightAccentBrush}">
+                                                    Padding="10, 5">
                                                 <TextBlock x:Name="ChartMaxLikes" 
                                                            Margin="5" FontWeight="SemiLight"/>
                                             </Border>
                                             <Border CornerRadius="10" 
                                                     Margin="10"
-                                                    Padding="10, 5"
-                                                    Background="{ThemeResource SystemControlHighlightAccentBrush}">
+                                                    Padding="10, 5">
                                                 <TextBlock x:Name="ChartMinLikes" Margin="5" FontWeight="SemiLight"/>
                                             </Border>
                                             <Border CornerRadius="10" 
                                                     Margin="10"
-                                                    Padding="10, 5"
-                                                    Background="{ThemeResource SystemControlHighlightAccentBrush}">
+                                                    Padding="10, 5">
                                                 <TextBlock x:Name="ChartAverageLikes" Margin="5" FontWeight="SemiLight"/>
                                             </Border>
                                         </StackPanel>
@@ -817,7 +839,7 @@
                                 </Border>
                                 <Border CornerRadius="50" 
                                         Margin="30, 10"
-                                        Background="{ThemeResource ScrollBarButtonForegroundThemeBrush}" Padding="10, 0">
+                                        Padding="10, 0">
                                     <StackPanel>
                                         <charting:Chart x:Name="commentChart" 
                                                     Height="400" Margin="0">
@@ -843,7 +865,7 @@
                                                 <charting:ResourceDictionaryCollection>
                                                     <ResourceDictionary>
                                                         <Style x:Key="DataPointStyle" TargetType="Control">
-                                                            <Setter Property="Background" Value="{ThemeResource SystemAltLowColor}" />
+                                                            <Setter Property="Background" Value="{ThemeResource SystemControlHighlightAccentBrush}" />
                                                         </Style>
                                                     </ResourceDictionary>
                                                 </charting:ResourceDictionaryCollection>
@@ -852,21 +874,18 @@
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                             <Border CornerRadius="10" 
                                                     Margin="10"
-                                                    Padding="10, 5"
-                                                    Background="{ThemeResource SystemControlHighlightAccentBrush}">
+                                                    Padding="10, 5">
                                                 <TextBlock x:Name="ChartMaxComments" 
                                                            Margin="5" FontWeight="SemiLight"/>
                                             </Border>
                                             <Border CornerRadius="10" 
                                                     Margin="10"
-                                                    Padding="10, 5"
-                                                    Background="{ThemeResource SystemControlHighlightAccentBrush}">
+                                                    Padding="10, 5">
                                                 <TextBlock x:Name="ChartMinComments" Margin="5" FontWeight="SemiLight"/>
                                             </Border>
                                             <Border CornerRadius="10" 
                                                     Margin="10"
-                                                    Padding="10, 5"
-                                                    Background="{ThemeResource SystemControlHighlightAccentBrush}">
+                                                    Padding="10, 5">
                                                 <TextBlock x:Name="ChartAverageComments" Margin="5" FontWeight="SemiLight"/>
                                             </Border>
                                         </StackPanel>

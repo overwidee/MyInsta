@@ -1470,7 +1470,7 @@ namespace MyInsta.Logic
 
                 IsFeedLoading = true;
                 var timeLineFeed =
-                    await user.Api.FeedProcessor.GetUserTimelineFeedAsync(PaginationParameters.MaxPagesToLoad(1)
+                    await user.Api.FeedProcessor.GetUserTimelineFeedAsync(PaginationParameters.MaxPagesToLoad(2)
                         .StartFromMaxId(FeedMaxLoadedId));
                 FeedMaxLoadedId = timeLineFeed.Value.NextMaxId;
 

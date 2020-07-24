@@ -35,6 +35,14 @@ namespace MyInsta.View
             InitializeComponent();
 
             InstaServer.OnUserFeedLoaded += UpdateList;
+
+            InstaServer.UpdateCountFeed += async () =>
+            {
+                if (ScrollListPosts.ScrollableHeight == 0)
+                {
+                    await InstaServer.GetCustomFeed(InstaUser);
+                }
+            };
         }
 
         #region CompleteEvent
@@ -150,6 +158,8 @@ namespace MyInsta.View
         private void FeedPage_OnUnloaded(object sender, RoutedEventArgs e)
         {
             InstaServer.OnUserFeedLoaded -= UpdateList;
+
+            GC.Collect();
         }
 
         private async void MenuFlyoutItem_OnClick(object sender, RoutedEventArgs e)

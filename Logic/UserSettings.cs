@@ -10,6 +10,7 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.UI.Xaml.Controls;
 using Newtonsoft.Json;
+using Windows.UI.Xaml;
 
 namespace MyInsta.Logic
 {
@@ -18,6 +19,7 @@ namespace MyInsta.Logic
         public delegate void UpdateSettings();
 
         public static event UpdateSettings OnPaneModeChanged;
+        public static event UpdateSettings OnThemeChanged;
         private static IEnumerable<DownloadPath> DefaultPaths { get; set; } = new ObservableCollection<DownloadPath>();
 
         public static bool IsMenuOpen
@@ -31,6 +33,23 @@ namespace MyInsta.Logic
             {
                 ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
                 localSettings.Values["IsMenuOpen"] = value;
+            }
+        }
+
+        public static string Theme
+        {
+            get
+            {
+                ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+                return localSettings.Values["Theme"] != null
+                    ? localSettings.Values["Theme"].ToString()
+                    : Application.Current.RequestedTheme.ToString();
+            }
+            set
+            {
+                ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+                localSettings.Values["Theme"] = value;
+                OnThemeChanged?.Invoke();
             }
         }
 

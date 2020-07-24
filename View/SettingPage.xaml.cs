@@ -29,6 +29,9 @@ namespace MyInsta.View
         public SettingPage()
         {
             InitializeComponent();
+
+            //ComboBoxTheme.SelectionChanged += Selector_OnSelectionChanged;
+            UserSettings.OnThemeChanged += RestartApp;
         }
 
         public User InstaUser { get; set; }
@@ -36,6 +39,18 @@ namespace MyInsta.View
         public double StoryHeight { get; set; }
         public double PostHeight { get; set; }
         public double PostWidth { get; set; }
+
+        public string Theme
+        {
+            get => UserSettings.Theme;
+            set
+            {
+                if (value != UserSettings.Theme)
+                {
+                    UserSettings.Theme = value;
+                }
+            }
+        }
 
         public NavigationViewPaneDisplayMode SelectedMode
         {
@@ -65,7 +80,6 @@ namespace MyInsta.View
             ListViewPaths.ItemsSource = UserSettings.GetDefaultPaths();
             var paneModes = Enum.GetValues(typeof(NavigationViewPaneDisplayMode)).Cast<NavigationViewPaneDisplayMode>();
             ComboBoxPaneMode.ItemsSource = paneModes;
-
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -140,6 +154,11 @@ namespace MyInsta.View
         private void ComboBoxPaneMode_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //UserSettings.PaneMode = (NavigationViewPaneDisplayMode)ComboBoxPaneMode.SelectedItem;
+        }
+
+        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //RestartApp();
         }
     }
 }

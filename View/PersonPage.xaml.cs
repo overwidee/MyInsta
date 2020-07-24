@@ -132,6 +132,7 @@ namespace MyInsta.View
 
             UrlStories = await InstaServer.GetStoryUser(CurrentUser, InstaUserInfo);
             storiesList.ItemsSource = UrlStories;
+            storyTab.Header = $"Stories ({UrlStories.Count})";
 
             if (InstaHighlightFeeds.Items.Count > 0)
             {
@@ -141,7 +142,7 @@ namespace MyInsta.View
             if (UrlStories.Count > 0)
             {
                 highTab.IsEnabled = true;
-            }
+            } 
 
 
             CurrentUser.UserData.PostsLastUser.Clear();

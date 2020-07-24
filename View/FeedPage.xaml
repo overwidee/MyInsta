@@ -242,8 +242,12 @@
                                                                 CornerRadius="10">
                                                     
                                                     <Border.Background>
-                                                        <ImageBrush Stretch="UniformToFill" 
-                                                                            ImageSource="{x:Bind UrlBigImage}"/>
+                                                        <ImageBrush Stretch="UniformToFill">
+                                                            <ImageBrush.ImageSource>
+                                                                <BitmapImage UriSource="{x:Bind UrlBigImage}" 
+                                                                             CreateOptions="IgnoreImageCache" />
+                                                            </ImageBrush.ImageSource>
+                                                        </ImageBrush>
                                                     </Border.Background>
                                                     <Viewbox MaxHeight="20" MaxWidth="20"
                                                              HorizontalAlignment="Right"

@@ -32,10 +32,10 @@ namespace MyInsta
         /// </summary>
         public App()
         {
-            this.InitializeComponent();
-            this.Suspending += OnSuspending;
+            InitializeComponent();
+            Suspending += OnSuspending;
 
-            ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             ApplicationLanguages.PrimaryLanguageOverride = localSettings.Values["Language"] != null ?
                 localSettings.Values["Language"].ToString() : "en-US";
 
@@ -43,11 +43,10 @@ namespace MyInsta
             {
                 RequestedTheme = ApplicationTheme.Dark;
             }
-            else if (localSettings.Values["Theme"] != null &&  localSettings.Values["Theme"].ToString() == "Light")
+            else if (localSettings.Values["Theme"] != null && localSettings.Values["Theme"].ToString() == "Light")
             {
                 RequestedTheme = ApplicationTheme.Light;
             }
-            RequestedTheme = ApplicationTheme.Light;
         }
 
         /// <summary>
