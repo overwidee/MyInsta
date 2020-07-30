@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // атрибутов. Отредактируйте значения этих атрибутов, чтобы изменить
 // сведений о сборке.
 [assembly: AssemblyTitle("My Insta")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("https://github.com/the-shichko")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Shichko dev.")]
+[assembly: AssemblyCompany("the-shichko")]
 [assembly: AssemblyProduct("MyInsta")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
