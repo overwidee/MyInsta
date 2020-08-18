@@ -24,7 +24,7 @@
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <PackageCertificateThumbprint>6DF90C980DED5AA170E2CF3C1EE3E6AB7AD7B0D6</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>232EDE5616101CC7A0627743C368DAA00FA8A291</PackageCertificateThumbprint>
     <PackageCertificateKeyFile />
     <AppInstallerUpdateFrequency>0</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
@@ -465,10 +465,10 @@
     <None Include="MyInsta_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="InstagramApiSharp, Version=1.5.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\InstagramApiSharp\src\InstagramApiSharp\bin\Debug\net452\netstandard2.0\netstandard2.0\InstagramApiSharp.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\InstagramApiSharp\src\InstagramApiSharp\InstagramApiSharp.csproj">
+      <Project>{ffd3bd6e-54e7-4466-946c-d61bfe5b8fde}</Project>
+      <Name>InstagramApiSharp</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
